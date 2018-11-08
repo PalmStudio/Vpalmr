@@ -20,10 +20,6 @@ Compute the leaf deviation on point A
 \examples{
 \dontrun{
 library(Vpalmr)
-leaf_curvature(position= c(0,0.43,0.69,1),
-               angC= c(27.14,27.14,27.14,27.14),
-               angA= c(66.59,66.59,66.59,66.59),
-               coefCurv= 3.58,
-               Lenght= c(320.11,320.11,320.11,320.11))
+deviation_A(devC= 86, Lenght= 320)
 }
 }
