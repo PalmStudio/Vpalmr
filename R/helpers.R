@@ -1,0 +1,186 @@
+#' Sigmoidal function
+#'
+#' @description Estimate a sigmoidal function from parameters.
+#'
+#' @param X       The x values
+#' @param max     The y maximum value
+#' @param slope   The slope at the inflection point
+#' @param infl    The X position of the inflection point
+#'
+#' @return A sigmoid
+#'
+#' @examples
+#'\dontrun{
+#' library(Vpalmr)
+#' f.sigmo(X= 1/10,max= 3,slope= 1,infl=5)
+#'}
+#' @export
+f.sigmo=function(X,max,slope,infl){
+  max/(1+exp(4* slope*(infl-X)))
+}
+
+
+#' Distance bewteen 2D points
+#'
+#' @description Estimate the linear distance between points in 2D coordinates
+#'
+#' @param x The values in the x axis
+#' @param y The values in the y axis
+#'
+#' @details The function returns a 0 value for the first two points.
+#'
+#' @return The total distance (lenght) of the series of objects
+#'
+#' @importFrom dplyr lag "%>%"
+#'
+#' @examples
+#'\dontrun{
+#' library(Vpalmr)
+#' f.lengthEstim(x= 1:10,y= 1:10)
+#'}
+#' @export
+distance_2D= function(x,y){
+  sqrt((x-dplyr::lag(x,default = 0))^2+
+         (y-dplyr::lag(y,default = 0))^2)
+}
+
+
+#' Lenght of non-linear objects
+#'
+#' @description Estimate the smoothed distance between points sampled
+#' in an object
+#'
+#' @param x      The values in the x axis
+#' @param y      The values in the y axis
+#' @param res    The re-sampling resolution, with the same unit as inputs.
+#' @param method The smoothing method, either using [stats::loess()] or [stats::smooth.spline()]
+#' @param ...    Further arguments to pass to the smoothing function
+#'
+#' @details The x and y coordinates must be ordered from first to last point on the object.
+#'  The function uses the c(0,0) point coordinate as the reference for the first point length.
+#'  The function is used to compute the length of an object from subsampled points
+#'  coordinates. Here is how the function works:
+#'  1. The user sample some points from an object and register their X and Y positions
+#'     in a euclidean coordinate system, and give the points coordinates as input to the function
+#'  1. An approximation of the object curvature is made using a smoothing function on all
+#'  measured points
+#'  1. The object is re-sampled using the resulting smoothing function with a
+#'  sampling resolution of `res`.
+#'  1. The linear distances between each re-sampled points is computed
+#'  1. The distances of each points bewteen the input coordinates are summed, so the estimation of
+#'  the distances between the input coordinates are returned
+#'
+#' @note The distance from the 0 reference for each points can be computed using [base::cumsum()],
+#'  and the total length of the object using [base::sum()].
+#'  [stats::smooth.spline()] needs at least four unique values, so if the number of points is unknown,
+#'  consider using [stats::loess()] instead.
+#'
+#' @return The distance between points from a curved object
+#'
+#' @importFrom dplyr lag "%>%"
+#' @importFrom stats smooth.spline loess
+#'
+#' @examples
+#'\dontrun{
+#' library(Vpalmr)
+#' Segment_lengths= object_lenght(x= 1:10,y= rep(1,10))
+#' Length_from_0= cumsum(Segment_lengths)
+#' Total_length= sum(Segment_lengths)
+#'}
+#' @export
+object_lenght= function(x,y,res = 1,method = c("loess","smooth.spline"),...){
+
+  if(length(x)!=length(y)){stop("x and y must have the same length")}
+  if(length(x)<4 & method=="smooth.spline"){
+    warning(paste("x must have at least four distinct values for smooth.spline,",
+                  "using linear interpolation instead"))
+  }
+
+  # Re-sampling with the given resolution
+  x_pred= seq(0,max(x),res)%>%dplyr::union(x)
+
+  if(method=="smooth.spline"){
+    df_model=
+      predict(object= smooth.spline(x,y,...),
+              x= seq(0,max(x),res)%>%dplyr::union(x))%>%
+      data.frame()%>%rename(x_res= x, y_res=y)
+  }else if(method=="loess"){
+    df_model=
+      predict(object= stats::loess(y~x,...),x_pred)%>%
+      data.frame(x_res= x_pred,y_res= .)
+  }
+
+  df_model%>%
+    mutate(Distance= distance_2D(x = x_res,y = y_res),
+           x=cut(x_res,x,labels=x[-1]))%>%slice(-1)%>%
+    group_by(x)%>%
+    summarise(Distance= sum(Distance))%>%
+    merge(data.frame(x,y),.,by="x",all.x=T)%>%
+    mutate(Distance= replace(Distance,1,0))
+}
+
+
+#' Compute the tangants along non-linear objects
+#'
+#' @description Estimate the tangants for points from a curved object using smoothing
+#'
+#' @param x      The values in the x axis
+#' @param y      The values in the y axis
+#' @param res    The re-sampling resolution, with the same unit as inputs.
+#' @param method The smoothing method, either using [stats::loess()] or [stats::smooth.spline()]
+#' @param ...    Further arguments to pass to the smoothing function
+#'
+#' @details The x and y coordinates must be ordered from first to last point on the object.
+#'  The function is used to compute the tangents of points for a curved object. The function
+#'  re-sample the object using a smoothing function to give the closest tangant to the point.
+#'  The higher the resolution, the higher the sub-sampling, and the closer the tangent will be.
+#'  Here is how the function works:
+#'  1. The user sample some points from a curved object and register their X and Y positions
+#'     in a euclidean coordinate system, and give the points coordinates as input of the function
+#'  1. An approximation of the object curvature is made using a smoothing function on all
+#'  measured points
+#'  1. The object is re-sampled using the resulting smoothing function with a
+#'  sampling resolution of `res`.
+#'  1. The tangent is computed for each input point using the closer re-sampled points
+#'
+#' @return The tangent for each point of a curved object
+#' @seealso [object_lenght()]
+#' @importFrom dplyr lead "%>%"
+#' @importFrom stats smooth.spline loess
+#'
+#' @examples
+#'\dontrun{
+#' library(Vpalmr)
+#' object_tans(x= 1:10,y= rep(1,10))
+#'}
+#' @export
+object_tans= function(x,y,res = 1,method = c("loess","smooth.spline"),...){
+
+  if(length(x)!=length(y)){stop("x and y must have the same length")}
+  if(length(x)<4 & method=="smooth.spline"){
+    warning(paste("x must have at least four distinct values for smooth.spline,",
+                  "using linear interpolation instead"))
+  }
+
+  # Re-sampling with the given resolution
+  x_pred= seq(0,max(x),res)%>%dplyr::union(x)
+
+  if(method=="smooth.spline"){
+    df_model=
+      predict(object= smooth.spline(x,y,...),
+              x= seq(0,max(x),res)%>%dplyr::union(x))%>%
+      data.frame()%>%rename(x_res= x, y_res=y)
+  }else if(method=="loess"){
+    df_model=
+      predict(object= stats::loess(y~x,...),x_pred)%>%
+      data.frame(x_res= x_pred,y_res= .)
+  }
+
+  df_model%>%
+    mutate(angle= atan((lead(x_res)-x_res)/(lead(y_res)-y_res)))%>%
+    mutate(angle= replace(angle,n(),lag(angle)%>%.[n()]))%>%
+    filter(x_res%in%x)
+}
+
+
+
