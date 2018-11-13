@@ -15,7 +15,7 @@
 #' f.sigmo(X= 1/10,max= 3,slope= 1,infl=5)
 #'}
 #' @export
-f.sigmo=function(X,max,slope,infl){
+sigmoid=function(X,max,slope,infl){
   max/(1+exp(4* slope*(infl-X)))
 }
 
@@ -184,3 +184,16 @@ object_tans= function(x,y,res = 1,method = c("loess","smooth.spline"),...){
 
 
 
+#' AlKashi
+#'
+#' @description Get the length of the 3 side of a triangle knowing the 2 other sides using
+#' the law of cosines, also known as the generalized Pythagorean theorem.
+#'
+#' @param x lenght of one side
+#' @param l lenght of the second side
+#'
+#' @return The length of the third side
+#' @export
+AlKashi= function(x,l){
+  acos((l^2+l^2-x^2)/(2*l*l))*180/pi
+}

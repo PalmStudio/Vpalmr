@@ -88,7 +88,7 @@ leaf_curvature=function(position,angC,angA,coefCurv,Length){
 #'}
 #' @export
 curvature_error= function(angC,position,Length,X_pos,Y_pos,coefCurv,decAInfl){
-  angA= f.sigmo(X= angC, max= 160, slope= 0.02,infl= decAInfl)
+  angA= sigmoid(X= angC, max= 160, slope= 0.02,infl= decAInfl)
 
   leaf_curvature(position= position,
                   angC= angC, angA= angA, coefCurv= coefCurv,
@@ -182,4 +182,20 @@ deviation_A=function(devC,Length){
   devA= devCm[devCm$dif==min(devCm$dif),]$devA
 
   return(devA)
+}
+
+#' Rachis section height
+#'
+#' @description Computes the leaf section height from its
+#' relative position on the leaf and the \code{a} parameter.
+#'
+#' @param PositionRelativeRachis Relative position on the rachis (0-1)
+#' @param a Parameter
+#'
+#' @return
+#' @export
+#'
+#' @examples
+section_height= function(Position,a){
+  1 + a*(Position**3)
 }

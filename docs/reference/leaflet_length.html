@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Sigmoidal function — import_data • Vpalmr</title>
+<title>Leaflet dimensions — leaflet_length • Vpalmr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,10 @@
 
 
 
-<meta property="og:title" content="Sigmoidal function — import_data" />
+<meta property="og:title" content="Leaflet dimensions — leaflet_length" />
 
-<meta property="og:description" content="Estimate a sigmoidal function from parameters." />
+<meta property="og:description" content="Computes the leaflet length or maximum width using leaflet
+position along the leaf and several parameters" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -95,43 +96,50 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Sigmoidal function</h1>
+    <h1>Leaflet dimensions</h1>
     
-    <div class="hidden name"><code>import_data.Rd</code></div>
+    <div class="hidden name"><code>leaflet_length.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Estimate a sigmoidal function from parameters.</p>
+    <p>Computes the leaflet length or maximum width using leaflet
+position along the leaf and several parameters</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>import_data</span>(<span class='no'>file_archi</span>, <span class='no'>file_la</span>, <span class='no'>file_phylo</span>, <span class='no'>file_angles</span>)</pre>
+    <pre class="usage"><span class='fu'>leaflet_length</span>(<span class='no'>X</span>, <span class='no'>Ymax</span>, <span class='no'>Y0</span>, <span class='no'>Yfin</span>, <span class='no'>X_Ymax</span>)
+
+<span class='fu'>leaflet_max_width</span>(<span class='no'>X</span>, <span class='no'>Ymax</span>, <span class='no'>Y0</span>, <span class='no'>Yfin</span>, <span class='no'>X_Ymax</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>file_archi</th>
-      <td><p>Path to the architectural file</p></td>
+      <th>X</th>
+      <td><p>Relative position along the leaf</p></td>
     </tr>
     <tr>
-      <th>file_la</th>
-      <td><p>Path to the leaf area file</p></td>
+      <th>Ymax</th>
+      <td><p>Maximal Y</p></td>
     </tr>
     <tr>
-      <th>file_phylo</th>
-      <td><p>Path to the phylotaxy file</p></td>
+      <th>Y0</th>
+      <td><p>Intercept</p></td>
     </tr>
     <tr>
-      <th>file_angles</th>
-      <td><p>Path to the leaf declination angles file</p></td>
+      <th>Yfin</th>
+      <td><p>Value at the maximal X</p></td>
+    </tr>
+    <tr>
+      <th>X_Ymax</th>
+      <td><p>X value at Ymax</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A sigmoid</p>
+    <p>The leaflet length or maximum width</p>
     
 
   </div>

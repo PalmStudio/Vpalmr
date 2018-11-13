@@ -21,9 +21,3 @@ A sigmoid
 \description{
 Estimate a sigmoidal function from parameters.
 }
-\examples{
-\dontrun{
-library(Vpalmr)
-f.sigmo(X= 1/10,max= 3,slope= 1,infl=5)
-}
-}

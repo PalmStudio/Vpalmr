@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Sigmoidal function — import_data • Vpalmr</title>
+<title>Sigmoidal function — sigmoid • Vpalmr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,7 +30,7 @@
 
 
 
-<meta property="og:title" content="Sigmoidal function — import_data" />
+<meta property="og:title" content="Sigmoidal function — sigmoid" />
 
 <meta property="og:description" content="Estimate a sigmoidal function from parameters." />
 <meta name="twitter:card" content="summary" />
@@ -97,7 +97,7 @@
     <div class="page-header">
     <h1>Sigmoidal function</h1>
     
-    <div class="hidden name"><code>import_data.Rd</code></div>
+    <div class="hidden name"><code>sigmoid.Rd</code></div>
     </div>
 
     <div class="ref-description">
@@ -106,26 +106,26 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>import_data</span>(<span class='no'>file_archi</span>, <span class='no'>file_la</span>, <span class='no'>file_phylo</span>, <span class='no'>file_angles</span>)</pre>
+    <pre class="usage"><span class='fu'>sigmoid</span>(<span class='no'>X</span>, <span class='no'>max</span>, <span class='no'>slope</span>, <span class='no'>infl</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>file_archi</th>
-      <td><p>Path to the architectural file</p></td>
+      <th>X</th>
+      <td><p>The x values</p></td>
     </tr>
     <tr>
-      <th>file_la</th>
-      <td><p>Path to the leaf area file</p></td>
+      <th>max</th>
+      <td><p>The y maximum value</p></td>
     </tr>
     <tr>
-      <th>file_phylo</th>
-      <td><p>Path to the phylotaxy file</p></td>
+      <th>slope</th>
+      <td><p>The slope at the inflection point</p></td>
     </tr>
     <tr>
-      <th>file_angles</th>
-      <td><p>Path to the leaf declination angles file</p></td>
+      <th>infl</th>
+      <td><p>The X position of the inflection point</p></td>
     </tr>
     </table>
     
@@ -134,6 +134,11 @@
     <p>A sigmoid</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='fu'>library</span>(<span class='no'>Vpalmr</span>)
+<span class='fu'>f.sigmo</span>(<span class='kw'>X</span><span class='kw'>=</span> <span class='fl'>1</span>/<span class='fl'>10</span>,<span class='kw'>max</span><span class='kw'>=</span> <span class='fl'>3</span>,<span class='kw'>slope</span><span class='kw'>=</span> <span class='fl'>1</span>,<span class='kw'>infl</span><span class='kw'>=</span><span class='fl'>5</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -141,7 +146,9 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

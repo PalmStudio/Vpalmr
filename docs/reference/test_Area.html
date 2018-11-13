@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Sigmoidal function — import_data • Vpalmr</title>
+<title>Test the Area data.frame — test_Area • Vpalmr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Sigmoidal function — import_data" />
+<meta property="og:title" content="Test the Area data.frame — test_Area" />
 
-<meta property="og:description" content="Estimate a sigmoidal function from parameters." />
+<meta property="og:description" content="Performs several tests on the Area file to check for potential errors or typos" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -95,45 +95,40 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Sigmoidal function</h1>
+    <h1>Test the Area data.frame</h1>
     
-    <div class="hidden name"><code>import_data.Rd</code></div>
+    <div class="hidden name"><code>test_Area.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Estimate a sigmoidal function from parameters.</p>
+    <p>Performs several tests on the Area file to check for potential errors or typos</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>import_data</span>(<span class='no'>file_archi</span>, <span class='no'>file_la</span>, <span class='no'>file_phylo</span>, <span class='no'>file_angles</span>)</pre>
+    <pre class="usage"><span class='fu'>test_Area</span>(<span class='no'>Area</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>file_archi</th>
-      <td><p>Path to the architectural file</p></td>
-    </tr>
-    <tr>
-      <th>file_la</th>
-      <td><p>Path to the leaf area file</p></td>
-    </tr>
-    <tr>
-      <th>file_phylo</th>
-      <td><p>Path to the phylotaxy file</p></td>
-    </tr>
-    <tr>
-      <th>file_angles</th>
-      <td><p>Path to the leaf declination angles file</p></td>
+      <th>Area</th>
+      <td><p>The Area data.frame</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A sigmoid</p>
+    <p><code>TRUE</code> if the file had no major problem, or a special output that points to the potential
+error</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='fu'>library</span>(<span class='no'>Vpalmr</span>)
+<span class='no'>Area</span><span class='kw'>=</span> <span class='kw pkg'>data.table</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/data.table/topics/fread'>fread</a></span>(<span class='st'>'LeafArea_monitoring_SMSE.csv'</span>,<span class='kw'>data.table</span> <span class='kw'>=</span> <span class='no'>F</span>,<span class='kw'>dec</span><span class='kw'>=</span><span class='st'>','</span>)
+<span class='fu'>test_Area</span>(<span class='kw'>Area</span><span class='kw'>=</span> <span class='no'>Area</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -141,7 +136,9 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Sigmoidal function — import_data • Vpalmr</title>
+<title>Fit nls on leaflet shape — leaflet_shape_nls • Vpalmr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Sigmoidal function — import_data" />
+<meta property="og:title" content="Fit nls on leaflet shape — leaflet_shape_nls" />
 
-<meta property="og:description" content="Estimate a sigmoidal function from parameters." />
+<meta property="og:description" content="Find the coefficients of the beta function for leaflet shape." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -95,43 +95,42 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Sigmoidal function</h1>
+    <h1>Fit nls on leaflet shape</h1>
     
-    <div class="hidden name"><code>import_data.Rd</code></div>
+    <div class="hidden name"><code>leaflet_shape_nls.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Estimate a sigmoidal function from parameters.</p>
+    <p>Find the coefficients of the beta function for leaflet shape.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>import_data</span>(<span class='no'>file_archi</span>, <span class='no'>file_la</span>, <span class='no'>file_phylo</span>, <span class='no'>file_angles</span>)</pre>
+    <pre class="usage"><span class='fu'>leaflet_shape_nls</span>(<span class='no'>width</span>, <span class='no'>position</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>file_archi</th>
-      <td><p>Path to the architectural file</p></td>
+      <th>width</th>
+      <td><p>Leaflet relative width (compared to maximum observed on the leaf, 0-1)</p></td>
     </tr>
     <tr>
-      <th>file_la</th>
-      <td><p>Path to the leaf area file</p></td>
-    </tr>
-    <tr>
-      <th>file_phylo</th>
-      <td><p>Path to the phylotaxy file</p></td>
-    </tr>
-    <tr>
-      <th>file_angles</th>
-      <td><p>Path to the leaf declination angles file</p></td>
+      <th>position</th>
+      <td><p>Leaflet relative position on the leaf (0-1)</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A sigmoid</p>
+    <p>The estimation of the xm and ym parameters from the nls fit</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The function determines the nonlinear (weighted) least-squares estimates of the
+xm and ym parameters using the <code><a href='http://www.rdocumentation.org/packages/stats/topics/nls'>nls</a></code> of the following model:
+<code>width~shape_beta(x= position,xm= xm,ym= ym)</code>.
+See <code><a href='shape_beta.html'>shape_beta</a></code> for more informations.</p>
     
 
   </div>
@@ -141,6 +140,8 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
           </ul>
 
   </div>

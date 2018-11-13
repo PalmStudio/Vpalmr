@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Sigmoidal function — import_data • Vpalmr</title>
+<title>Rachis section height — section_height • Vpalmr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,10 @@
 
 
 
-<meta property="og:title" content="Sigmoidal function — import_data" />
+<meta property="og:title" content="Rachis section height — section_height" />
 
-<meta property="og:description" content="Estimate a sigmoidal function from parameters." />
+<meta property="og:description" content="Computes the leaf section height from its
+relative position on the leaf and the a parameter." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -95,43 +96,32 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Sigmoidal function</h1>
+    <h1>Rachis section height</h1>
     
-    <div class="hidden name"><code>import_data.Rd</code></div>
+    <div class="hidden name"><code>section_height.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Estimate a sigmoidal function from parameters.</p>
+    <p>Computes the leaf section height from its
+relative position on the leaf and the <code>a</code> parameter.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>import_data</span>(<span class='no'>file_archi</span>, <span class='no'>file_la</span>, <span class='no'>file_phylo</span>, <span class='no'>file_angles</span>)</pre>
+    <pre class="usage"><span class='fu'>section_height</span>(<span class='no'>Position</span>, <span class='no'>a</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>file_archi</th>
-      <td><p>Path to the architectural file</p></td>
+      <th>a</th>
+      <td><p>Parameter</p></td>
     </tr>
     <tr>
-      <th>file_la</th>
-      <td><p>Path to the leaf area file</p></td>
-    </tr>
-    <tr>
-      <th>file_phylo</th>
-      <td><p>Path to the phylotaxy file</p></td>
-    </tr>
-    <tr>
-      <th>file_angles</th>
-      <td><p>Path to the leaf declination angles file</p></td>
+      <th>PositionRelativeRachis</th>
+      <td><p>Relative position on the rachis (0-1)</p></td>
     </tr>
     </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A sigmoid</p>
     
 
   </div>
@@ -139,9 +129,7 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-          </ul>
+                </ul>
 
   </div>
 </div>
