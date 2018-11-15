@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Test the Area data.frame — test_Area • Vpalmr</title>
+<title>Plot the architectural parameters estimations — plot_stem_diameter • Vpalmr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,10 @@
 
 
 
-<meta property="og:title" content="Test the Area data.frame — test_Area" />
+<meta property="og:title" content="Plot the architectural parameters estimations — plot_stem_diameter" />
 
-<meta property="og:description" content="Performs several tests on the Area file to check for potential errors or typos" />
+<meta property="og:description" content="Plot the estimations of the palm architectural parameters from
+their parameter estimation and input data." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -95,41 +96,86 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Test the Area data.frame</h1>
+    <h1>Plot the architectural parameters estimations</h1>
     
-    <div class="hidden name"><code>test_Area.Rd</code></div>
+    <div class="hidden name"><code>plot_stem_diameter.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Performs several tests on the Area file to check for potential errors or typos</p>
+    <p>Plot the estimations of the palm architectural parameters from
+their parameter estimation and input data.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>test_Area</span>(<span class='no'>Area</span>)
+    <pre class="usage"><span class='fu'>plot_stem_diameter</span>(<span class='no'>data</span>, <span class='no'>model</span>)
 
-<span class='fu'>test_petiole_width</span>(<span class='no'>x</span>)</pre>
+<span class='fu'>plot_stem_height</span>(<span class='no'>data</span>, <span class='no'>model</span>)
+
+<span class='fu'>plot_rachis_length</span>(<span class='no'>data</span>, <span class='no'>model</span>)
+
+<span class='fu'>plot_petiole_ratio</span>(<span class='no'>data</span>, <span class='no'>model</span>, <span class='no'>Physio_age</span>)
+
+<span class='fu'>plot_B_position</span>(<span class='no'>data</span>, <span class='no'>model</span>, <span class='no'>Physio_age</span>)
+
+<span class='fu'>plot_nb_leaflet</span>(<span class='no'>data</span>, <span class='no'>model</span>)
+
+<span class='fu'>plot_C_declination</span>(<span class='no'>data</span>, <span class='no'>model</span>)
+
+<span class='fu'>plot_leaf_curvature</span>(<span class='no'>data</span>, <span class='no'>model</span>)
+
+<span class='fu'>plot_A_declination</span>(<span class='no'>data</span>, <span class='no'>model</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>Area</th>
-      <td><p>The Area data.frame</p></td>
+      <th>data</th>
+      <td><p>Input data, generally one of the objects from <code><a href='import_data.html'>import_data()</a></code></p></td>
+    </tr>
+    <tr>
+      <th>model</th>
+      <td><p>Model fitted from one of <a href='mod_stem_diameter.html'>models</a></p></td>
+    </tr>
+    <tr>
+      <th>Physio_age</th>
+      <td><p>Physiological age, in number of leaves emmitted from birth</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>TRUE</code> if the file had no major problem, or a special output that points to the potential
-error</p>
+    <p>A ggplot</p>
+    
+    <h2 class="hasAnchor" id="plotting-functions-plot-"><a class="anchor" href="#plotting-functions-plot-"></a>Plotting functions (plot_*)</h2>
+
+    
+    <ul>
+<li><p><code>plot_stem_diameter()</code>: plot the predicted stem diameter at the level of
+the considered leaf using the leaf length</p></li>
+<li><p><code>plot_stem_height()</code>: plot the predicted stem height using the total cumulated
+emitted leaves</p></li>
+<li><p><code>plot_rachis_length()</code>: plot the predicted leaf length according to its index (leaf
+number)</p></li>
+<li><p><code>plot_petiole_ratio()</code>: plot the observed petiole to rachis ratio along the average
+value used for simulation.</p></li>
+<li><p><code>plot_nb_leaflet()</code>: plot the predicted number of leaflets in function of rachis
+length</p></li>
+<li><p><code>plot_C_declination()</code>: plot the declination angle at C point in function of leaf rank</p></li>
+<li><p><code>plot_leaf_curvature()</code>: plot the leaf curvature in function of the relative position
+on the leaf</p></li>
+<li><p><code>plot_A_declination()</code>; plot the leaf declination angle at A point in function of the C point</p></li>
+</ul>
+    <p>@importFrom dplyr group_by do mutate filter
+@importFrom tidyr unnest
+@importFrom ggplot2 ggplot facet_wrap geom_point geom_line ylab xlab aes</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
 <span class='fu'>library</span>(<span class='no'>Vpalmr</span>)
-<span class='no'>Area</span><span class='kw'>=</span> <span class='kw pkg'>data.table</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/data.table/topics/fread'>fread</a></span>(<span class='st'>'LeafArea_monitoring_SMSE.csv'</span>,<span class='kw'>data.table</span> <span class='kw'>=</span> <span class='no'>F</span>,<span class='kw'>dec</span><span class='kw'>=</span><span class='st'>','</span>)
-<span class='fu'>test_Area</span>(<span class='kw'>Area</span><span class='kw'>=</span> <span class='no'>Area</span>)
+<span class='no'>archi_param</span><span class='kw'>=</span> <span class='fu'><a href='estimate_archi.html'>estimate_archi</a></span>(<span class='kw'>progeny</span><span class='kw'>=</span> <span class='st'>"DY"</span>,<span class='kw'>map</span><span class='kw'>=</span> <span class='fl'>47</span>)
+<span class='fu'>plot_params</span>(<span class='no'>archi_param</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -138,6 +184,8 @@ error</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#plotting-functions-plot-">Plotting functions (plot_*)</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

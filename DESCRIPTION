@@ -13,4 +13,7 @@ RoxygenNote: 6.0.1
 Suggests: 
     testthat
 Imports: 
-    dplyr
+    dplyr,
+    nlme,
+    tidyr,
+    ggplot2

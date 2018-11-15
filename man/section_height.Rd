@@ -7,9 +7,12 @@
 section_height(Position, a)
 }
 \arguments{
-\item{a}{Parameter}
+\item{Position}{Relative position on the rachis (0-1)}
 
-\item{PositionRelativeRachis}{Relative position on the rachis (0-1)}
+\item{a}{Parameter}
+}
+\value{
+The section height
 }
 \description{
 Computes the leaf section height from its

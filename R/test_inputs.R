@@ -37,3 +37,13 @@ test_Area= function(Area){
     return(TRUE)
   }
 }
+
+#' @rdname test_Area
+#' @export
+test_petiole_width= function(x){
+  if(nrow(na.omit(x[x$RatioPetiole>0.5,]))>0){
+    ID=paste('tree ',x$TreeNumber,' leaf ', x$LeafIndex,sep='')
+    message('Probable error in petiole length or rachis length for:\n',
+            paste(ID[x$RatioPetiole>0.5]))
+  }
+}

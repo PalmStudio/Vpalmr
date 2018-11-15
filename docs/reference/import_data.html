@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Sigmoidal function — import_data • Vpalmr</title>
+<title>Import all data — import_data • Vpalmr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Sigmoidal function — import_data" />
+<meta property="og:title" content="Import all data — import_data" />
 
-<meta property="og:description" content="Estimate a sigmoidal function from parameters." />
+<meta property="og:description" content="Import and pre-compute the input data for VPalm" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -95,45 +95,85 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Sigmoidal function</h1>
+    <h1>Import all data</h1>
     
     <div class="hidden name"><code>import_data.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Estimate a sigmoidal function from parameters.</p>
+    <p>Import and pre-compute the input data for VPalm</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>import_data</span>(<span class='no'>file_archi</span>, <span class='no'>file_la</span>, <span class='no'>file_phylo</span>, <span class='no'>file_angles</span>)</pre>
+    <pre class="usage"><span class='fu'>import_data</span>(<span class='no'>parameter</span>, <span class='no'>development</span>, <span class='no'>phylotaxy</span>, <span class='no'>declination</span>, <span class='no'>curvature</span>, <span class='no'>toricity</span>,
+  <span class='no'>leaf_area</span>, <span class='no'>axial_angle</span>, <span class='no'>petiole_width</span>, <span class='no'>twist</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>file_archi</th>
-      <td><p>Path to the architectural file</p></td>
+      <th>parameter</th>
+      <td><p>File path to the parameter file (ParameterSimu.csv)</p></td>
     </tr>
     <tr>
-      <th>file_la</th>
-      <td><p>Path to the leaf area file</p></td>
+      <th>development</th>
+      <td><p>File path to the development file (Development_Rep4_SMSE.csv)</p></td>
     </tr>
     <tr>
-      <th>file_phylo</th>
-      <td><p>Path to the phylotaxy file</p></td>
+      <th>phylotaxy</th>
+      <td><p>File path to the phylotaxy file (Stem_SMSE14.csv)</p></td>
     </tr>
     <tr>
-      <th>file_angles</th>
-      <td><p>Path to the leaf declination angles file</p></td>
+      <th>declination</th>
+      <td><p>File path to the declination file (A_SMSE_Nov14.csv)</p></td>
+    </tr>
+    <tr>
+      <th>curvature</th>
+      <td><p>File path to the leaf curvature file (LeafCurvature_SMSE14.csv)</p></td>
+    </tr>
+    <tr>
+      <th>toricity</th>
+      <td><p>File path to the leaf toricity file (AnglesC&amp;A_SMSE_Nov14.csv)</p></td>
+    </tr>
+    <tr>
+      <th>leaf_area</th>
+      <td><p>File path to the leaf area file (LeafArea_monitoring_SMSE.csv)</p></td>
+    </tr>
+    <tr>
+      <th>axial_angle</th>
+      <td><p>File path to the leaf axial angle file (LeafDispositionComp_SMSE14.csv)</p></td>
+    </tr>
+    <tr>
+      <th>petiole_width</th>
+      <td><p>File path to the leaf petiole width file (Petiole_SMSE14.csv)</p></td>
+    </tr>
+    <tr>
+      <th>twist</th>
+      <td><p>File path to the leaf twist file (Torsion_SMSE14.csv), used to compute
+leaf nerve height.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A sigmoid</p>
+    <p>A list of the imported and pre-processed files</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='kw pkg'>Vpalmr</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/Vpalmr/topics/import_data'>import_data</a></span>(<span class='kw'>parameter</span><span class='kw'>=</span> <span class='st'>'Archi/ParameterSimu.csv'</span>,
+                    <span class='kw'>development</span><span class='kw'>=</span> <span class='st'>'Archi/Development_Rep4_SMSE.csv'</span>,
+                    <span class='kw'>phylotaxy</span><span class='kw'>=</span> <span class='st'>"Archi/Stem_SMSE14.csv"</span>,
+                    <span class='kw'>declination</span><span class='kw'>=</span> <span class='st'>"Archi/AnglesC&amp;A_SMSE_Nov14.csv"</span>,
+                    <span class='kw'>curvature</span><span class='kw'>=</span> <span class='st'>"Archi/LeafCurvature_SMSE14.csv"</span>,
+                    <span class='kw'>toricity</span><span class='kw'>=</span> <span class='st'>'Archi/AnglesC&amp;A_SMSE_Nov14.csv'</span>,
+                    <span class='kw'>leaf_area</span><span class='kw'>=</span> <span class='st'>'Archi/LeafArea_monitoring_SMSE.csv'</span>,
+                    <span class='kw'>axial_angle</span><span class='kw'>=</span> <span class='st'>"Archi/LeafDispositionComp_SMSE14.csv"</span>,
+                    <span class='kw'>petiole_width</span><span class='kw'>=</span> <span class='st'>"Archi/Petiole_SMSE14.csv"</span>,
+                    <span class='kw'>twist</span><span class='kw'>=</span> <span class='st'>"Archi/Torsion_SMSE14.csv"</span>)
+<span class='co'># }</span><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -141,7 +181,9 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

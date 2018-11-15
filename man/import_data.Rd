@@ -2,22 +2,51 @@
 % Please edit documentation in R/import_data.R
 \name{import_data}
 \alias{import_data}
-\title{Sigmoidal function}
+\title{Import all data}
 \usage{
-import_data(file_archi, file_la, file_phylo, file_angles)
+import_data(parameter, development, phylotaxy, declination, curvature, toricity,
+  leaf_area, axial_angle, petiole_width, twist)
 }
 \arguments{
-\item{file_archi}{Path to the architectural file}
+\item{parameter}{File path to the parameter file (ParameterSimu.csv)}
 
-\item{file_la}{Path to the leaf area file}
+\item{development}{File path to the development file (Development_Rep4_SMSE.csv)}
 
-\item{file_phylo}{Path to the phylotaxy file}
+\item{phylotaxy}{File path to the phylotaxy file (Stem_SMSE14.csv)}
 
-\item{file_angles}{Path to the leaf declination angles file}
+\item{declination}{File path to the declination file (A_SMSE_Nov14.csv)}
+
+\item{curvature}{File path to the leaf curvature file (LeafCurvature_SMSE14.csv)}
+
+\item{toricity}{File path to the leaf toricity file (AnglesC&A_SMSE_Nov14.csv)}
+
+\item{leaf_area}{File path to the leaf area file (LeafArea_monitoring_SMSE.csv)}
+
+\item{axial_angle}{File path to the leaf axial angle file (LeafDispositionComp_SMSE14.csv)}
+
+\item{petiole_width}{File path to the leaf petiole width file (Petiole_SMSE14.csv)}
+
+\item{twist}{File path to the leaf twist file (Torsion_SMSE14.csv), used to compute
+leaf nerve height.}
 }
 \value{
-A sigmoid
+A list of the imported and pre-processed files
 }
 \description{
-Estimate a sigmoidal function from parameters.
+Import and pre-compute the input data for VPalm
+}
+\examples{
+\dontrun{
+Vpalmr::import_data(parameter= 'Archi/ParameterSimu.csv',
+                    development= 'Archi/Development_Rep4_SMSE.csv',
+                    phylotaxy= "Archi/Stem_SMSE14.csv",
+                    declination= "Archi/AnglesC&A_SMSE_Nov14.csv",
+                    curvature= "Archi/LeafCurvature_SMSE14.csv",
+                    toricity= 'Archi/AnglesC&A_SMSE_Nov14.csv',
+                    leaf_area= 'Archi/LeafArea_monitoring_SMSE.csv',
+                    axial_angle= "Archi/LeafDispositionComp_SMSE14.csv",
+                    petiole_width= "Archi/Petiole_SMSE14.csv",
+                    twist= "Archi/Torsion_SMSE14.csv")
+}
+
 }

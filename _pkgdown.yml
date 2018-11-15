@@ -1,0 +1,38 @@
+reference:
+  - title: "Model fitting functions (nls, lme, nlme)"
+    desc: >
+      Functions that fits particular models to the input data
+    contents:
+      - starts_with("mod_")
+  - title: "Import / Initialization"
+    desc: "Functions for initializing, reading or writing data."
+    contents:
+      - import_data
+      - init_list
+  - title: "Plots"
+    desc: "Automatic plot generation"
+    contents:
+      - starts_with("plot_")
+  - title: "Helpers"
+    desc: "Different helpers (Al-Kashi, curvature, distances...)"
+    contents:
+      - AlKashi
+      - curvature
+      - curvature_error
+      - deviation_A
+      - distance_2D
+      - find_angle
+      - leaflet_length
+      - leaflet_shape_nls
+      - leaf_curvature
+      - object_lenght
+      - object_tans
+      - optim_Leaf_Curv_Infl
+      - section_height
+      - shape_beta
+      - sigmoid
+      - Stem_height
+  - title: "Tests"
+    desc: "Helper functions for testing the input data format or missing values"
+    contents:
+      - test_Area

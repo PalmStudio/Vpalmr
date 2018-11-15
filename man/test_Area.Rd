@@ -2,9 +2,12 @@
 % Please edit documentation in R/test_inputs.R
 \name{test_Area}
 \alias{test_Area}
+\alias{test_petiole_width}
 \title{Test the Area data.frame}
 \usage{
 test_Area(Area)
+
+test_petiole_width(x)
 }
 \arguments{
 \item{Area}{The Area data.frame}

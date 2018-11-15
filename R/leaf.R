@@ -189,13 +189,11 @@ deviation_A=function(devC,Length){
 #' @description Computes the leaf section height from its
 #' relative position on the leaf and the \code{a} parameter.
 #'
-#' @param PositionRelativeRachis Relative position on the rachis (0-1)
+#' @param Position Relative position on the rachis (0-1)
 #' @param a Parameter
 #'
-#' @return
+#' @return The section height
 #' @export
-#'
-#' @examples
 section_height= function(Position,a){
   1 + a*(Position**3)
 }
