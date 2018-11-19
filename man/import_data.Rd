@@ -5,7 +5,7 @@
 \title{Import all data}
 \usage{
 import_data(parameter, development, phylotaxy, declination, curvature, toricity,
-  leaf_area, axial_angle, petiole_width, twist)
+  leaf_area, axial_angle, petiole_width, twist, map)
 }
 \arguments{
 \item{parameter}{File path to the parameter file (ParameterSimu.csv)}
@@ -28,6 +28,8 @@ import_data(parameter, development, phylotaxy, declination, curvature, toricity,
 
 \item{twist}{File path to the leaf twist file (Torsion_SMSE14.csv), used to compute
 leaf nerve height.}
+
+\item{map}{Physiological age requested in month after planting}
 }
 \value{
 A list of the imported and pre-processed files

@@ -112,7 +112,8 @@ extract parameters used as VPalm inputs</p>
 
 <span class='fu'>mod_stem_height</span>(<span class='no'>data</span>)
 
-<span class='fu'>mod_rachis_length</span>(<span class='no'>data</span>)
+<span class='fu'>mod_rachis_length</span>(<span class='no'>data</span>, <span class='kw'>param_controle</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/lmeControl'>lmeControl</a></span>(<span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>,
+  <span class='kw'>niterEM</span> <span class='kw'>=</span> <span class='fl'>25000</span>))
 
 <span class='fu'>mod_petiole_ratio</span>(<span class='no'>data</span>, <span class='no'>Physio_age</span>)
 
@@ -120,11 +121,44 @@ extract parameters used as VPalm inputs</p>
 
 <span class='fu'>mod_nb_leaflet</span>(<span class='no'>data</span>)
 
-<span class='fu'>mod_C_declination</span>(<span class='no'>data</span>)
+<span class='fu'>mod_C_declination</span>(<span class='no'>data</span>, <span class='kw'>param_controle</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/lmeControl'>lmeControl</a></span>(<span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>,
+  <span class='kw'>niterEM</span> <span class='kw'>=</span> <span class='fl'>25000</span>))
 
 <span class='fu'>mod_leaf_curvature</span>(<span class='no'>data</span>)
 
-<span class='fu'>mod_A_declination</span>(<span class='no'>data</span>, <span class='kw'>decMaxA</span> <span class='kw'>=</span> <span class='fl'>180</span>, <span class='kw'>decSlopeA</span> <span class='kw'>=</span> <span class='fl'>0.01</span>)</pre>
+<span class='fu'>mod_A_declination</span>(<span class='no'>data</span>, <span class='kw'>decMaxA</span> <span class='kw'>=</span> <span class='fl'>180</span>, <span class='kw'>decSlopeA</span> <span class='kw'>=</span> <span class='fl'>0.01</span>)
+
+<span class='fu'>mod_A_deviation</span>(<span class='no'>data</span>)
+
+<span class='fu'>mod_leaflet_position</span>(<span class='no'>data</span>, <span class='kw'>param_controle</span> <span class='kw'>=</span> <span class='kw pkg'>stats</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/stats/topics/nls.control'>nls.control</a></span>(<span class='kw'>maxiter</span> <span class='kw'>=</span>
+  <span class='fl'>5e+05</span>))
+
+<span class='fu'>mod_leaflet_length_B</span>(<span class='no'>data</span>, <span class='kw'>param_controle</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/lmeControl'>lmeControl</a></span>(<span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>,
+  <span class='kw'>niterEM</span> <span class='kw'>=</span> <span class='fl'>25000</span>))
+
+<span class='fu'>mod_leaflet_width_B</span>(<span class='no'>data</span>, <span class='kw'>param_controle</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/lmeControl'>lmeControl</a></span>(<span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>,
+  <span class='kw'>niterEM</span> <span class='kw'>=</span> <span class='fl'>25000</span>))
+
+<span class='fu'>mod_leaflet_length</span>(<span class='no'>data</span>, <span class='kw'>param_controle</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/nlmeControl'>nlmeControl</a></span>(<span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>,
+  <span class='kw'>niterEM</span> <span class='kw'>=</span> <span class='fl'>25000</span>))
+
+<span class='fu'>mod_leaflet_width</span>(<span class='no'>data</span>, <span class='kw'>param_controle</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/nlmeControl'>nlmeControl</a></span>(<span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>,
+  <span class='kw'>niterEM</span> <span class='kw'>=</span> <span class='fl'>25000</span>))
+
+<span class='fu'>mod_leaflet_axial_angle</span>(<span class='no'>data</span>, <span class='kw'>param_controle</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/nlmeControl'>nlmeControl</a></span>(<span class='kw'>maxIter</span> <span class='kw'>=</span>
+  <span class='fl'>5e+05</span>, <span class='kw'>niterEM</span> <span class='kw'>=</span> <span class='fl'>25000</span>))
+
+<span class='fu'>mod_leaflet_radial_angle</span>(<span class='no'>data</span>)
+
+<span class='fu'>mod_leaflet_type_freq</span>(<span class='no'>data</span>)
+
+<span class='fu'>mod_leaflet_shape</span>(<span class='no'>data</span>)
+
+<span class='fu'>mod_petiole_width_C</span>(<span class='no'>data</span>, <span class='kw'>param_controle</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/lmeControl'>lmeControl</a></span>(<span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>,
+  <span class='kw'>niterEM</span> <span class='kw'>=</span> <span class='fl'>25000</span>))
+
+<span class='fu'>mod_petiole_height</span>(<span class='no'>data</span>, <span class='kw'>param_controle</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/nlmeControl'>nlmeControl</a></span>(<span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>,
+  <span class='kw'>niterEM</span> <span class='kw'>=</span> <span class='fl'>25000</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -173,15 +207,37 @@ function needs the decAInfl parameter computed by <code>mod_leaf_curvature()</co
 checks if the parameter is present in the input data, and computes it if absent. The user
 should avoid this step by providing the parameter when possible because the
 <code>mod_leaf_curvature()</code> call can be computationally intensive.</p></li>
+<li><p><code>mod_A_deviation()</code>: model the leaf deviation by using the distance from C point
+and the length of the leaf between A and C point as inputs for <code><a href='deviation_A.html'>deviation_A()</a></code>, and
+return the average value and standard deviation per progeny.</p></li>
+<li><p><code>mod_leaflet_position()</code>: model the leaflet position along the leaf rachis.</p></li>
+<li><p><code>mod_leaflet_length_B()</code>: model the leaflet length at B point</p></li>
+<li><p><code>mod_leaflet_width_B()</code>: model the leaflet width at B point</p></li>
+<li><p><code>mod_leaflet_length()</code>: model the leaflet relative length from its relative position
+on the rachis</p></li>
+<li><p><code>mod_leaflet_width()</code>:  model the leaflet relative width from its relative position
+on the rachis</p></li>
+<li><p><code>mod_leaflet_axial_angle()</code>: model the leaflet axial angle from its relative position
+on the rachis</p></li>
+<li><p><code>mod_leaflet_radial_angle()</code>: model the leaflet radial angle from its relative position
+on the rachis</p></li>
+<li><p><code>mod_leaflet_type_freq()</code>: model the leaflet radial angle frequency along the rachis.
+Leaflets can be positionned up, medium or down.</p></li>
+<li><p><code>mod_leaflet_shape()</code>: model the leaflet shape</p></li>
+<li><p><code>mod_petiole_width_C()</code>: model the petiole width at C point</p></li>
+<li><p><code>mod_petiole_height()</code>: model the petiole section height using <code><a href='section_height.html'>section_height()</a></code></p></li>
 </ul>
     
     <h2 class="hasAnchor" id="the-models"><a class="anchor" href="#the-models"></a>The models</h2>
 
     
     <ul>
-<li><p><code><a href='http://www.rdocumentation.org/packages/stats/topics/nls'>stats::nls()</a></code> is used for <code>mod_stem_diameter()</code>, <code>mod_stem_height()</code>, <code>mod_nb_leaflet()</code></p></li>
-<li><p><code><a href='http://www.rdocumentation.org/packages/nlme/topics/lme'>nlme::lme()</a></code> is used for <code>mod_rachis_length()</code>, <code>mod_C_declination()</code></p></li>
-<li><p><code><a href='http://www.rdocumentation.org/packages/nlme/topics/nlme'>nlme::nlme()</a></code> is used for</p></li>
+<li><p><code><a href='http://www.rdocumentation.org/packages/stats/topics/nls'>stats::nls()</a></code> is used for <code>mod_stem_diameter()</code>, <code>mod_stem_height()</code>,
+<code>mod_nb_leaflet()</code>, <code>mod_leaflet_position()</code></p></li>
+<li><p><code><a href='http://www.rdocumentation.org/packages/nlme/topics/lme'>nlme::lme()</a></code> is used for <code>mod_rachis_length()</code>, <code>mod_C_declination()</code>,
+<code>mod_leaflet_length_B()</code>, <code>mod_petiole_width_C()</code>, <code>mod_petiole_height()</code></p></li>
+<li><p><code><a href='http://www.rdocumentation.org/packages/nlme/topics/nlme'>nlme::nlme()</a></code> is used for <code>mod_leaflet_length()</code>, <code>mod_leaflet_width()</code>,
+<code>mod_leaflet_axial_angle()</code></p></li>
 <li><p><code><a href='http://www.rdocumentation.org/packages/base/topics/mean'>base::mean()</a></code> is used for <code>mod_petiole_ratio()</code></p></li>
 <li><p><code><a href='http://www.rdocumentation.org/packages/stats/topics/optim'>stats::optim()</a></code> is used by <code>mod_leaf_curvature()</code></p></li>
 </ul>

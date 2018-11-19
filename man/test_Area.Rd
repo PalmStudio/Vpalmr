@@ -2,22 +2,26 @@
 % Please edit documentation in R/test_inputs.R
 \name{test_Area}
 \alias{test_Area}
-\alias{test_petiole_width}
-\title{Test the Area data.frame}
+\alias{test_development}
+\title{Test the input data}
 \usage{
-test_Area(Area)
+test_Area(x)
 
-test_petiole_width(x)
+test_development(x)
 }
 \arguments{
-\item{Area}{The Area data.frame}
+\item{x}{The input data.frame}
 }
 \value{
-\code{TRUE} if the file had no major problem, or a special output that points to the potential
-error
+\code{NULL} if no major issue was found in the file, or a character string of all
+cumulated potential errors in the data.frame.
 }
 \description{
-Performs several tests on the Area file to check for potential errors or typos
+Performs several tests on the VPalm input files to check for potential
+errors such as wrong format, missing essential data or typos.
+}
+\details{
+The outputs of the functions are used to make global warnings, messages or errors
 }
 \examples{
 \dontrun{

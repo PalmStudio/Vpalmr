@@ -197,3 +197,19 @@ object_tans= function(x,y,res = 1,method = c("loess","smooth.spline"),...){
 AlKashi= function(x,l){
   acos((l^2+l^2-x^2)/(2*l*l))*180/pi
 }
+
+
+
+#' warning construction
+#'
+#' @description Helper to add warnings and return only one
+#'
+#' @param x A previous warning message as a character string
+#'
+#' @return One warning from two: the warn object and x
+#'
+#' @keywords internal
+warn_inc= function(warn,x){
+  warn= paste(warn,"\n",x)
+}
+

@@ -13,6 +13,7 @@
 #' @param petiole_width File path to the leaf petiole width file (Petiole_SMSE14.csv)
 #' @param twist         File path to the leaf twist file (Torsion_SMSE14.csv), used to compute
 #'                      leaf nerve height.
+#' @param map           Physiological age requested in month after planting
 #'
 #' @return A list of the imported and pre-processed files
 #'
@@ -36,7 +37,7 @@
 #' @export
 #'
 import_data= function(parameter,development,phylotaxy,declination,curvature,toricity,
-                      leaf_area,axial_angle,petiole_width,twist){
+                      leaf_area,axial_angle,petiole_width,twist,map){
   # Parameter ---------------------------------------------------------------
 
   Parameter=
@@ -68,7 +69,6 @@ import_data= function(parameter,development,phylotaxy,declination,curvature,tori
            Leaflet_width4=Leaflet_width4/10,
            # StemDiameter------stem basis diameter
            StemDiameter= StemCircumference/pi)
-
 
   DataAll%<>%
     merge(nbLeafEmitted, by="Progeny")
@@ -117,6 +117,11 @@ import_data= function(parameter,development,phylotaxy,declination,curvature,tori
     mutate(LeafletBWidth= ifelse(is.na(LeafletBWidth),max_width,LeafletBWidth))
 
 
+
+  test_dev= test_development(x = DataAll)
+  if(!is.null(test_dev)){
+    warning(paste("Potential error in Development file:\n",test_dev))
+  }
 
   # Phylotaxy data ----------------------------------------------------------
 
@@ -211,7 +216,38 @@ import_data= function(parameter,development,phylotaxy,declination,curvature,tori
     filter(MAP<=Map_Max & MAP>= Map_Min)%>%
     select(-Map_Max,-Map_Min)
 
+  # Computing the total number of leaflets per leaf from the sum of the number of leaflets
+  # that are on position 0
+  Area=
+    Area%>%
+    group_by(TreeNumber,LeafIndex)%>%
+    mutate(NbLeaflets_0= ifelse(PositionOnLeaflet==0,NbLeaflets,0),
+           TotalLeaflets= sum(NbLeaflets_0))%>%
+    select(-NbLeaflets_0)
 
+  # Re-computing the leaflet rank on rachis:
+  Area%<>%
+    group_by(Progeny,TreeNumber,LeafIndex,Section)%>%
+    arrange(.by_group = T)%>%
+    summarise(LeafletRankOnSection= unique(LeafletRankOnSection),
+              NbLeaflets= unique(NbLeaflets))%>%
+    ungroup()%>%group_by(Progeny,TreeNumber,LeafIndex)%>%
+    mutate(cum_LeafletRank= cumsum(NbLeaflets))%>%
+    mutate(LeafletRank= lag(cum_LeafletRank,default = 0)+LeafletRankOnSection)%>%
+    select(-cum_LeafletRank,-LeafletRankOnSection,-NbLeaflets)%>%
+    merge(Area,., by=c("Progeny","TreeNumber","LeafIndex","Section"),sort = F)
+
+  # Deriving some new varibales:
+  Area=
+    Area%>%
+    mutate(RelativeLeafletRank= LeafletRank/TotalLeaflets,
+           RelativePositionRachis= PositionOnRachis/LeafLength)
+
+
+  test_area= test_Area(x = Area)
+  if(!is.null(test_area)){
+    warning(paste("Potential error in Area file:\n",test_area))
+  }
   # Leaf axial angle --------------------------------------------------------
 
   LftAngle=
@@ -255,7 +291,8 @@ import_data= function(parameter,development,phylotaxy,declination,curvature,tori
     mutate(Petiole_relative_width= Petiole_width/Petiole_max_width,
            Petiole_relative_height= Petiole_height/Petiole_max_height)
 
-  out= list(Parameter,DataAll,Phylo,Dec,Curve,Tor,Area,LftAngle,PetioleSectionC,RachisHeight)
+  out= list(Parameter,DataAll,Phylo,Dec,Curve,Tor,Area,LftAngle,PetioleSectionC,
+            RachisHeight)
   names(out)=
     c("Parameter","DataAll","Phylo","Dec","Curve","Tor","Area","LftAngle",
       "PetioleSectionC","RachisHeight")

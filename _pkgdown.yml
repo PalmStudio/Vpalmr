@@ -35,4 +35,4 @@ reference:
   - title: "Tests"
     desc: "Helper functions for testing the input data format or missing values"
     contents:
-      - test_Area
+      - starts_with("test_")

@@ -10,13 +10,26 @@
 \alias{mod_C_declination}
 \alias{mod_leaf_curvature}
 \alias{mod_A_declination}
+\alias{mod_A_deviation}
+\alias{mod_leaflet_position}
+\alias{mod_leaflet_length_B}
+\alias{mod_leaflet_width_B}
+\alias{mod_leaflet_length}
+\alias{mod_leaflet_width}
+\alias{mod_leaflet_axial_angle}
+\alias{mod_leaflet_radial_angle}
+\alias{mod_leaflet_type_freq}
+\alias{mod_leaflet_shape}
+\alias{mod_petiole_width_C}
+\alias{mod_petiole_height}
 \title{Fit the models}
 \usage{
 mod_stem_diameter(data)
 
 mod_stem_height(data)
 
-mod_rachis_length(data)
+mod_rachis_length(data, param_controle = nlme::lmeControl(maxIter = 5e+05,
+  niterEM = 25000))
 
 mod_petiole_ratio(data, Physio_age)
 
@@ -24,11 +37,44 @@ mod_B_position(data, Physio_age)
 
 mod_nb_leaflet(data)
 
-mod_C_declination(data)
+mod_C_declination(data, param_controle = nlme::lmeControl(maxIter = 5e+05,
+  niterEM = 25000))
 
 mod_leaf_curvature(data)
 
 mod_A_declination(data, decMaxA = 180, decSlopeA = 0.01)
+
+mod_A_deviation(data)
+
+mod_leaflet_position(data, param_controle = stats::nls.control(maxiter =
+  5e+05))
+
+mod_leaflet_length_B(data, param_controle = nlme::lmeControl(maxIter = 5e+05,
+  niterEM = 25000))
+
+mod_leaflet_width_B(data, param_controle = nlme::lmeControl(maxIter = 5e+05,
+  niterEM = 25000))
+
+mod_leaflet_length(data, param_controle = nlme::nlmeControl(maxIter = 5e+05,
+  niterEM = 25000))
+
+mod_leaflet_width(data, param_controle = nlme::nlmeControl(maxIter = 5e+05,
+  niterEM = 25000))
+
+mod_leaflet_axial_angle(data, param_controle = nlme::nlmeControl(maxIter =
+  5e+05, niterEM = 25000))
+
+mod_leaflet_radial_angle(data)
+
+mod_leaflet_type_freq(data)
+
+mod_leaflet_shape(data)
+
+mod_petiole_width_C(data, param_controle = nlme::lmeControl(maxIter = 5e+05,
+  niterEM = 25000))
+
+mod_petiole_height(data, param_controle = nlme::nlmeControl(maxIter = 5e+05,
+  niterEM = 25000))
 }
 \arguments{
 \item{data}{Input data, generally one of the objects from \code{\link[=import_data]{import_data()}}}
@@ -70,15 +116,37 @@ function needs the decAInfl parameter computed by \code{\link[=mod_leaf_curvatur
 checks if the parameter is present in the input data, and computes it if absent. The user
 should avoid this step by providing the parameter when possible because the
 \code{\link[=mod_leaf_curvature]{mod_leaf_curvature()}} call can be computationally intensive.
+\item \code{\link[=mod_A_deviation]{mod_A_deviation()}}: model the leaf deviation by using the distance from C point
+and the length of the leaf between A and C point as inputs for \code{\link[=deviation_A]{deviation_A()}}, and
+return the average value and standard deviation per progeny.
+\item \code{\link[=mod_leaflet_position]{mod_leaflet_position()}}: model the leaflet position along the leaf rachis.
+\item \code{\link[=mod_leaflet_length_B]{mod_leaflet_length_B()}}: model the leaflet length at B point
+\item \code{\link[=mod_leaflet_width_B]{mod_leaflet_width_B()}}: model the leaflet width at B point
+\item \code{\link[=mod_leaflet_length]{mod_leaflet_length()}}: model the leaflet relative length from its relative position
+on the rachis
+\item \code{\link[=mod_leaflet_width]{mod_leaflet_width()}}:  model the leaflet relative width from its relative position
+on the rachis
+\item \code{\link[=mod_leaflet_axial_angle]{mod_leaflet_axial_angle()}}: model the leaflet axial angle from its relative position
+on the rachis
+\item \code{\link[=mod_leaflet_radial_angle]{mod_leaflet_radial_angle()}}: model the leaflet radial angle from its relative position
+on the rachis
+\item \code{\link[=mod_leaflet_type_freq]{mod_leaflet_type_freq()}}: model the leaflet radial angle frequency along the rachis.
+Leaflets can be positionned up, medium or down.
+\item \code{\link[=mod_leaflet_shape]{mod_leaflet_shape()}}: model the leaflet shape
+\item \code{\link[=mod_petiole_width_C]{mod_petiole_width_C()}}: model the petiole width at C point
+\item \code{\link[=mod_petiole_height]{mod_petiole_height()}}: model the petiole section height using \code{\link[=section_height]{section_height()}}
 }
 }
 
 \section{The models}{
 
 \itemize{
-\item \code{\link[stats:nls]{stats::nls()}} is used for \code{\link[=mod_stem_diameter]{mod_stem_diameter()}}, \code{\link[=mod_stem_height]{mod_stem_height()}}, \code{\link[=mod_nb_leaflet]{mod_nb_leaflet()}}
-\item \code{\link[nlme:lme]{nlme::lme()}} is used for \code{\link[=mod_rachis_length]{mod_rachis_length()}}, \code{\link[=mod_C_declination]{mod_C_declination()}}
-\item \code{\link[nlme:nlme]{nlme::nlme()}} is used for
+\item \code{\link[stats:nls]{stats::nls()}} is used for \code{\link[=mod_stem_diameter]{mod_stem_diameter()}}, \code{\link[=mod_stem_height]{mod_stem_height()}},
+\code{\link[=mod_nb_leaflet]{mod_nb_leaflet()}}, \code{\link[=mod_leaflet_position]{mod_leaflet_position()}}
+\item \code{\link[nlme:lme]{nlme::lme()}} is used for \code{\link[=mod_rachis_length]{mod_rachis_length()}}, \code{\link[=mod_C_declination]{mod_C_declination()}},
+\code{\link[=mod_leaflet_length_B]{mod_leaflet_length_B()}}, \code{\link[=mod_petiole_width_C]{mod_petiole_width_C()}}, \code{\link[=mod_petiole_height]{mod_petiole_height()}}
+\item \code{\link[nlme:nlme]{nlme::nlme()}} is used for \code{\link[=mod_leaflet_length]{mod_leaflet_length()}}, \code{\link[=mod_leaflet_width]{mod_leaflet_width()}},
+\code{\link[=mod_leaflet_axial_angle]{mod_leaflet_axial_angle()}}
 \item \code{\link[base:mean]{base::mean()}} is used for \code{\link[=mod_petiole_ratio]{mod_petiole_ratio()}}
 \item \code{\link[stats:optim]{stats::optim()}} is used by \code{\link[=mod_leaf_curvature]{mod_leaf_curvature()}}
 }

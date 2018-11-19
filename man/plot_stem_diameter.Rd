@@ -10,13 +10,25 @@
 \alias{plot_C_declination}
 \alias{plot_leaf_curvature}
 \alias{plot_A_declination}
+\alias{plot_A_deviation}
+\alias{plot_leaflet_position}
+\alias{plot_leaflet_length_B}
+\alias{plot_leaflet_width_B}
+\alias{plot_leaflet_length}
+\alias{plot_leaflet_width}
+\alias{plot_leaflet_axial_angle}
+\alias{plot_leaflet_radial_angle}
+\alias{plot_leaflet_type_freq}
+\alias{plot_leaflet_shape}
+\alias{plot_petiole_width_C}
+\alias{plot_petiole_height}
 \title{Plot the architectural parameters estimations}
 \usage{
 plot_stem_diameter(data, model)
 
 plot_stem_height(data, model)
 
-plot_rachis_length(data, model)
+plot_rachis_length(data, model, nb_leaves)
 
 plot_petiole_ratio(data, model, Physio_age)
 
@@ -29,6 +41,30 @@ plot_C_declination(data, model)
 plot_leaf_curvature(data, model)
 
 plot_A_declination(data, model)
+
+plot_A_deviation(data, model)
+
+plot_leaflet_position(data, model, mode = c("Progeny", "Tree"))
+
+plot_leaflet_length_B(data, model)
+
+plot_leaflet_width_B(data, model)
+
+plot_leaflet_length(data, model)
+
+plot_leaflet_width(data, model)
+
+plot_leaflet_axial_angle(data, model)
+
+plot_leaflet_radial_angle(data, model)
+
+plot_leaflet_type_freq(model)
+
+plot_leaflet_shape(model)
+
+plot_petiole_width_C(data, model)
+
+plot_petiole_height(data, model)
 }
 \arguments{
 \item{data}{Input data, generally one of the objects from \code{\link[=import_data]{import_data()}}}
@@ -36,6 +72,9 @@ plot_A_declination(data, model)
 \item{model}{Model fitted from one of \link[=mod_stem_diameter]{models}}
 
 \item{Physio_age}{Physiological age, in number of leaves emmitted from birth}
+
+\item{mode}{Information level of the plot: "Progeny" for progeny scale, or "Tree"
+for tree scale.}
 }
 \value{
 A ggplot
@@ -60,7 +99,25 @@ length
 \item \code{\link[=plot_C_declination]{plot_C_declination()}}: plot the declination angle at C point in function of leaf rank
 \item \code{\link[=plot_leaf_curvature]{plot_leaf_curvature()}}: plot the leaf curvature in function of the relative position
 on the leaf
-\item \code{\link[=plot_A_declination]{plot_A_declination()}}; plot the leaf declination angle at A point in function of the C point
+\item \code{\link[=plot_A_declination]{plot_A_declination()}}: plot the leaf declination angle at A point in function of the C point
+\item \code{\link[=plot_A_deviation]{plot_A_deviation()}}: plot the leaf deviation computed using \code{\link[=deviation_A]{deviation_A()}}, compared to the
+value used by Vpalm (the average value).
+\item \code{\link[=plot_leaflet_position]{plot_leaflet_position()}}: plot the leaflet position along the rachis relative rank
+for each progeny with \code{mode= "Progeny"} or for each Progeny and colored by Tree with
+\code{mode= "Tree"}
+\item \code{\link[=plot_leaflet_length_B]{plot_leaflet_length_B()}}: plot the predicted leaflet length at B point
+\item \code{\link[=plot_leaflet_width_B]{plot_leaflet_width_B()}}: plot the predicted leaflet width at B point
+\item \code{\link[=plot_leaflet_length]{plot_leaflet_length()}}: plot the predicted relative leaflet length
+\item \code{\link[=plot_leaflet_width]{plot_leaflet_width()}}: plot the predicted leaflet width
+\item \code{\link[=plot_leaflet_axial_angle]{plot_leaflet_axial_angle()}}: plot the predicted leaflet axial angle from the relative
+position of the leaflet on the rachis
+\item \code{\link[=plot_leaflet_radial_angle]{plot_leaflet_radial_angle()}}: plot the leaflet radial angle from its relative position
+on the rachis
+\item \code{\link[=plot_leaflet_type_freq]{plot_leaflet_type_freq()}}: plot the leaflet radial angle frequency along the rachis.
+Leaflets can be positionned up, medium or down.
+\item \code{\link[=plot_leaflet_shape]{plot_leaflet_shape()}}: plot the leaflet shape
+\item \code{\link[=plot_petiole_width_C]{plot_petiole_width_C()}}: plot the petiole width at C point
+\item \code{\link[=plot_petiole_height]{plot_petiole_height()}}: plot the petiole heigth
 }
 
 @importFrom dplyr group_by do mutate filter
