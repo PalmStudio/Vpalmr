@@ -729,3 +729,95 @@ mod_petiole_height= function(data,control= nlme::nlmeControl(maxIter=500000,nite
            SdG1_rachisRelativeHeight= intervals(mod)$reStruct$TreeNumber[1,'est.'],
            rachisRelativeHeight_cov= list(vcov(mod)))
 }
+
+
+#' Fit all models
+#'
+#' @param data  A list of all data (generally from [import_data()])
+#'
+#' @return A list of all model fits
+#' @export
+#'
+mod_all= function(x){
+
+  # STEM SCALE --------------------------------------------------------------
+
+  # Stem diameter at the level of the considered leaf
+  StemDiam.nls= mod_stem_diameter(DataAll)
+
+  # Stem height
+  model.stemHeight= mod_stem_height(DataAll)
+
+  # LEAF SCALE --------------------------------------------------------------
+
+  # Rachis length
+  rachisLength.lme= mod_rachis_length(DataAll)
+
+  # Ratio petiol/rachis
+  Pet= mod_petiole_ratio(DataAll,Physio_age)
+
+  # B point position
+  Bpos= mod_B_position(DataAll,Physio_age)
+
+  # Number of leaflets
+  nbLeaflets.nls= mod_nb_leaflet(DataAll)
+
+  # Declination at C point
+  decliC.lme= mod_C_declination(Dec)
+
+  # Leaf curvature
+  df_optim= mod_leaf_curvature(Curve)
+
+  Curve=
+    merge(Curve,df_optim%>%select(-value,-conv),
+          by = c('Progeny','TreeNumber'),all.x = T, sort = F)%>%
+    arrange(Progeny, TreeNumber, Rank, RelativePositionRachisEstim)
+
+  # Declination at A point
+  decliA_nls= mod_A_declination(Curve)
+
+  # Rachis deviation
+  Dev= mod_A_deviation(Curve)
+
+  # LEAFLET SCALE -----------------------------------------------------------
+
+  # Model the leaflet position along the leaf rachis
+  dispo_nls= mod_leaflet_position(DataAll)
+
+  # Leaflet length at Bpoint
+  leaflet_length_B.lme= mod_leaflet_length_B(DataAll)
+
+  # Leaflet width at Bpoint
+  leaflet_width_B.lme= mod_leaflet_width_B(DataAll)
+
+  # Leaflet relative length from relative position on rachis
+  leafleftLength.nlme= mod_leaflet_length(Area)
+
+  # Leaflet relative widths
+  leafletWidth.nlme= mod_leaflet_width(Area)
+
+  # Leaflet axial angle
+  axialAngle.nlme= mod_leaflet_axial_angle(LftAngle)
+
+  # Leaflet radial angle (mean radial angle vs relative position on rachis)
+  radial.nls= mod_leaflet_radial_angle(LftAngle)
+
+  # Frequency of leaflets type depending on their radial angle
+  Rep= mod_leaflet_type_freq(LftAngle)
+
+  # Leaflet shape
+  Shape= mod_leaflet_shape(Area)
+
+  # NERVE SHAPE -------------------------------------------------------------
+
+  # Nerve width at C point
+  petioleWidthC.lme= mod_petiole_width_C(PetioleSectionC)
+
+  # Nerve height
+  rachisRelativeHeight.nlme= mod_petiole_height(RachisHeight)
+
+  list(StemDiam.nls,model.stemHeight,rachisLength.lme,Pet,Bpos,nbLeaflets.nls,
+       decliC.lme,df_optim,decliA_nls,Dev,dispo_nls,leaflet_length_B.lme,
+       leaflet_width_B.lme,leafleftLength.nlme,leafletWidth.nlme,axialAngle.nlme,
+       radial.nls,Rep,Shape,petioleWidthC.lme,rachisRelativeHeight.nlme)
+}

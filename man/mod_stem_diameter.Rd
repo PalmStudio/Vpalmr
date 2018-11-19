@@ -28,8 +28,8 @@ mod_stem_diameter(data)
 
 mod_stem_height(data)
 
-mod_rachis_length(data, param_controle = nlme::lmeControl(maxIter = 5e+05,
-  niterEM = 25000))
+mod_rachis_length(data, control = nlme::lmeControl(maxIter = 5e+05, niterEM =
+  25000))
 
 mod_petiole_ratio(data, Physio_age)
 
@@ -37,8 +37,8 @@ mod_B_position(data, Physio_age)
 
 mod_nb_leaflet(data)
 
-mod_C_declination(data, param_controle = nlme::lmeControl(maxIter = 5e+05,
-  niterEM = 25000))
+mod_C_declination(data, control = nlme::lmeControl(maxIter = 5e+05, niterEM =
+  25000))
 
 mod_leaf_curvature(data)
 
@@ -46,23 +46,22 @@ mod_A_declination(data, decMaxA = 180, decSlopeA = 0.01)
 
 mod_A_deviation(data)
 
-mod_leaflet_position(data, param_controle = stats::nls.control(maxiter =
-  5e+05))
+mod_leaflet_position(data, control = stats::nls.control(maxiter = 5e+05))
 
-mod_leaflet_length_B(data, param_controle = nlme::lmeControl(maxIter = 5e+05,
+mod_leaflet_length_B(data, control = nlme::lmeControl(maxIter = 5e+05, niterEM
+  = 25000))
+
+mod_leaflet_width_B(data, control = nlme::lmeControl(maxIter = 5e+05, niterEM
+  = 25000))
+
+mod_leaflet_length(data, control = nlme::nlmeControl(maxIter = 5e+05, niterEM
+  = 25000))
+
+mod_leaflet_width(data, control = nlme::nlmeControl(maxIter = 5e+05, niterEM =
+  25000))
+
+mod_leaflet_axial_angle(data, control = nlme::nlmeControl(maxIter = 5e+05,
   niterEM = 25000))
-
-mod_leaflet_width_B(data, param_controle = nlme::lmeControl(maxIter = 5e+05,
-  niterEM = 25000))
-
-mod_leaflet_length(data, param_controle = nlme::nlmeControl(maxIter = 5e+05,
-  niterEM = 25000))
-
-mod_leaflet_width(data, param_controle = nlme::nlmeControl(maxIter = 5e+05,
-  niterEM = 25000))
-
-mod_leaflet_axial_angle(data, param_controle = nlme::nlmeControl(maxIter =
-  5e+05, niterEM = 25000))
 
 mod_leaflet_radial_angle(data)
 
@@ -70,14 +69,16 @@ mod_leaflet_type_freq(data)
 
 mod_leaflet_shape(data)
 
-mod_petiole_width_C(data, param_controle = nlme::lmeControl(maxIter = 5e+05,
-  niterEM = 25000))
+mod_petiole_width_C(data, control = nlme::lmeControl(maxIter = 5e+05, niterEM
+  = 25000))
 
-mod_petiole_height(data, param_controle = nlme::nlmeControl(maxIter = 5e+05,
-  niterEM = 25000))
+mod_petiole_height(data, control = nlme::nlmeControl(maxIter = 5e+05, niterEM
+  = 25000))
 }
 \arguments{
 \item{data}{Input data, generally one of the objects from \code{\link[=import_data]{import_data()}}}
+
+\item{control}{The control parameters for each kind of model}
 
 \item{decMaxA}{The maximum allowed declination angle at the A point}
 

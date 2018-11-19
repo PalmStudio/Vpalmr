@@ -351,7 +351,7 @@ plot_leaflet_position= function(data, model, mode= c("Progeny","Tree")){
 
   if(mode=="Progeny"){
     plot_pos=
-    data%>%
+      data%>%
       ggplot(aes(x= RelativeLeafletRank, y= RelativePositionRachis))+
       facet_wrap(Progeny~.)+
       geom_point(aes(color= "Observed"))+
@@ -360,7 +360,7 @@ plot_leaflet_position= function(data, model, mode= c("Progeny","Tree")){
   }
   if(mode=="Tree"){
     plot_pos=
-    data%>%
+      data%>%
       group_by(Progeny,TreeNumber)%>%
       summarise(Tree_Index= unique(TreeNumber))%>%
       mutate(Tree_Index= seq_along(TreeNumber))%>% # compute a Tree Index
@@ -634,3 +634,38 @@ plot_petiole_height= function(data,model){
 }
 
 
+
+#' Plot all model outputs
+#'
+#' @param data  A list of all data (generally from [import_data()])
+#' @param model The models fitted on the data (generally from any [model][mod_stem_diameter()])
+#' @param nb_leaves The number of leaves to plot
+#'
+#' @return A list of all plots
+#' @export
+#'
+plot_all= function(data,model,nb_leaves= 45){
+  list(
+    stem_diameter= plot_stem_diameter(data = data$DataAll, model = model$StemDiam.nls),
+    stem_height= plot_stem_height(data$DataAll,model$model.stemHeight),
+    rachis_length= plot_rachis_length(data = data$DataAll,model = model$rachisLength.lme, nb_leaves = nb_leaves),
+    petiole_ratio= plot_petiole_ratio(data$DataAll,model$Pet,Physio_age),
+    B_position= plot_B_position(data$DataAll,model$Bpos,Physio_age),
+    nb_leaflet= plot_nb_leaflet(data$DataAll,model$nbLeaflets.nls),
+    C_declination= plot_C_declination(data$Dec, model$decliC.lme),
+    leaf_curvature= plot_leaf_curvature(data= data$Curve, model = df_optim),
+    A_declination= plot_A_declination(data$Curve,model$decliA_nls),
+    A_deviation= plot_A_deviation(data$Curve,model$Dev),
+    leaflet_position= plot_leaflet_position(data$DataAll,model$dispo_nls),
+    leaflet_length_B= plot_leaflet_length_B(data$DataAll,model$leaflet_length_B.lme),
+    leaflet_width_B= plot_leaflet_width_B(data$DataAll,model$leaflet_width_B.lme),
+    leaflet_length= plot_leaflet_length(data$Area, model$leafleftLength.nlme),
+    leaflet_width= plot_leaflet_width(data$Area, model$leafletWidth.nlme),
+    leaflet_axial_angle= plot_leaflet_axial_angle(data$LftAngle, model$axialAngle.nlme),
+    leaflet_radial_angle= plot_leaflet_radial_angle(data$LftAngle, model$radial.nls),
+    leaflet_type_freq= plot_leaflet_type_freq(model$Rep),
+    leaflet_shape= plot_leaflet_shape(model$Shape),
+    petiole_width_C= plot_petiole_width_C(data$PetioleSectionC, model$petioleWidthC.lme),
+    petiole_height= plot_petiole_height(data$RachisHeight, model$rachisRelativeHeight.nlme)
+  )
+}
