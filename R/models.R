@@ -632,7 +632,10 @@ mod_leaflet_radial_angle= function(data){
              control= list(maxiter= 5000000, minFactor= 0.000000000001, warnOnly= T)))%>%
     mutate(Mode= ifelse(Type==0,"sup","inf"),Type= "Low")
 
-  rbind(radialHigh.nls,radialLow.nls)%>%arrange(Progeny,Type,Mode)
+  radial= rbind(radialHigh.nls,radialLow.nls)%>%arrange(Progeny,Type,Mode)
+  radial$A0= sapply(radial%>%.$mod,function(x){coef(x)['A0']})
+  radial$Amax= sapply(radial%>%.$mod,function(x){coef(x)['Amax']})
+  radial
 }
 
 
@@ -674,9 +677,19 @@ mod_leaflet_shape= function(data){
       PositionRelative= unique(PositionRelative),
       shape= list(suppressWarnings(leaflet_shape_nls(Width_rel,Position_leaflet_rel))))
 
-  data.frame(Shape%>%select(-shape),
-             unlist(Shape$shape)%>%matrix(ncol = 2, byrow = T))%>%
-    rename(xm= X1, ym= X2)
+  Shape=
+    data.frame(Shape%>%select(-shape),
+               unlist(Shape$shape)%>%matrix(ncol = 2, byrow = T))%>%
+    rename(xm= X1, ym= X2)%>%
+    group_by(Progeny)%>%
+    mutate(xm.lm= list(lm(data=.,xm~PositionRelative)),
+           ym.lm= list(lm(data=.,ym~PositionRelative)))
+
+  Shape$xm_intercept= sapply(Shape$xm.lm, function(x){coef(x)[1]})
+  Shape$xm_slope= sapply(Shape$xm.lm, function(x){coef(x)[2]})
+  Shape$ym_intercept= sapply(Shape$ym.lm, function(x){coef(x)[1]})
+  Shape$ym_slope= sapply(Shape$ym.lm, function(x){coef(x)[2]})
+  Shape
 }
 
 #' @rdname mod_stem_diameter
