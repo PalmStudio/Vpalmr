@@ -730,13 +730,13 @@ mod_all= function(x){
   leafletWidth.nlme= mod_leaflet_width(x$Area)
 
   # Leaflet axial angle
-  axialAngle.nlme= mod_leaflet_axial_angle(LftAngle)
+  axialAngle.nlme= mod_leaflet_axial_angle(x$LftAngle)
 
   # Leaflet radial angle (mean radial angle vs relative position on rachis)
-  radial.nls= mod_leaflet_radial_angle(LftAngle)
+  radial.nls= mod_leaflet_radial_angle(x$LftAngle)
 
   # Frequency of leaflets type depending on their radial angle
-  Rep= mod_leaflet_type_freq(LftAngle)
+  Rep= mod_leaflet_type_freq(x$LftAngle)
 
   # Leaflet shape
   Shape= mod_leaflet_shape(x$Area)
@@ -749,8 +749,15 @@ mod_all= function(x){
   # Nerve height
   rachisRelativeHeight.nlme= mod_petiole_height(x$RachisHeight)
 
-  list(StemDiam.nls,model.stemHeight,rachisLength.lme,Pet,Bpos,nbLeaflets.nls,
-       decliC.lme,df_optim,decliA_nls,Dev,dispo_nls,leaflet_length_B.lme,
-       leaflet_width_B.lme,leafleftLength.nlme,leafletWidth.nlme,axialAngle.nlme,
-       radial.nls,Rep,Shape,petioleWidthC.lme,rachisRelativeHeight.nlme)
+  out=
+    list(StemDiam.nls,model.stemHeight,rachisLength.lme,Pet,Bpos,nbLeaflets.nls,
+         decliC.lme,df_optim,decliA_nls,Dev,dispo_nls,leaflet_length_B.lme,
+         leaflet_width_B.lme,leafleftLength.nlme,leafletWidth.nlme,axialAngle.nlme,
+         radial.nls,Rep,Shape,petioleWidthC.lme,rachisRelativeHeight.nlme)
+  names(out)=
+    c("StemDiam.nls","model.stemHeight","rachisLength.lme","Pet","Bpos","nbLeaflets.nls",
+      "decliC.lme","df_optim","decliA_nls","Dev","dispo_nls","leaflet_length_B.lme",
+      "leaflet_width_B.lme","leafleftLength.nlme","leafletWidth.nlme","axialAngle.nlme",
+      "radial.nls","Rep","Shape","petioleWidthC.lme","rachisRelativeHeight.nlme")
+  out
 }

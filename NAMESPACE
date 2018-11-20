@@ -2,6 +2,7 @@
 
 export(AlKashi)
 export(Stem_height)
+export(VPalm_list)
 export(coef_sample)
 export(curvature)
 export(curvature_error)

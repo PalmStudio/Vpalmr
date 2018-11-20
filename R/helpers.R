@@ -321,16 +321,14 @@ leaflet_axial_angle=function(position,angle_C,slope_C,angle_A){
 #' @return The leaflet axial angle
 #' @export
 leaflet_radial_angle=function(position,A0,Amax,Xm){
-  if(position<Xm){
     c1=(A0-Amax)/(Xm**2)
     b1=-2*c1*Xm
     a1=A0
-    y= a1+b1*position+c1*(position**2)
-  }else{
     c2=-Amax/((Xm-1)**2)
     b2=-2*c2*Xm
     a2=-b2-c2
-    y= a2+b2*position+c2*(position**2)
-  }
-  y
+
+    ifelse(position < Xm,
+           a1+b1*position+c1*(position**2),
+           a2+b2*position+c2*(position**2))
 }
