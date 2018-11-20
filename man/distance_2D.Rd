@@ -23,6 +23,6 @@ The function returns a 0 value for the first two points.
 \examples{
 \dontrun{
 library(Vpalmr)
-f.lengthEstim(x= 1:10,y= 1:10)
+distance_2D(x= 1:10,y= 1:10)
 }
 }

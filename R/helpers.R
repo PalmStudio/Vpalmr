@@ -12,7 +12,7 @@
 #' @examples
 #'\dontrun{
 #' library(Vpalmr)
-#' f.sigmo(X= 1/10,max= 3,slope= 1,infl=5)
+#' sigmoid(X= 1/10,max= 3,slope= 1,infl=5)
 #'}
 #' @export
 sigmoid=function(X,max,slope,infl){
@@ -36,7 +36,7 @@ sigmoid=function(X,max,slope,infl){
 #' @examples
 #'\dontrun{
 #' library(Vpalmr)
-#' f.lengthEstim(x= 1:10,y= 1:10)
+#' distance_2D(x= 1:10,y= 1:10)
 #'}
 #' @export
 distance_2D= function(x,y){
@@ -213,3 +213,124 @@ warn_inc= function(warn,x){
   warn= paste(warn,"\n",x)
 }
 
+
+
+
+#' Pull lme output
+#'
+#' @description Format lme outputs in a standard [tibble::tibble()] and computes
+#' some usefull informations such as covariance matrices. Carefull, this function is
+#' poorly designed for the moment and is only applicable on the lme used in this context
+#' because only two factors can be used.
+#'
+#' @param data The output from one of the [lme models][mod_stem_diameter()]
+#' @param epsilon epsilon value for matrix inversion
+#'
+#' @details Epsilon is used to avoid non semi-positive matrices, and is added to the matrix
+#' diagonal to make it closer to the identity matrix
+#'
+#' @return A [tibble::tibble()] with model outputs
+#'
+#' @export
+pull_lme= function(data, epsilon= 10^-6){
+  data%>%
+    dplyr::mutate(intercept= fixed.effects(mod)[1],
+                  slope= fixed.effects(mod)[2],
+                  cov= list(vcov(mod)),
+                  coef_mean= list(c(intercept, slope)),
+                  sigma= summary(mod)$sigma,
+                  label= list(colnames(random.effects(mod))),
+                  SdG1= as.numeric(VarCorr(mod)['(Intercept)','StdDev']),
+                  SdG2= as.numeric(VarCorr(mod)[2,'StdDev']),
+                  corG= as.numeric(VarCorr(mod)[2,'Corr']),
+                  MatG= list(matrix(
+                    data=c(SdG1^2,SdG1 * SdG2 * corG,
+                           SdG1 * SdG2 * corG,SdG2^2),
+                    nrow= length(coef_mean), ncol=length(coef_mean),
+                    dimnames=list(label, label))))%>%
+    coef_sample(epsilon)
+}
+
+
+#' Simulation coefficient
+#'
+#' @description Computes the simulation coefficients from a sampling in
+#' the variance-covariance matrix for VPalm input.
+#'
+#' @param data The output from one of the [lme models][mod_stem_diameter()]
+#' @param epsilon epsilon value for matrix inversion
+#'
+#' @details `data` must have a `MatG` column that represents the variance-covariance
+#' matrix, and a `coef_mean` for the mean coefficient values.
+#' Epsilon is used to avoid non semi-positive matrices, and is added to the matrix
+#' diagonal to make it closer to the identity matrix.
+#' The sampling is made using a normal distribution: `rnorm(mean= 0,sd= 1)`.
+#'
+#' @return The coefficients as a [tibble::tibble()]
+#'
+#' @export
+coef_sample= function(data,epsilon){
+  data$MatG=
+    lapply(data$MatG, function(x){
+      diag(x)= diag(x)+epsilon
+      x
+    })
+
+  data$coef_sd=
+    lapply(data$MatG, function(x){
+      matrix(data= rnorm(n=ncol(x)),ncol=ncol(x))%*%chol(x)
+    })
+
+  data$coef_simu=
+    data%>%
+    do(coef_simu= .$coef_mean + .$coef_sd)%>%
+    pull(coef_simu)
+  data
+}
+
+
+#' Axial insertion angle
+#'
+#' @description Computes the leaflet axial insertion angle
+#'
+#' @param position Relative position of the leaflet
+#' @param angle_C  Angle of the leaflet compared to C point
+#' @param slope_C  Slope of the leaflet to C point relationship
+#' @param angle_A  Angle of the leaflet compared to A point
+#'
+#' @return The leaflet axial angle
+#' @export
+leaflet_axial_angle=function(position,angle_C,slope_C,angle_A){
+  a= angle_C**2
+  b= slope_C*2*sqrt(a)
+  c= angle_A**2-a-b
+  sqrt(a+b*position+c*(position**3))
+}
+
+
+
+#' Radial insertion angle
+#'
+#' @description Computes the leaflet radial insertion angle
+#'
+#' @param position Relative position of the leaflet
+#' @param A0   Intercept
+#' @param Amax Maximum angle
+#' @param Xm   Maximum position value
+#'
+#' @return The leaflet axial angle
+#' @export
+leaflet_radial_angle=function(position,A0,Amax,Xm){
+  if(position<Xm){
+    c1=(A0-Amax)/(Xm**2)
+    b1=-2*c1*Xm
+    a1=A0
+    y= a1+b1*position+c1*(position**2)
+  }else{
+    c2=-Amax/((Xm-1)**2)
+    b2=-2*c2*Xm
+    a2=-b2-c2
+    y= a2+b2*position+c2*(position**2)
+  }
+  y
+}

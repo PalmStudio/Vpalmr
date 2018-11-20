@@ -907,7 +907,10 @@ estimate_archi= function(progeny,map,Dec){
     #C angle declination#
     #####################
 
-    coef.decliC_sd<-matrix(data=rnorm(n=ncol(MatG_decliC)),ncol=ncol(MatG_decliC),dimnames=list(Progeny= Progeny,Effet=rownames(MatG_decliC)))%*% chol(MatG_decliC)
+    coef.decliC_sd<-
+      matrix(data=rnorm(n=ncol(MatG_decliC)),ncol=ncol(MatG_decliC),
+             dimnames=list(Progeny= Progeny,Effet=rownames(MatG_decliC)))%*%
+      chol(MatG_decliC)
 
     coef.decliC_simu= coef.decliC_mean + coef.decliC_sd
 

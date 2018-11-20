@@ -103,7 +103,7 @@ mod_stem_diameter= function(data){
     dplyr::mutate(finalStemDiam= coef(mod)['finalStemDiam'],
                   StemDiamSlope= coef(mod)['StemDiamSlope'],
                   StemDiamInfl= coef(mod)['StemDiamInfl'],
-                  residStemDiam=summary(mod)$sigma)
+                  residStemDiam= summary(mod)$sigma)
 }
 
 
@@ -124,8 +124,9 @@ mod_stem_height= function(data){
 
 #' @rdname mod_stem_diameter
 #' @export
-mod_rachis_length= function(data, control= nlme::lmeControl(maxIter=500000,
-                                                                   niterEM=25000)){
+mod_rachis_length= function(data, epsilon=10^-6,
+                            control= nlme::lmeControl(maxIter=500000,
+                                                      niterEM=25000)){
   data%>%
     filter(TotalEmitted<= Physio_age+30 & TotalEmitted>= Physio_age-30 &
              !is.na(RachisLength))%>%
@@ -135,28 +136,13 @@ mod_rachis_length= function(data, control= nlme::lmeControl(maxIter=500000,
                    data= .,
                    random=~1+ LeafNumber |TreeNumber,method='ML',
                    control= control))%>%
-    mutate(rachisLength_intercept= summary(mod)$coefficients$fixed[1],
-           rachisLength_slope= summary(mod)$coefficients$fixed[2],
-           rachisLength_cov= list(vcov(mod)),
-           coef.rachisLength_mean= list(c(rachisLength_intercept, rachisLength_slope)),
-           SigmaR_rachisLength= summary(mod)$sigma,
-           label.rachisLength.lme= list(colnames(summary(mod)$coefficients$random$TreeNumber)),
-           SdG1_rachisLength= as.numeric(VarCorr(mod)['(Intercept)','StdDev']),
-           SdG2_rachisLength= as.numeric(VarCorr(mod)['LeafNumber','StdDev']),
-           corG_rachisLength= as.numeric(VarCorr(mod)['LeafNumber','Corr']),
-           MatG_rachisLength= list(
-             matrix(data=c(SdG1_rachisLength^2,
-                           SdG1_rachisLength* SdG2_rachisLength* corG_rachisLength,
-                           SdG1_rachisLength* SdG2_rachisLength* corG_rachisLength,
-                           SdG2_rachisLength ^2),
-                    nrow= length(coef.rachisLength_mean), ncol=length(coef.rachisLength_mean),
-                    dimnames=list(label.rachisLength.lme, label.rachisLength.lme))))
+    pull_lme(epsilon= epsilon)
 }
 
 
 #' @rdname mod_stem_diameter
 #' @export
-mod_petiole_ratio= function(data,Physio_age){
+mod_petiole_ratio= function(data){
 
   Pet=
     data%>%
@@ -201,7 +187,7 @@ mod_petiole_ratio= function(data,Physio_age){
 
 #' @rdname mod_stem_diameter
 #' @export
-mod_B_position= function(data,Physio_age){
+mod_B_position= function(data){
 
   Pet=
     data%>%
@@ -260,16 +246,17 @@ mod_nb_leaflet= function(data){
     mutate(nbMax= coef(mod)['nbMax'],
            nbSlope= coef(mod)['nbSlope'],
            nbInfl= coef(mod)['nbInfl'],
-           SigmaR_nbLeaflets= summary(mod)$sigma,
-           coef.nbLeaflets_mean= list(c(nbMax, nbSlope, nbInfl)),
-           nbLeaflets_cov= list(vcov(mod)))
+           sigma= summary(mod)$sigma,
+           coef_mean= list(c(nbMax, nbSlope, nbInfl)),
+           cov= list(vcov(mod)))
 }
 
 
 #' @rdname mod_stem_diameter
 #' @export
-mod_C_declination= function(data, control= nlme::lmeControl(maxIter=500000,
-                                                                   niterEM=25000)){
+mod_C_declination= function(data, epsilon= 0,
+                            control= nlme::lmeControl(maxIter=500000,
+                                                      niterEM=25000)){
   data%>%
     filter(!is.na(Decli_C))%>%
     group_by(Progeny)%>%
@@ -278,22 +265,7 @@ mod_C_declination= function(data, control= nlme::lmeControl(maxIter=500000,
              data= .,
              random= ~1 + Rank |TreeNumber,method='ML',
              control= control))%>%
-    mutate(decliC_intercept= summary(mod)$coefficients$fixed[1],
-           decliC_slope= summary(mod)$coefficients$fixed[2],
-           SigmaR_decliC= summary(mod)$sigma,
-           SdG1_decli= as.numeric(VarCorr(mod)['(Intercept)','StdDev']),
-           SdG2_decli= as.numeric(VarCorr(mod)['Rank','StdDev']),
-           corG_decli= as.numeric(VarCorr(mod)['Rank','Corr']),
-           decliC_cov= list(vcov(mod)),
-           coef.decliC_mean= list(c(decliC_intercept, decliC_slope)),
-           label.decliC.lme= list(colnames(summary(mod)$coefficients$random$TreeNumber)),
-           MatG_decliC= list(
-             matrix(data= c(SdG1_decli^2,
-                            SdG1_decli*SdG2_decli* corG_decli,
-                            SdG1_decli*SdG2_decli* corG_decli,SdG2_decli^2),
-                    nrow=length(coef.decliC_mean),
-                    ncol=length(coef.decliC_mean),
-                    dimnames=list(label.decliC.lme, label.decliC.lme))))
+    pull_lme(epsilon= epsilon)
 }
 
 
@@ -327,7 +299,7 @@ mod_A_declination= function(data, decMaxA= 180, decSlopeA= 0.01){
              start=list(decAInfl= mean(.$decAInfl)),upper=c(decAInfl =120),
              lower= list(infl=0),algorithm='port'))%>%
     mutate(decInflA= coef(decliA_nls),
-           SigmaR_decliA= summary(decliA_nls)$sigma)
+           sigma= summary(decliA_nls)$sigma)
 }
 
 
@@ -346,10 +318,9 @@ mod_A_deviation= function(data){
 
 #' @rdname mod_stem_diameter
 #' @export
-mod_leaflet_position= function(data, control= stats::nls.control(maxiter=500000)){
-  # Predicting the leaflet position along the rachis:
-
-    data%>%
+mod_leaflet_position= function(data, Area,
+                               control= stats::nls.control(maxiter=500000)){
+  data%>%
     group_by(TreeNumber,LeafIndex)%>%
     summarise(LeafNumber= min(LeafNumber,na.rm = T))%>%
     merge(Area,., by=c("TreeNumber","LeafIndex"), sort= F)%>%
@@ -364,14 +335,15 @@ mod_leaflet_position= function(data, control= stats::nls.control(maxiter=500000)
              control=control))%>%
     mutate(coefDispo= coef(dispo_nls),
            coefDispo_SD= summary(dispo_nls)$parameters[,'Std. Error'],
-           residDispo= summary(dispo_nls)$sigma)
+           sigma= summary(dispo_nls)$sigma)
 }
 
 
 #' @rdname mod_stem_diameter
 #' @export
-mod_leaflet_length_B= function(data,control= nlme::lmeControl(maxIter=500000,
-                                                                     niterEM=25000)){
+mod_leaflet_length_B= function(data, epsilon= 2e-06,
+                               control= nlme::lmeControl(maxIter=500000,
+                                                         niterEM=25000)){
   data%>%
     filter(!is.na(LeafletBLength))%>%
     group_by(Progeny)%>%
@@ -380,27 +352,15 @@ mod_leaflet_length_B= function(data,control= nlme::lmeControl(maxIter=500000,
              data= .,
              random= ~1 + RachisLength |TreeNumber,method='ML',
              control= control))%>%
-    mutate(Length_B_intercept= summary(mod)$coefficients$fixed[1],
-           Length_B_slope= summary(mod)$coefficients$fixed[2],
-           SigmaR_length_B= summary(mod)$sigma,
-           SdG1_Length_B= as.numeric(VarCorr(mod)['(Intercept)','StdDev']),
-           SdG2_Length_B= as.numeric(VarCorr(mod)['RachisLength','StdDev']),
-           corG_Length_B= as.numeric(VarCorr(mod)['RachisLength','Corr']),
-           Length_B_cov= list(vcov(mod)),
-           coef.length_B_mean= list(c(Length_B_intercept,Length_B_slope)),
-           label.leaflet_length_B.lme= list(colnames(summary(mod)$coefficients$random$TreeNumber)),
-           MatG_Length_B= list(
-             matrix(data= c(SdG1_Length_B^2,SdG1_Length_B*SdG2_Length_B*corG_Length_B,
-                            SdG1_Length_B*SdG2_Length_B*corG_Length_B,SdG2_Length_B^2),
-                    nrow=length(coef.length_B_mean),ncol=length(coef.length_B_mean),
-                    dimnames=list(label.leaflet_length_B.lme, label.leaflet_length_B.lme))))
+    pull_lme(epsilon= epsilon)
 }
 
 
 #' @rdname mod_stem_diameter
 #' @export
-mod_leaflet_width_B= function(data,control= nlme::lmeControl(maxIter=500000,
-                                                                    niterEM=25000)){
+mod_leaflet_width_B= function(data, epsilon= 2e-06,
+                              control= nlme::lmeControl(maxIter=500000,
+                                                        niterEM=25000)){
   data%>%
     filter(!is.na(LeafletBLength))%>%
     group_by(Progeny)%>%
@@ -409,28 +369,15 @@ mod_leaflet_width_B= function(data,control= nlme::lmeControl(maxIter=500000,
              data= .,
              random= ~1 + RachisLength |TreeNumber,method='ML',
              control= control))%>%
-    mutate(width_B_intercept= summary(mod)$coefficients$fixed[1],
-           width_B_slope= summary(mod)$coefficients$fixed[2],
-           SigmaR_width_B= summary(mod)$sigma,
-           SdG1_width_B= as.numeric(VarCorr(mod)['(Intercept)','StdDev']),
-           SdG2_width_B= as.numeric(VarCorr(mod)['RachisLength','StdDev']),
-           corG_width_B= as.numeric(VarCorr(mod)['RachisLength','Corr']),
-           width_B_cov= list(vcov(mod)),
-           coef.width_B_mean= list(c(width_B_intercept,width_B_slope)),
-           label.leaflet_width_B.lme= list(colnames(summary(mod)$coefficients$random$TreeNumber)),
-           MatG_width_B= list(
-             matrix(data= c(SdG1_width_B^2,SdG1_width_B*SdG2_width_B*corG_width_B,
-                            SdG1_width_B*SdG2_width_B*corG_width_B,SdG2_width_B^2),
-                    nrow=length(coef.width_B_mean),ncol=length(coef.width_B_mean),
-                    dimnames=list(label.leaflet_width_B.lme, label.leaflet_width_B.lme))))
+    pull_lme(epsilon= epsilon)
 }
 
 
 #' @rdname mod_stem_diameter
 #' @export
-mod_leaflet_length= function(data,control= nlme::nlmeControl(maxIter=500000,
-                                                                    niterEM=25000)){
-
+mod_leaflet_length= function(data,epsilon= 5e-06,
+                             control= nlme::nlmeControl(maxIter=500000,
+                                                        niterEM=25000)){
   data%>%
     filter(Width==0 & PositionOnLeaflet!=0)%>%
     mutate(Position_rachis_rel= PositionOnRachis/LeafLength)%>%
@@ -460,39 +407,33 @@ mod_leaflet_length= function(data,control= nlme::nlmeControl(maxIter=500000,
     mutate(L0= summary(mod)$coefficients$fixed['L0'],
            Lfin= summary(mod)$coefficients$fixed['Lfin'],
            Pos_Lmax= summary(mod)$coefficients$fixed['Pos_Lmax'],
-           SigmaR_relative_leaflet_length= summary(mod)$sigma,
-           SdG1_leafletLength= as.numeric(VarCorr(mod)['L0','StdDev']),
-           SdG2_leafletLength= as.numeric(VarCorr(mod)['Lfin','StdDev']),
-           SdG3_leafletLength= as.numeric(VarCorr(mod)['Pos_Lmax','StdDev']),
-           corG12_leafletLength= as.numeric(VarCorr(mod)['Lfin','Corr']),
-           corG13_leafletLength= as.numeric(VarCorr(mod)['Pos_Lmax','Corr']),
-           corG23_leafletLength=
-             as.numeric(VarCorr(mod)['Pos_Lmax',
-                                     length(summary(mod)$coefficients$fixed)+1]),
-           Leaflet_relative_length_cov= list(vcov(mod)),
-           coef.relative_leaflet_length_mean= list(c(L0,Lfin,Pos_Lmax)),
-           label.leafleftLength.nlme= list(colnames(summary(mod)$coefficients$random$TreeNumber)),
-           MatG_leafletLength= list(
-             matrix(data=c(SdG1_leafletLength^2,
-                           SdG1_leafletLength*SdG2_leafletLength*corG12_leafletLength,
-                           SdG1_leafletLength*SdG3_leafletLength*corG13_leafletLength,
-                           SdG1_leafletLength*SdG2_leafletLength*corG12_leafletLength,
-                           SdG2_leafletLength^2,
-                           SdG2_leafletLength*SdG3_leafletLength*corG23_leafletLength,
-                           SdG1_leafletLength*SdG3_leafletLength*corG13_leafletLength,
-                           SdG2_leafletLength*SdG3_leafletLength*corG23_leafletLength,
-                           SdG3_leafletLength^2),
-                    nrow= length(coef.relative_leaflet_length_mean),
-                    ncol= length(coef.relative_leaflet_length_mean),
-                    dimnames=list(label.leafleftLength.nlme,label.leafleftLength.nlme))))
+           sigma= summary(mod)$sigma,
+           SdG1= as.numeric(VarCorr(mod)['L0','StdDev']),
+           SdG2= as.numeric(VarCorr(mod)['Lfin','StdDev']),
+           SdG3= as.numeric(VarCorr(mod)['Pos_Lmax','StdDev']),
+           corG12= as.numeric(VarCorr(mod)['Lfin','Corr']),
+           corG13= as.numeric(VarCorr(mod)['Pos_Lmax','Corr']),
+           corG23= as.numeric(VarCorr(mod)['Pos_Lmax',
+                                           length(summary(mod)$coefficients$fixed)+1]),
+           cov= list(vcov(mod)),
+           coef_mean= list(c(L0,Lfin,Pos_Lmax)),
+           label= list(colnames(summary(mod)$coefficients$random$TreeNumber)),
+           MatG= list(
+             matrix(data=c(SdG1^2, SdG1*SdG2*corG12, SdG1*SdG3*corG13,
+                           SdG1*SdG2*corG12, SdG2^2, SdG2*SdG3*corG23,
+                           SdG1*SdG3*corG13, SdG2*SdG3*corG23, SdG3^2),
+                    nrow= length(coef_mean), ncol= length(coef_mean),
+                    dimnames=list(label,label))))%>%
+    coef_sample(epsilon = epsilon)
 }
 
 
 
 #' @rdname mod_stem_diameter
 #' @export
-mod_leaflet_width= function(data,control= nlme::nlmeControl(maxIter=500000,
-                                                                     niterEM=25000)){
+mod_leaflet_width= function(data, epsilon= 10^-6,
+                            control= nlme::nlmeControl(maxIter=500000,
+                                                       niterEM=25000)){
   data%>%
     filter(PositionOnLeaflet!=0)%>%
     group_by(Progeny,TreeNumber,LeafIndex,Section)%>%
@@ -515,7 +456,8 @@ mod_leaflet_width= function(data,control= nlme::nlmeControl(maxIter=500000,
     )%>%
     do(mod=
          nlme(Relative_max_width~
-                leaflet_max_width(X=Position_rachis_rel,Ymax=1,Y0=W0,Yfin=Wfin,X_Ymax=Pos_Wmax),
+                leaflet_max_width(X=Position_rachis_rel,Ymax=1,Y0=W0,
+                                  Yfin=Wfin,X_Ymax=Pos_Wmax),
               data= .,
               start=
                 list(fixed= c(W0=0.2,
@@ -527,43 +469,40 @@ mod_leaflet_width= function(data,control= nlme::nlmeControl(maxIter=500000,
     mutate(W0=summary(mod)$coefficients$fixed['W0'],
            Wfin=summary(mod)$coefficients$fixed['Wfin'],
            Pos_Wmax=summary(mod)$coefficients$fixed['Pos_Wmax'],
-           SigmaR_relative_leaflet_Width= summary(mod)$sigma,
-           SdG1_leafletWidth= as.numeric(VarCorr(mod)['W0','StdDev']),
-           SdG2_leafletWidth= as.numeric(VarCorr(mod)['Wfin','StdDev']),
-           SdG3_leafletWidth= as.numeric(VarCorr(mod)['Pos_Wmax','StdDev']),
-           corG12_leafletWidth= as.numeric(VarCorr(mod)['Wfin','Corr']),
-           corG13_leafletWidth= as.numeric(VarCorr(mod)['Pos_Wmax','Corr']),
-           corG23_leafletWidth= as.numeric(VarCorr(mod)['Pos_Wmax',
-                                                        length(summary(mod)$coefficients$fixed)+1]),
-           Leaflet_relative_Width_cov= list(vcov(mod)),
-           coef.relative_leaflet_Width_mean= list(c(W0,Wfin,Pos_Wmax)),
-           label.leafleftWidth.nlme= list(colnames(summary(mod)$coefficients$random$TreeNumber)),
-           MatG_leafletLength= list(
-             matrix(
-               data= c(SdG1_leafletWidth^2,
-                       SdG1_leafletWidth*SdG2_leafletWidth*corG12_leafletWidth,
-                       SdG1_leafletWidth*SdG3_leafletWidth*corG13_leafletWidth,
-                       SdG1_leafletWidth*SdG2_leafletWidth*corG12_leafletWidth,
-                       SdG2_leafletWidth^2,
-                       SdG2_leafletWidth*SdG3_leafletWidth*corG23_leafletWidth,
-                       SdG1_leafletWidth*SdG3_leafletWidth*corG13_leafletWidth,
-                       SdG2_leafletWidth*SdG3_leafletWidth*corG23_leafletWidth,
-                       SdG3_leafletWidth^2),
-               nrow= length(coef.relative_leaflet_Width_mean),
-               ncol= length(coef.relative_leaflet_Width_mean),
-               dimnames= list(label.leafleftWidth.nlme,label.leafleftWidth.nlme))))
+           Sigma= summary(mod)$sigma,
+           SdG1= as.numeric(VarCorr(mod)['W0','StdDev']),
+           SdG2= as.numeric(VarCorr(mod)['Wfin','StdDev']),
+           SdG3= as.numeric(VarCorr(mod)['Pos_Wmax','StdDev']),
+           corG12= as.numeric(VarCorr(mod)['Wfin','Corr']),
+           corG13= as.numeric(VarCorr(mod)['Pos_Wmax','Corr']),
+           corG23=
+             as.numeric(VarCorr(mod)['Pos_Wmax',
+                                     length(summary(mod)$coefficients$fixed)+1]),
+           cov= list(vcov(mod)),
+           coef_mean= list(c(W0,Wfin,Pos_Wmax)),
+           label= list(colnames(summary(mod)$coefficients$random$TreeNumber)),
+           MatG= list(
+             matrix( data= c(SdG1^2, SdG1*SdG2*corG12, SdG1*SdG3*corG13,
+                             SdG1*SdG2*corG12, SdG2^2, SdG2*SdG3*corG23,
+                             SdG1*SdG3*corG13, SdG2*SdG3*corG23, SdG3^2),
+                     nrow= length(coef_mean), ncol= length(coef_mean),
+                     dimnames= list(label,label))))%>%
+    coef_sample(epsilon = epsilon)
 }
 
 
 #' @rdname mod_stem_diameter
 #' @export
-mod_leaflet_axial_angle= function(data,control= nlme::nlmeControl(maxIter=500000,
-                                                                         niterEM=25000)){
+mod_leaflet_axial_angle= function(data,epsilon= 10^-2,
+                                  control= nlme::nlmeControl(maxIter=500000,
+                                                             niterEM=25000)){
   data%>%
     filter(!is.na(Axial))%>%
     group_by(Progeny)%>%
     do(mod=
-         nlme(Axial~f.axialAngle(X=Position_rel,angleC=angleC,slopeC=slopeC,angleA=angleA),
+         nlme(Axial~
+                leaflet_axial_angle(position= Position_rel, angle_C=angleC,
+                                    slope_C= slopeC, angle_A= angleA),
               data= .,
               start= list(fixed=c(angleC=101,slopeC=-2,angleA=10)),
               fixed= angleC+slopeC+angleA~1,
@@ -572,31 +511,26 @@ mod_leaflet_axial_angle= function(data,control= nlme::nlmeControl(maxIter=500000
     mutate(angleC= summary(mod)$coefficients$fixed['angleC'],
            slopeC= summary(mod)$coefficients$fixed['slopeC'],
            angleA= summary(mod)$coefficients$fixed['angleA'],
-           SigmaR_axialAngle= summary(mod)$sigma,
-           SdG1_axialAngle =as.numeric(VarCorr(mod)['angleC','StdDev']),
-           SdG2_axialAngle=as.numeric(VarCorr(mod)['slopeC','StdDev']),
-           SdG3_axialAngle =as.numeric(VarCorr(mod)['angleA','StdDev']),
-           corG12_axialAngle=as.numeric(VarCorr(mod)['slopeC','Corr']),
-           corG13_axialAngle=as.numeric(VarCorr(mod)['angleA','Corr']),
-           corG23_axialAngle=as.numeric(VarCorr(mod)['angleA',
-                                                     length(summary(mod)$coefficients$fixed)+1]),
-           axialAngle_cov= list(vcov(mod)),
-           coef.axialAngle_mean= list(c(angleC,slopeC, angleA)),
-           label.axialAngle.nlme= list(colnames(summary(mod)$coefficients$random$TreeNumber)),
-           MatG_leafletLength= list(
+           sigma= summary(mod)$sigma,
+           SdG1 =as.numeric(VarCorr(mod)['angleC','StdDev']),
+           SdG2=as.numeric(VarCorr(mod)['slopeC','StdDev']),
+           SdG3 =as.numeric(VarCorr(mod)['angleA','StdDev']),
+           corG12=as.numeric(VarCorr(mod)['slopeC','Corr']),
+           corG13=as.numeric(VarCorr(mod)['angleA','Corr']),
+           corG23=
+             as.numeric(VarCorr(mod)['angleA',
+                                     length(summary(mod)$coefficients$fixed)+1]),
+           cov= list(vcov(mod)),
+           coef_mean= list(c(angleC,slopeC, angleA)),
+           label= list(colnames(summary(mod)$coefficients$random$TreeNumber)),
+           MatG= list(
              matrix(
-               data= c(SdG1_axialAngle^2,
-                       SdG1_axialAngle*SdG2_axialAngle*corG12_axialAngle,
-                       SdG1_axialAngle*SdG3_axialAngle*corG13_axialAngle,
-                       SdG1_axialAngle*SdG2_axialAngle*corG12_axialAngle,
-                       SdG2_axialAngle^2,
-                       SdG2_axialAngle*SdG3_axialAngle*corG23_axialAngle,
-                       SdG1_axialAngle*SdG3_axialAngle*corG13_axialAngle,
-                       SdG2_axialAngle*SdG3_axialAngle*corG23_axialAngle,
-                       SdG3_axialAngle^2),
-               nrow=length(coef.axialAngle_mean),
-               ncol=length(coef.axialAngle_mean),
-               dimnames=list(label.axialAngle.nlme, label.axialAngle.nlme))))
+               data= c(SdG1^2, SdG1*SdG2*corG12, SdG1*SdG3*corG13,
+                       SdG1*SdG2*corG12, SdG2^2, SdG2*SdG3*corG23,
+                       SdG1*SdG3*corG13, SdG2*SdG3*corG23, SdG3^2),
+               nrow=length(coef_mean), ncol=length(coef_mean),
+               dimnames=list(label, label))))%>%
+    coef_sample(epsilon = epsilon)
 }
 
 
@@ -617,7 +551,8 @@ mod_leaflet_radial_angle= function(data){
     dataAngle%>%filter(Type!=-1)%>%na.omit()%>%group_by(Progeny,Type)%>%
     do(mod=
          nls(formula =
-               up~f.radialAngle(x= position, A0= A0, Amax= Amax, Xm= 0.5),
+               up~
+               leaflet_radial_angle(position= position, A0= A0, Amax= Amax, Xm= 0.5),
              data = .,start= list(A0= 10, Amax= max(.$up)), trace= F,
              control= list(maxiter= 5000000, minFactor= 0.000000000001,
                            warnOnly= T)))%>%
@@ -627,7 +562,8 @@ mod_leaflet_radial_angle= function(data){
     dataAngle%>%filter(Type!=1)%>%na.omit()%>%group_by(Progeny,Type)%>%
     do(mod=
          nls(formula =
-               dwn~f.radialAngle(x= position, A0= A0, Amax= Amax, Xm= 0.5),
+               dwn~
+               leaflet_radial_angle(position= position, A0= A0, Amax= Amax, Xm= 0.5),
              data = .,start= list(A0= -10, Amax= max(.$up)), trace= F,
              control= list(maxiter= 5000000, minFactor= 0.000000000001, warnOnly= T)))%>%
     mutate(Mode= ifelse(Type==0,"sup","inf"),Type= "Low")
@@ -694,8 +630,9 @@ mod_leaflet_shape= function(data){
 
 #' @rdname mod_stem_diameter
 #' @export
-mod_petiole_width_C= function(data,control= nlme::lmeControl(maxIter=500000,
-                                                                    niterEM=25000)){
+mod_petiole_width_C= function(data, epsilon= 10^-6,
+                              control= nlme::lmeControl(maxIter=500000,
+                                                        niterEM=25000)){
   data%>%
     group_by(Progeny)%>%
     do(mod=
@@ -703,24 +640,7 @@ mod_petiole_width_C= function(data,control= nlme::lmeControl(maxIter=500000,
              data= .,
              random= ~1 + CtoA |TreeNumber,method='ML',
              control= control))%>%
-    mutate(widthC_intercept= summary(mod)$coefficients$fixed[1],
-           widthC_slope= summary(mod)$coefficients$fixed[2],
-           coef.widthC_mean= list(c(widthC_intercept,widthC_slope)),
-           widthC_cov= list(vcov(mod)),
-           SigmaR_widthC= summary(mod)$sigma,
-           SdG1_widthC= as.numeric(VarCorr(mod)['(Intercept)','StdDev']),
-           SdG2_widthC= as.numeric(VarCorr(mod)['CtoA','StdDev']),
-           corG_widthC= as.numeric(VarCorr(mod)['CtoA','Corr']),
-           width_C_cov= list(vcov(mod)),
-           label.petioleWidthC.lme= list(colnames(summary(mod)$coefficients$random$TreeNumber)),
-           MatG_width_C= list(
-             matrix(data= c(SdG1_widthC^2,
-                            SdG1_widthC*SdG2_widthC*corG_widthC,
-                            SdG1_widthC*SdG2_widthC*corG_widthC,
-                            SdG2_widthC^2),
-                    nrow= length(coef.widthC_mean),
-                    ncol= length(coef.widthC_mean),
-                    dimnames=(list(label.petioleWidthC.lme, label.petioleWidthC.lme)))))
+    pull_lme(epsilon= epsilon)
 }
 
 #' @rdname mod_stem_diameter
@@ -737,10 +657,10 @@ mod_petiole_height= function(data,control= nlme::nlmeControl(maxIter=500000,nite
               fixed= a~1,
               random= a~1|TreeNumber,
               control= control))%>%
-    mutate(coef.rachisRelativeHeight_mean= summary(mod)$coefficients$fixed,
-           SigmaR_rachisRelativeHeight= summary(mod)$sigma,
-           SdG1_rachisRelativeHeight= intervals(mod)$reStruct$TreeNumber[1,'est.'],
-           rachisRelativeHeight_cov= list(vcov(mod)))
+    mutate(coef_mean= summary(mod)$coefficients$fixed,
+           sigma= summary(mod)$sigma,
+           SdG1= intervals(mod)$reStruct$TreeNumber[1,'est.'],
+           cov= list(vcov(mod)))
 }
 
 
@@ -756,58 +676,58 @@ mod_all= function(x){
   # STEM SCALE --------------------------------------------------------------
 
   # Stem diameter at the level of the considered leaf
-  StemDiam.nls= mod_stem_diameter(DataAll)
+  StemDiam.nls= mod_stem_diameter(x$DataAll)
 
   # Stem height
-  model.stemHeight= mod_stem_height(DataAll)
+  model.stemHeight= mod_stem_height(x$DataAll)
 
   # LEAF SCALE --------------------------------------------------------------
 
   # Rachis length
-  rachisLength.lme= mod_rachis_length(DataAll)
+  rachisLength.lme= mod_rachis_length(x$DataAll)
 
   # Ratio petiol/rachis
-  Pet= mod_petiole_ratio(DataAll,Physio_age)
+  Pet= mod_petiole_ratio(x$DataAll)
 
   # B point position
-  Bpos= mod_B_position(DataAll,Physio_age)
+  Bpos= mod_B_position(x$DataAll)
 
   # Number of leaflets
-  nbLeaflets.nls= mod_nb_leaflet(DataAll)
+  nbLeaflets.nls= mod_nb_leaflet(x$DataAll)
 
   # Declination at C point
-  decliC.lme= mod_C_declination(Dec)
+  decliC.lme= mod_C_declination(x$Dec)
 
   # Leaf curvature
-  df_optim= mod_leaf_curvature(Curve)
+  df_optim= mod_leaf_curvature(x$Curve)
 
-  Curve=
-    merge(Curve,df_optim%>%select(-value,-conv),
+  x$Curve=
+    merge(x$Curve,df_optim%>%select(-value,-conv),
           by = c('Progeny','TreeNumber'),all.x = T, sort = F)%>%
     arrange(Progeny, TreeNumber, Rank, RelativePositionRachisEstim)
 
   # Declination at A point
-  decliA_nls= mod_A_declination(Curve)
+  decliA_nls= mod_A_declination(x$Curve)
 
   # Rachis deviation
-  Dev= mod_A_deviation(Curve)
+  Dev= mod_A_deviation(x$Curve)
 
   # LEAFLET SCALE -----------------------------------------------------------
 
   # Model the leaflet position along the leaf rachis
-  dispo_nls= mod_leaflet_position(DataAll)
+  dispo_nls= mod_leaflet_position(x$DataAll,x$Area)
 
   # Leaflet length at Bpoint
-  leaflet_length_B.lme= mod_leaflet_length_B(DataAll)
+  leaflet_length_B.lme= mod_leaflet_length_B(x$DataAll)
 
   # Leaflet width at Bpoint
-  leaflet_width_B.lme= mod_leaflet_width_B(DataAll)
+  leaflet_width_B.lme= mod_leaflet_width_B(x$DataAll)
 
   # Leaflet relative length from relative position on rachis
-  leafleftLength.nlme= mod_leaflet_length(Area)
+  leafleftLength.nlme= mod_leaflet_length(x$Area)
 
   # Leaflet relative widths
-  leafletWidth.nlme= mod_leaflet_width(Area)
+  leafletWidth.nlme= mod_leaflet_width(x$Area)
 
   # Leaflet axial angle
   axialAngle.nlme= mod_leaflet_axial_angle(LftAngle)
@@ -819,15 +739,15 @@ mod_all= function(x){
   Rep= mod_leaflet_type_freq(LftAngle)
 
   # Leaflet shape
-  Shape= mod_leaflet_shape(Area)
+  Shape= mod_leaflet_shape(x$Area)
 
   # NERVE SHAPE -------------------------------------------------------------
 
   # Nerve width at C point
-  petioleWidthC.lme= mod_petiole_width_C(PetioleSectionC)
+  petioleWidthC.lme= mod_petiole_width_C(x$PetioleSectionC)
 
   # Nerve height
-  rachisRelativeHeight.nlme= mod_petiole_height(RachisHeight)
+  rachisRelativeHeight.nlme= mod_petiole_height(x$RachisHeight)
 
   list(StemDiam.nls,model.stemHeight,rachisLength.lme,Pet,Bpos,nbLeaflets.nls,
        decliC.lme,df_optim,decliA_nls,Dev,dispo_nls,leaflet_length_B.lme,
