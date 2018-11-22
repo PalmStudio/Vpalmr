@@ -11,6 +11,10 @@ VPalm_list(data, model, nb_leaves = 45, seed = sample.int(1000, 1))
 
 \item{model}{A list of the models fitted on the data (generally from
 \code{\link[=mod_all]{mod_all()}})}
+
+\item{nb_leaves}{The number of leaves needed}
+
+\item{seed}{The seed for random parameter generation}
 }
 \value{
 A list of the parameters used as VPalm input

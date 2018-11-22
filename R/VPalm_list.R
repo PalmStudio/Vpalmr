@@ -5,13 +5,15 @@
 #' @param data  A list of all data (generally from [import_data()])
 #' @param model A list of the models fitted on the data (generally from
 #'  [mod_all()])
+#' @param nb_leaves The number of leaves needed
+#' @param seed      The seed for random parameter generation
 #'
 #' @return A list of the parameters used as VPalm input
 #' @export
 #'
 VPalm_list= function(data, model, nb_leaves= 45, seed= sample.int(1000,1)){
   list(
-    seed= set.seed(seed),
+    seed= seed,
 
     # FIXED PARAMETERS PER PROGENY --------------------------------------------
     # Stem phylotaxis
@@ -35,8 +37,8 @@ VPalm_list= function(data, model, nb_leaves= 45, seed= sample.int(1000,1)){
     rachisTwistFinalAngle_SD= sd(data$Tor$TwistA,na.rm=T),
 
     # frond deviation
-    rachisDevFinalAngle_M= mean(model$Dev$DevA_deg),
-    rachisDevFinalAngle_SD= sd(model$Dev$DevA_deg),
+    rachisDevFinalAngle_M= model$Dev$DevA_deg,
+    rachisDevFinalAngle_SD= model$Dev$DevA_deg,
 
     # parameters ratio petiole/rachis final
     petioleRachisRatio_M= model$Pet$RatioPetiole,
