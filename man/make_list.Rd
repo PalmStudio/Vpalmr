@@ -4,7 +4,8 @@
 \alias{make_list}
 \title{VPalm parameter list for all progenies}
 \usage{
-make_list(data, model, nb_leaves = 45, seed = sample.int(1000, 1))
+make_list(data, model, nb_leaves = 45, seed = sample.int(1000, 1),
+  init = init_list())
 }
 \arguments{
 \item{data}{A list of all data (generally from \code{\link[=import_data]{import_data()}})}
@@ -14,6 +15,8 @@ make_list(data, model, nb_leaves = 45, seed = sample.int(1000, 1))
 \item{nb_leaves}{The number of leaves needed}
 
 \item{seed}{The seed for random parameter generation}
+
+\item{init}{Initialisation values (see \code{\link[=VPalm_list]{VPalm_list()}})}
 }
 \value{
 A list of two:

@@ -7,14 +7,16 @@
 #' @param data  A list of all data (generally from [import_data()])
 #' @param model A list of the models fitted on the data (generally from [mod_all()])
 #' @param nb_leaves The number of leaves needed
-#' @param seed      The seed for random parameter generation
+#' @param seed  The seed for random parameter generation
+#' @param init  Initialisation values (see [VPalm_list()])
 #'
 #' @return A list of two:
 #' * Progeny, a list of VPalm parameters for each progeny
 #' * Average, A list of VPalm parameters with average parameter values
 #'
 #' @export
-make_list= function(data, model, nb_leaves= 45, seed= sample.int(1000,1)){
+make_list= function(data, model, nb_leaves= 45, seed= sample.int(1000,1),
+                    init= init_list()){
   # Testing if any model has missing Progenies:
   Progenies=
     lapply(model, function(x){
@@ -54,18 +56,13 @@ make_list= function(data, model, nb_leaves= 45, seed= sample.int(1000,1)){
     Prog_list[[i]]=
       suppressWarnings(
         Vpalmr::VPalm_list(data= data_pro, model= mod_pro,
-                           nb_leaves= nb_leaves, seed = seed)
+                           nb_leaves= nb_leaves, seed = seed, init = init)
       )
   }
 
   # Computing the average of all progenies:
   keys= unique(unlist(lapply(Prog_list, names)))
-  # grouped_list=
-  #   setNames(do.call(mapply, c(FUN=c, lapply(Prog_list, `[`, keys))), keys)
-  pmean= function(...){
-    x= cbind(...)
-    rowMeans(x, na.rm = T)
-  }
+
   Average_list= setNames(do.call(mapply, c(FUN=pmean, lapply(Prog_list, `[`, keys))), keys)
 
   # Replacing missing values (if any) for each Progeny by the average value:

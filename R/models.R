@@ -627,7 +627,10 @@ mod_leaflet_shape= function(data){
   Shape$ym_slope= sapply(Shape$ym.lm, function(x){coef(x)[2]})
   Shape%>%
     group_by(Progeny)%>%
-    summarise(xm= mean(xm, na.rm= T), ym= mean(ym, na.rm= T))
+    summarise(xm_intercept= mean(xm_intercept, na.rm= T),
+              xm_slope= mean(xm_slope, na.rm= T),
+              ym_intercept= mean(ym_intercept, na.rm= T),
+              ym_slope= mean(ym_slope, na.rm= T))
 }
 
 #' @rdname mod_stem_diameter

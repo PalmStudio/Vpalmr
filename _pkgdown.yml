@@ -13,25 +13,45 @@ reference:
     desc: "Automatic plot generation"
     contents:
       - starts_with("plot_")
+  - title: "Leaflet scale functions"
+    desc: "VPalm functions at leaflet scale, used to find the parameters"
+    contents:
+      - leaflet_length
+      - leaflet_max_width
+      - find_angle
+      - leaflet_axial_angle
+      - leaflet_radial_angle
+      - leaflet_length
+      - leaflet_shape_nls
+      - shape_beta
+      - leaflet_position
+  - title: "Leaf scale functions"
+    desc: "VPalm functions at leaf scale, used to find the parameters"
+    contents:
+      - curvature
+      - leaf_curvature
+      - curvature_error
+      - optim_Leaf_Curv_Infl
+      - deviation_A
+      - section_height
+  - title: "Stem functions"
+    desc: "VPalm functions for the stem, used to find the parameters"
+    contents:
+      - Stem_height
   - title: "Helpers"
     desc: "Different helpers (Al-Kashi, curvature, distances...)"
     contents:
       - AlKashi
-      - curvature
-      - curvature_error
-      - deviation_A
       - distance_2D
-      - find_angle
-      - leaflet_length
-      - leaflet_shape_nls
-      - leaf_curvature
       - object_lenght
       - object_tans
-      - optim_Leaf_Curv_Infl
-      - section_height
-      - shape_beta
       - sigmoid
-      - Stem_height
+  - title: "Outputs"
+    desc: "Computing the VPalm inputs"
+    contents:
+      - VPalm_list
+      - make_list
+      -
   - title: "Tests"
     desc: "Helper functions for testing the input data format or missing values"
     contents:

@@ -1,7 +1,3 @@
-####leaflets dicposition on rachis
-
-
-
 #' Leaflet position
 #'
 #' @description Predict the leaflet position along the rachis

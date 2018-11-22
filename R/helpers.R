@@ -289,46 +289,24 @@ coef_sample= function(data,epsilon){
 }
 
 
-#' Axial insertion angle
+#' Parallel mean
 #'
-#' @description Computes the leaflet axial insertion angle
+#' @description Returns the parallel mean, in the same fashion as [base::pmax()]
 #'
-#' @param position Relative position of the leaflet
-#' @param angle_C  Angle of the leaflet compared to C point
-#' @param slope_C  Slope of the leaflet to C point relationship
-#' @param angle_A  Angle of the leaflet compared to A point
+#' @param ...   Numeric arguments
+#' @param na.rm A logical indicating whether missing values should be removed.
 #'
-#' @return The leaflet axial angle
+#' @details The function uses a combination of [base::cbind()] and [base::rowMeans()].
+#' The function can take one or more vectors or matrices as arguments and returns a single
+#' 'parallel' mean of the vectors. The first element of the result is the mean of the first
+#' elements of all the arguments and so on.
+#'
+#' @return A vector of the parallel mean of same length as the arguments.
 #' @export
-leaflet_axial_angle=function(position,angle_C,slope_C,angle_A){
-  a= angle_C**2
-  b= slope_C*2*sqrt(a)
-  c= angle_A**2-a-b
-  sqrt(a+b*position+c*(position**3))
-}
-
-
-
-#' Radial insertion angle
 #'
-#' @description Computes the leaflet radial insertion angle
-#'
-#' @param position Relative position of the leaflet
-#' @param A0   Intercept
-#' @param Amax Maximum angle
-#' @param Xm   Maximum position value
-#'
-#' @return The leaflet axial angle
-#' @export
-leaflet_radial_angle=function(position,A0,Amax,Xm){
-    c1=(A0-Amax)/(Xm**2)
-    b1=-2*c1*Xm
-    a1=A0
-    c2=-Amax/((Xm-1)**2)
-    b2=-2*c2*Xm
-    a2=-b2-c2
-
-    ifelse(position < Xm,
-           a1+b1*position+c1*(position**2),
-           a2+b2*position+c2*(position**2))
+#' @examples
+#' pmean(1:10, 21:30)
+pmean= function(..., na.rm = T){
+  x= cbind(...)
+  rowMeans(x, na.rm= na.rm)
 }

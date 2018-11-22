@@ -41,3 +41,48 @@ find_angle= function(x,y){
   angle_A= tail(angles,1)
   return(c(angle_C,angle_A))
 }
+
+
+#' Axial insertion angle
+#'
+#' @description Computes the leaflet axial insertion angle
+#'
+#' @param position Relative position of the leaflet
+#' @param angle_C  Angle of the leaflet compared to C point
+#' @param slope_C  Slope of the leaflet to C point relationship
+#' @param angle_A  Angle of the leaflet compared to A point
+#'
+#' @return The leaflet axial angle
+#' @export
+leaflet_axial_angle=function(position,angle_C,slope_C,angle_A){
+  a= angle_C**2
+  b= slope_C*2*sqrt(a)
+  c= angle_A**2-a-b
+  sqrt(a+b*position+c*(position**3))
+}
+
+
+
+#' Radial insertion angle
+#'
+#' @description Computes the leaflet radial insertion angle
+#'
+#' @param position Relative position of the leaflet
+#' @param A0   Intercept
+#' @param Amax Maximum angle
+#' @param Xm   Maximum position value
+#'
+#' @return The leaflet axial angle
+#' @export
+leaflet_radial_angle=function(position,A0,Amax,Xm){
+  c1=(A0-Amax)/(Xm**2)
+  b1=-2*c1*Xm
+  a1=A0
+  c2=-Amax/((Xm-1)**2)
+  b2=-2*c2*Xm
+  a2=-b2-c2
+
+  ifelse(position < Xm,
+         a1+b1*position+c1*(position**2),
+         a2+b2*position+c2*(position**2))
+}

@@ -2,9 +2,10 @@
 % Please edit documentation in R/VPalm_list.R
 \name{VPalm_list}
 \alias{VPalm_list}
-\title{VPalm input}
+\title{VPalm parameters}
 \usage{
-VPalm_list(data, model, nb_leaves = 45, seed = sample.int(1000, 1))
+VPalm_list(data, model, nb_leaves = 45, seed = sample.int(1000, 1),
+  init = init_list())
 }
 \arguments{
 \item{data}{A list of all data (generally from \code{\link[=import_data]{import_data()}})}
@@ -15,10 +16,27 @@ VPalm_list(data, model, nb_leaves = 45, seed = sample.int(1000, 1))
 \item{nb_leaves}{The number of leaves needed}
 
 \item{seed}{The seed for random parameter generation}
+
+\item{init}{The initialisation parameters (see details)}
 }
 \value{
 A list of the parameters used as VPalm input
 }
 \description{
 Format the model outputs as a list for VPalm inputs
+}
+\details{
+The init parameter should be a named list of initialization
+parameters as in \code{\link[=init_list]{init_list()}}. The user can use \code{\link[=init_list]{init_list()}} as a
+template to change the values of the init argument (see examples).
+}
+\examples{
+# Change the initial values of lamina angle :
+ini= init_list()
+ini$laminaAngle= 145
+\dontrun{
+ # call the function to create a VPalm input:
+ VPalm_list(data,model, nb_leaves= 45, seed= sample.int(1000,1),
+ initialisation= ini)
+}
 }

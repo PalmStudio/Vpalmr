@@ -4,7 +4,7 @@
 \alias{init_list}
 \title{Parameter initialization}
 \usage{
-init_list(seed = 1)
+init_list()
 }
 \arguments{
 \item{seed}{The seed to use for random generation}
