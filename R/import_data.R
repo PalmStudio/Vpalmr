@@ -17,7 +17,7 @@
 #'
 #' @return A list of the imported and pre-processed files
 #'
-#' @importFrom dplyr ungroup group_by summarise "%>%"
+#' @importFrom dplyr ungroup group_by summarise select "%>%"
 #' @importFrom data.table fread
 #'
 #' @examples

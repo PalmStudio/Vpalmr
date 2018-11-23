@@ -38,6 +38,18 @@ reference:
     desc: "VPalm functions for the stem, used to find the parameters"
     contents:
       - Stem_height
+  - title: "Extract"
+    desc: "Extract the VPalm parameters from the models outputs"
+    contents:
+      - starts_with("extract_")
+  - title: "Format"
+    desc: "Format the parameters lists as a VPalm input"
+    contents:
+      - starts_with("format_")
+  - title: "Write"
+    desc: "Writting the pre-formatted parameter lists in a VPalm input file"
+    contents:
+      - starts_with("write_")
   - title: "Helpers"
     desc: "Different helpers (Al-Kashi, curvature, distances...)"
     contents:
@@ -46,12 +58,6 @@ reference:
       - object_lenght
       - object_tans
       - sigmoid
-  - title: "Outputs"
-    desc: "Computing the VPalm inputs"
-    contents:
-      - VPalm_list
-      - make_list
-      -
   - title: "Tests"
     desc: "Helper functions for testing the input data format or missing values"
     contents:

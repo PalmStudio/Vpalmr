@@ -16,4 +16,6 @@ Imports:
     dplyr,
     nlme,
     tidyr,
-    ggplot2
+    ggplot2,
+    magrittr,
+    data.table

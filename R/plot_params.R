@@ -63,7 +63,7 @@
 #'
 #' * [plot_petiole_height()]: plot the petiole heigth
 #'
-#'  @importFrom dplyr group_by do mutate filter
+#'  @importFrom dplyr group_by do mutate filter rename do
 #'  @importFrom tidyr unnest
 #'  @importFrom ggplot2 ggplot facet_wrap geom_point geom_line ylab xlab aes
 #'

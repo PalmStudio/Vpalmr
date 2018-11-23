@@ -103,7 +103,7 @@ object_lenght= function(x,y,res = 1,method = c("loess","smooth.spline"),...){
     df_model=
       predict(object= smooth.spline(x,y,...),
               x= seq(0,max(x),res)%>%dplyr::union(x))%>%
-      data.frame()%>%rename(x_res= x, y_res=y)
+      data.frame()%>%dplyr::rename(x_res= x, y_res=y)
   }else if(method=="loess"){
     df_model=
       predict(object= stats::loess(y~x,...),x_pred)%>%
@@ -112,7 +112,7 @@ object_lenght= function(x,y,res = 1,method = c("loess","smooth.spline"),...){
 
   df_model%>%
     mutate(Distance= distance_2D(x = x_res,y = y_res),
-           x=cut(x_res,x,labels=x[-1]))%>%slice(-1)%>%
+           x=cut(x_res,x,labels=x[-1]))%>%dplyr::slice(-1)%>%
     group_by(x)%>%
     summarise(Distance= sum(Distance))%>%
     merge(data.frame(x,y),.,by="x",all.x=T)%>%
@@ -169,7 +169,7 @@ object_tans= function(x,y,res = 1,method = c("loess","smooth.spline"),...){
     df_model=
       predict(object= smooth.spline(x,y,...),
               x= seq(0,max(x),res)%>%dplyr::union(x))%>%
-      data.frame()%>%rename(x_res= x, y_res=y)
+      data.frame()%>%dplyr::rename(x_res= x, y_res=y)
   }else if(method=="loess"){
     df_model=
       predict(object= stats::loess(y~x,...),x_pred)%>%
@@ -177,9 +177,9 @@ object_tans= function(x,y,res = 1,method = c("loess","smooth.spline"),...){
   }
 
   df_model%>%
-    mutate(angle= atan((lead(x_res)-x_res)/(lead(y_res)-y_res)))%>%
-    mutate(angle= replace(angle,n(),lag(angle)%>%.[n()]))%>%
-    filter(x_res%in%x)
+    dplyr::mutate(angle= atan((lead(x_res)-x_res)/(lead(y_res)-y_res)))%>%
+    dplyr::mutate(angle= replace(angle,n(),lag(angle)%>%.[n()]))%>%
+    dplyr::filter(x_res%in%x)
 }
 
 
@@ -225,6 +225,8 @@ warn_inc= function(warn,x){
 #'
 #' @param data The output from one of the [lme models][mod_stem_diameter()]
 #' @param epsilon epsilon value for matrix inversion
+#' @param type The type of sampling performed on the parameter distribution (see
+#'  [coef_sample()])
 #'
 #' @details Epsilon is used to avoid non semi-positive matrices, and is added to the matrix
 #' diagonal to make it closer to the identity matrix
@@ -232,23 +234,23 @@ warn_inc= function(warn,x){
 #' @return A [tibble::tibble()] with model outputs
 #'
 #' @export
-pull_lme= function(data, epsilon= 10^-6){
+pull_lme= function(data, epsilon= 10^-6, type= c('sample','mean')){
   data%>%
-    dplyr::mutate(intercept= fixed.effects(mod)[1],
-                  slope= fixed.effects(mod)[2],
+    dplyr::mutate(intercept= nlme::fixed.effects(mod)[1],
+                  slope= nlme::fixed.effects(mod)[2],
                   cov= list(vcov(mod)),
                   coef_mean= list(c(intercept, slope)),
                   sigma= summary(mod)$sigma,
-                  label= list(colnames(random.effects(mod))),
-                  SdG1= as.numeric(VarCorr(mod)['(Intercept)','StdDev']),
-                  SdG2= as.numeric(VarCorr(mod)[2,'StdDev']),
-                  corG= as.numeric(VarCorr(mod)[2,'Corr']),
+                  label= list(colnames(nlme::random.effects(mod))),
+                  SdG1= as.numeric(nlme::VarCorr(mod)['(Intercept)','StdDev']),
+                  SdG2= as.numeric(nlme::VarCorr(mod)[2,'StdDev']),
+                  corG= as.numeric(nlme::VarCorr(mod)[2,'Corr']),
                   MatG= list(matrix(
                     data=c(SdG1^2,SdG1 * SdG2 * corG,
                            SdG1 * SdG2 * corG,SdG2^2),
                     nrow= length(coef_mean), ncol=length(coef_mean),
                     dimnames=list(label, label))))%>%
-    coef_sample(epsilon)
+    coef_sample(epsilon, type= type)
 }
 
 
@@ -259,32 +261,47 @@ pull_lme= function(data, epsilon= 10^-6){
 #'
 #' @param data The output from one of the [lme models][mod_stem_diameter()]
 #' @param epsilon epsilon value for matrix inversion
+#' @param type The type of sampling performed on the parameter distribution (see details)
 #'
-#' @details `data` must have a `MatG` column that represents the variance-covariance
-#' matrix, and a `coef_mean` for the mean coefficient values.
+#' @details If `type = sample`, `data` must have a `MatG` column that represents the variance-covariance
+#' matrix, and a `coef_mean` for the mean coefficient values. It `type = mean`, `data` must have
+#' a `coef_mean` column only.
 #' Epsilon is used to avoid non semi-positive matrices, and is added to the matrix
 #' diagonal to make it closer to the identity matrix.
-#' The sampling is made using a normal distribution: `rnorm(mean= 0,sd= 1)`.
+#' The sampling is made using a normal distribution: `rnorm(mean= 0,sd= 1)`. If the type
+#' is equal to 'sample', the function makes a random sample in the distribution of the
+#' parameter using the mean coefficient and a sampled standard deviation. If it is set to
+#' 'mean', only the mean coefficient is used.
 #'
 #' @return The coefficients as a [tibble::tibble()]
 #'
 #' @export
-coef_sample= function(data,epsilon){
-  data$MatG=
-    lapply(data$MatG, function(x){
-      diag(x)= diag(x)+epsilon
-      x
-    })
+coef_sample= function(data, epsilon, type= c('sample','mean')){
 
-  data$coef_sd=
-    lapply(data$MatG, function(x){
-      matrix(data= rnorm(n=ncol(x)),ncol=ncol(x))%*%chol(x)
-    })
+  type= match.arg(type,c('sample','mean'))
 
-  data$coef_simu=
-    data%>%
-    do(coef_simu= .$coef_mean + .$coef_sd)%>%
-    pull(coef_simu)
+  if(type=="sample"){
+    data$MatG=
+      lapply(data$MatG, function(x){
+        diag(x)= diag(x)+epsilon
+        x
+      })
+
+    data$coef_sd=
+      lapply(data$MatG, function(x){
+        matrix(data= rnorm(n=ncol(x)),ncol=ncol(x))%*%chol(x)
+      })
+
+    data$coef_simu=
+      data%>%
+      dplyr::do(coef_simu= .$coef_mean + .$coef_sd)%>%
+      dplyr::pull(coef_simu)
+  }else{
+    data$coef_simu=
+      data%>%
+      dplyr::do(coef_simu= .$coef_mean)%>%
+      dplyr::pull(coef_simu)
+  }
   data
 }
 
