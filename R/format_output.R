@@ -1,11 +1,11 @@
 #' Format all parameters lists
 #'
-#' @description Format all the lists from [extract_list()] output to prepare for writting.
+#' @description Format all the lists from [extract_progeny()] output to prepare for writting.
 #'
-#' @details This function applies [format_param()] sequentially to all progenies and to
-#' the average list.
+#' @details This function applies [format_tree()] sequentially to all trees from all
+#' progenies and to the average list.
 #'
-#' @param data A [extract_list()] output
+#' @param data A [extract_progeny()] output
 #'
 #' @return A list of VPalm inputs
 #' @export
@@ -16,8 +16,14 @@
 #' out= format_list(data = VPalm_out)
 #' }
 #'
-format_list= function(data){
-  lapply(data, format_param)
+format_progeny= function(data){
+  if(!is.null(data$Average)){
+    out= lapply(data[-grep('Average',names(data))], function(x){lapply(x, format_tree)})
+    out$Average= format_tree(data$Average)
+  }else{
+    out= lapply(data, function(x){lapply(x, format_tree)})
+  }
+  out
 }
 
 #' Format a VPalm input list
@@ -34,9 +40,10 @@ format_list= function(data){
 #' VPalm_out= Vpalmr::extract_list(data= Inputs, model= models, nb_leaves= 45, seed= 10)
 #' average_params= format_param(data = VPalm_out$Average)
 #' }
-format_param=function(data){
+format_tree=function(data){
 
   paramNames=c(
+    paste("Modelled Months After Planting = "),
     paste('long seed = '),
     paste('int nbLeafEmitted = '),
 
@@ -150,6 +157,7 @@ format_param=function(data){
 
   paramValue=
     list(
+      data$MAP_requested,
       data$seed,
       data$nbLeafEmitted,
       data$frondPhyllo_M,

@@ -12,6 +12,7 @@
 #' @param leaves The number of leaves needed
 #' @param seed   The seeds for random parameter generation, see details.
 #' @param init   Initialisation values (see [extract_trees()])
+#' @param average Boolean, is mean of all average trees to be used to replace missing values ?
 #'
 #' @details `seed` should be a named list of length equal to the number of progenies, and each
 #' object with n seeds each. The names of the list objects should match the ones of the
@@ -19,14 +20,14 @@
 #' for each progeny. If `NULL`, a random seed is generated for each tree of each progeny
 #' using [base::sample()].
 #'
-#' @return A list of several VPalm parameters lists, one for each tree sampled per progeny
-#' and the average tree of the progeny, and one with the average (non-NA) values for all
+#' @return A nested list, containing a list of VPalm parameters for each tree sampled
+#' for each Progeny, and the average tree of each progeny, and one with the average (non-NA) values for all
 #' progenies. Each list in the list has as many n lists that represents each sampled tree
 #' for each progeny.
 #'
 #' @export
-extract_progenies= function(data, model, n, leaves= 45, seed= NULL,
-                            init= init_list()){
+extract_progeny= function(data, model, n, leaves= 45, seed= NULL,
+                          init= init_list(),average= T){
 
   # Testing if any model has missing Progenies:
   Progenies=
@@ -69,8 +70,14 @@ extract_progenies= function(data, model, n, leaves= 45, seed= NULL,
 
   if(length(missing_string)>0){
     missing_string= paste0(names(missing_string),", progeny: ",missing_string)
-    warning("Missing Progeny data to model:",paste("\n* ",missing_string),
-            "\nUsing all progenies average data for these missing values")
+    if(average){
+      warning("Missing Progeny data to model:",paste("\n* ",missing_string),
+              "\nUsing all progenies average data for these missing values")
+    }else{
+      warning("Missing Progeny data to model:",paste("\n* ",missing_string),
+              "\nset 'average' argument to TRUE to use average data for",
+              " these missing values")
+    }
   }
 
   # Make the VPalm list for each Progeny, then take average data for
@@ -95,6 +102,32 @@ extract_progenies= function(data, model, n, leaves= 45, seed= NULL,
       )
   }
 
+  # Extract average tree from each progeny in Prog_list
+  Averages= lapply(Prog_list, function(x)x$Average)
+
+  # Identifying all parameter names:
+  keys= unique(unlist(lapply(Prog_list[[1]], names)))
+  # Computing the averages from the average Tree of each progeny:
+  Average= setNames(do.call(mapply, c(FUN= pmean, lapply(Averages, `[`, keys))), keys)
+  # Order the average by the key just to be sure:
+  Average_list= Average[keys]
+
+  if(average){
+    # Replacing missing values (if any) for each tree by the average value:
+    Prog_list=
+      lapply(Prog_list, function(y){
+        lapply(y,
+               function(x){
+                 # making sure that x is rightly ordered:
+                 x= x[keys]
+                 # Finding the x with missing values:
+                 cond= lengths(x)<1 | is.na(x)
+                 # replacing those with average value:
+                 x[cond]= Average_list[cond]
+                 x
+               })
+      })
+  }
 
   return(c(Prog_list, Average= list(Average_list)))
 }

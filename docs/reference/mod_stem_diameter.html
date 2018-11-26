@@ -112,8 +112,8 @@ extract parameters used as VPalm inputs</p>
 
 <span class='fu'>mod_stem_height</span>(<span class='no'>data</span>)
 
-<span class='fu'>mod_rachis_length</span>(<span class='no'>data</span>, <span class='kw'>epsilon</span> <span class='kw'>=</span> <span class='fl'>10</span>^-<span class='fl'>6</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/lmeControl'>lmeControl</a></span>(<span class='kw'>maxIter</span>
-  <span class='kw'>=</span> <span class='fl'>5e+05</span>, <span class='kw'>niterEM</span> <span class='kw'>=</span> <span class='fl'>25000</span>))
+<span class='fu'>mod_rachis_length</span>(<span class='no'>data</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/lmeControl'>lmeControl</a></span>(<span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>, <span class='kw'>niterEM</span> <span class='kw'>=</span>
+  <span class='fl'>25000</span>))
 
 <span class='fu'>mod_petiole_ratio</span>(<span class='no'>data</span>)
 
@@ -121,8 +121,8 @@ extract parameters used as VPalm inputs</p>
 
 <span class='fu'>mod_nb_leaflet</span>(<span class='no'>data</span>)
 
-<span class='fu'>mod_C_declination</span>(<span class='no'>data</span>, <span class='kw'>epsilon</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/lmeControl'>lmeControl</a></span>(<span class='kw'>maxIter</span> <span class='kw'>=</span>
-  <span class='fl'>5e+05</span>, <span class='kw'>niterEM</span> <span class='kw'>=</span> <span class='fl'>25000</span>))
+<span class='fu'>mod_C_declination</span>(<span class='no'>data</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/lmeControl'>lmeControl</a></span>(<span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>, <span class='kw'>niterEM</span> <span class='kw'>=</span>
+  <span class='fl'>25000</span>))
 
 <span class='fu'>mod_leaf_curvature</span>(<span class='no'>data</span>)
 
@@ -133,20 +133,20 @@ extract parameters used as VPalm inputs</p>
 <span class='fu'>mod_leaflet_position</span>(<span class='no'>data</span>, <span class='no'>Area</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='kw pkg'>stats</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/stats/topics/nls.control'>nls.control</a></span>(<span class='kw'>maxiter</span> <span class='kw'>=</span>
   <span class='fl'>5e+05</span>))
 
-<span class='fu'>mod_leaflet_length_B</span>(<span class='no'>data</span>, <span class='kw'>epsilon</span> <span class='kw'>=</span> <span class='fl'>2e-06</span>,
-  <span class='kw'>control</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/lmeControl'>lmeControl</a></span>(<span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>, <span class='kw'>niterEM</span> <span class='kw'>=</span> <span class='fl'>25000</span>))
+<span class='fu'>mod_leaflet_length_B</span>(<span class='no'>data</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/lmeControl'>lmeControl</a></span>(<span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>, <span class='kw'>niterEM</span>
+  <span class='kw'>=</span> <span class='fl'>25000</span>))
 
-<span class='fu'>mod_leaflet_width_B</span>(<span class='no'>data</span>, <span class='kw'>epsilon</span> <span class='kw'>=</span> <span class='fl'>2e-06</span>,
-  <span class='kw'>control</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/lmeControl'>lmeControl</a></span>(<span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>, <span class='kw'>niterEM</span> <span class='kw'>=</span> <span class='fl'>25000</span>))
+<span class='fu'>mod_leaflet_width_B</span>(<span class='no'>data</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/lmeControl'>lmeControl</a></span>(<span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>, <span class='kw'>niterEM</span>
+  <span class='kw'>=</span> <span class='fl'>25000</span>))
 
-<span class='fu'>mod_leaflet_length</span>(<span class='no'>data</span>, <span class='kw'>epsilon</span> <span class='kw'>=</span> <span class='fl'>5e-06</span>,
-  <span class='kw'>control</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/nlmeControl'>nlmeControl</a></span>(<span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>, <span class='kw'>niterEM</span> <span class='kw'>=</span> <span class='fl'>25000</span>))
+<span class='fu'>mod_leaflet_length</span>(<span class='no'>data</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/nlmeControl'>nlmeControl</a></span>(<span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>, <span class='kw'>niterEM</span>
+  <span class='kw'>=</span> <span class='fl'>25000</span>))
 
-<span class='fu'>mod_leaflet_width</span>(<span class='no'>data</span>, <span class='kw'>epsilon</span> <span class='kw'>=</span> <span class='fl'>10</span>^-<span class='fl'>6</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/nlmeControl'>nlmeControl</a></span>(<span class='kw'>maxIter</span>
-  <span class='kw'>=</span> <span class='fl'>5e+05</span>, <span class='kw'>niterEM</span> <span class='kw'>=</span> <span class='fl'>25000</span>))
+<span class='fu'>mod_leaflet_width</span>(<span class='no'>data</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/nlmeControl'>nlmeControl</a></span>(<span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>, <span class='kw'>niterEM</span> <span class='kw'>=</span>
+  <span class='fl'>25000</span>))
 
-<span class='fu'>mod_leaflet_axial_angle</span>(<span class='no'>data</span>, <span class='kw'>epsilon</span> <span class='kw'>=</span> <span class='fl'>10</span>^-<span class='fl'>2</span>,
-  <span class='kw'>control</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/nlmeControl'>nlmeControl</a></span>(<span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>, <span class='kw'>niterEM</span> <span class='kw'>=</span> <span class='fl'>25000</span>))
+<span class='fu'>mod_leaflet_axial_angle</span>(<span class='no'>data</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/nlmeControl'>nlmeControl</a></span>(<span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>,
+  <span class='kw'>niterEM</span> <span class='kw'>=</span> <span class='fl'>25000</span>))
 
 <span class='fu'>mod_leaflet_radial_angle</span>(<span class='no'>data</span>)
 
@@ -154,8 +154,8 @@ extract parameters used as VPalm inputs</p>
 
 <span class='fu'>mod_leaflet_shape</span>(<span class='no'>data</span>)
 
-<span class='fu'>mod_petiole_width_C</span>(<span class='no'>data</span>, <span class='kw'>epsilon</span> <span class='kw'>=</span> <span class='fl'>10</span>^-<span class='fl'>6</span>,
-  <span class='kw'>control</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/lmeControl'>lmeControl</a></span>(<span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>, <span class='kw'>niterEM</span> <span class='kw'>=</span> <span class='fl'>25000</span>))
+<span class='fu'>mod_petiole_width_C</span>(<span class='no'>data</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/lmeControl'>lmeControl</a></span>(<span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>, <span class='kw'>niterEM</span>
+  <span class='kw'>=</span> <span class='fl'>25000</span>))
 
 <span class='fu'>mod_petiole_height</span>(<span class='no'>data</span>, <span class='kw'>control</span> <span class='kw'>=</span> <span class='kw pkg'>nlme</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/nlme/topics/nlmeControl'>nlmeControl</a></span>(<span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>, <span class='kw'>niterEM</span>
   <span class='kw'>=</span> <span class='fl'>25000</span>))</pre>
@@ -185,7 +185,6 @@ extract parameters used as VPalm inputs</p>
 
     <p>A <code><a href='http://www.rdocumentation.org/packages/tibble/topics/tibble'>tibble::tibble()</a></code> of the model outputs, eventually grouped by Progeny
 if several in input</p>
-<p>@importFrom dplyr group_by do mutate filter</p>
     
     <h2 class="hasAnchor" id="purpose-of-each-function"><a class="anchor" href="#purpose-of-each-function"></a>Purpose of each function</h2>
 

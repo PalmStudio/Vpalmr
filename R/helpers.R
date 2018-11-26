@@ -325,5 +325,10 @@ coef_sample= function(data, epsilon, type= c('sample','mean')){
 #' pmean(1:10, 21:30)
 pmean= function(..., na.rm = T){
   x= cbind(...)
-  rowMeans(x, na.rm= na.rm)
+  if(!is.null(x)){
+    x= rowMeans(x, na.rm= na.rm)
+  }else{
+    x= NULL
+  }
+  x
 }

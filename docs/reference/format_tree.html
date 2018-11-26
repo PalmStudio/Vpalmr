@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Simulation coefficient — coef_sample • Vpalmr</title>
+<title>Format a VPalm input list — format_tree • Vpalmr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,10 +30,10 @@
 
 
 
-<meta property="og:title" content="Simulation coefficient — coef_sample" />
+<meta property="og:title" content="Format a VPalm input list — format_tree" />
 
-<meta property="og:description" content="Computes the simulation coefficients from a sampling in
-the variance-covariance matrix for VPalm input." />
+<meta property="og:description" content="Format an extract_params() list or one of the extract_list() list
+to prepare for writting" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -96,54 +96,39 @@ the variance-covariance matrix for VPalm input." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Simulation coefficient</h1>
+    <h1>Format a VPalm input list</h1>
     
-    <div class="hidden name"><code>coef_sample.Rd</code></div>
+    <div class="hidden name"><code>format_tree.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Computes the simulation coefficients from a sampling in
-the variance-covariance matrix for VPalm input.</p>
+    <p>Format an <code><a href='extract_params.html'>extract_params()</a></code> list or one of the <code>extract_list()</code> list
+to prepare for writting</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>coef_sample</span>(<span class='no'>data</span>, <span class='no'>epsilon</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"sample"</span>, <span class='st'>"mean"</span>))</pre>
+    <pre class="usage"><span class='fu'>format_tree</span>(<span class='no'>data</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>The output from one of the <a href='mod_stem_diameter.html'>lme models</a></p></td>
-    </tr>
-    <tr>
-      <th>epsilon</th>
-      <td><p>epsilon value for matrix inversion</p></td>
-    </tr>
-    <tr>
-      <th>type</th>
-      <td><p>The type of sampling performed on the parameter distribution (see details)</p></td>
+      <td><p>An <code><a href='extract_params.html'>extract_params()</a></code> list, or one from the <code>extract_list()</code> lists</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The coefficients as a <code><a href='http://www.rdocumentation.org/packages/tibble/topics/tibble'>tibble::tibble()</a></code></p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>If <code>type = sample</code>, <code>data</code> must have a <code>MatG</code> column that represents the variance-covariance
-matrix, and a <code>coef_mean</code> for the mean coefficient values. It <code>type = mean</code>, <code>data</code> must have
-a <code>coef_mean</code> column only.
-Epsilon is used to avoid non semi-positive matrices, and is added to the matrix
-diagonal to make it closer to the identity matrix.
-The sampling is made using a normal distribution: <code>rnorm(mean= 0,sd= 1)</code>. If the type
-is equal to 'sample', the function makes a random sample in the distribution of the
-parameter using the mean coefficient and a sampled standard deviation. If it is set to
-'mean', only the mean coefficient is used.</p>
+    <p>A string in the VPalm input format</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='no'>VPalm_out</span><span class='kw'>=</span> <span class='kw pkg'>Vpalmr</span><span class='kw ns'>::</span><span class='fu'>extract_list</span>(<span class='kw'>data</span><span class='kw'>=</span> <span class='no'>Inputs</span>, <span class='kw'>model</span><span class='kw'>=</span> <span class='no'>models</span>, <span class='kw'>nb_leaves</span><span class='kw'>=</span> <span class='fl'>45</span>, <span class='kw'>seed</span><span class='kw'>=</span> <span class='fl'>10</span>)
+<span class='no'>average_params</span><span class='kw'>=</span> <span class='fu'>format_param</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>VPalm_out</span>$<span class='no'>Average</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -151,9 +136,9 @@ parameter using the mean coefficient and a sampled standard deviation. If it is 
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

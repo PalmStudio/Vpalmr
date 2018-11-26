@@ -292,10 +292,10 @@ import_data= function(parameter,development,phylotaxy,declination,curvature,tori
            Petiole_relative_height= Petiole_height/Petiole_max_height)
 
   out= list(Parameter,DataAll,Phylo,Dec,Curve,Tor,Area,LftAngle,PetioleSectionC,
-            RachisHeight)
+            RachisHeight,map)
   names(out)=
     c("Parameter","DataAll","Phylo","Dec","Curve","Tor","Area","LftAngle",
-      "PetioleSectionC","RachisHeight")
+      "PetioleSectionC","RachisHeight","MAP_requested")
 
   return(out)
 }

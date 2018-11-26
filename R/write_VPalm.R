@@ -1,67 +1,78 @@
-#' Write VPalm parameter lists
+
+#' Writes all progenies VPalm inputs
 #'
-#' @description Writes all the lists from [format_list()] as VPalm input files.
+#' @description Applies [write_tree()] successively to a [format_progeny()] output to
+#' write all trees from all progenies to a VPalm input file.
 #'
-#' @details This function applies [write_params()] sequentially to all progenies and to
-#' the average list.
-#'
-#' @param data A [format_list()] output
-#' @param path The path of the directory to write the files to.
-#' @param name (Optionnal) The names of the files. If `NULL`, the names of the progenies
-#' will be used
+#' @param data A pre-formated [format_progeny()] output list of matrices
+#' @param path The path of the directory to write in
 #'
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' out= format_list(data = VPalm_out)
-#' write_list(data = out)
-#' }
-#'
-write_list= function(data, path= getwd(), name= NULL){
+write_progeny= function(data,path){
+  prog= names(data)
+  name= mapply(function(x,y)paste(names(x),y,sep='_'),x=data, y=prog)
 
-  if(is.null(name)){
-    name= names(data)
-  }else{
-    if(length(name)!=length(data)){
-      stop("The name parameter length do not match the number of lists in data")
-    }
+  if(!is.null(data$Average)){
+    write_tree(data$Average, path = path, name = "All_Progenies_Average")
+    data= data[-grep('Average',names(data))]
+    name= name[-grep("Average",names(name))]
   }
 
+  mapply(FUN = function(x,y){
+    mapply(function(z,a){
+      write_tree(data = z, path = path, name= a)
+    },z= x, a= y)
+  }, x= data, y= name)
 
-  filenamePro= file.path(path,name,"MAP.txt")
-
-  write_param(data = data, )
-
-  # Average values from all progenies:
-  filenamePro= file.path(path,paste(pro,'_AverageTree_', map,"MAP.txt",sep = ""))
-  capture.output(ArchiOutputMean(Progeny=pro, nbLeafEmitted = nbLeafEmitted),file = filenamePro)
-
-  ###individuals
-  for (i in (1:20)){
-    filename= file.path("Outputs/ParametersFiles",paste(pro,'_','Tree',i,'_', map,"MAP.txt",sep = ""))
-    capture.output(ArchiOutput(Progeny=pro, nbLeafEmitted = nbLeafEmitted,seed=i),file = filename)
-  }
 }
 
 
-#' Write VPalm parameter
+
+#' Write VPalm tree parameter file
 #'
-#' @description Writes a parameter list from [format_param()] (or one from
-#'  [format_list()]) as a VPalm input files.
+#' @description Writes the input parameter file for VPalm from a pre-formated
+#' matrix, generally from [format_tree()]
 #'
+#' @param data A formated matrix input
+#' @param path The target directory
+#' @param name (Optionnal) The progeny/tree name
+#' @param age  (Optionnal) The age at which the progeny parameters were
+#'  computed from (see details)
 #'
-#' @param data A [format_param()] output (or one of the [format_list()])
-#' @param path The path of the VPalm input file
+#' @details If the `age` argument is not provided, the function will try to extract it from
+#' the matrix (from the `Modelled Months After Planting` row name).
 #'
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' out= format_list(data = VPalm_out)
-#' write_param(data = out$Average)
-#' }
+write_tree= function(data, path= getwd(), name= "vpalm_input", age=NULL){
+  if(!dir.exists(file.path(path))){
+    dir.create(file.path(path))
+  }
+
+  MAP= grep('Modelled Months After Planting',rownames(data))
+  if(is.null(age)&length(MAP)>0){
+    age= paste0('_',data[MAP,])
+    data= data[-MAP,]
+  }else{
+    age= '_unknown'
+  }
+  capture.output(data, file = file.path(path,paste0(name,age,'.txt')))
+  message("VPalm input file written in ",
+          file.path(getwd(),path,paste0(name,age,'.txt')), "\n")
+}
+
+
+#' Write model
 #'
-write_param= function(data,path= getwd()){
-  capture.output(data,file = path)
+#' @description Writes the models outputs to disk.
+#' @param data Model outputs, generally from [mod_all()]
+#' @param path Path to the folder where to write it
+#' @param name Name of the file to write
+#'
+#' @details The file can be read back using [base::readRDS()]
+#' @export
+#'
+write_models= function(data,path,name= 'models'){
+  saveRDS(data, file = file.path(path,paste0(name,".RData")))
 }

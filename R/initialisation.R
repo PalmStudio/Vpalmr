@@ -14,7 +14,6 @@
 init_list= function(){
   list(
     H0= 5,
-    nbLeafEmitted= 45,
     trunkBending_M=0,
     trunkBending_SD=0,
     # internodeFinalLength=2,

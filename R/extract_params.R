@@ -43,7 +43,7 @@ extract_trees= function(data, model, n, leaves= 45, seed= sample.int(1000,n),
   names(Trees_params)= paste0('Tree_',1:n)
 
   Average_params=
-    extract_params(data = data, model = model, leaves = leaves, seed = NULL,
+    extract_params(data = data, model = model, leaves = leaves, seed = 0,
                    init= init, type= 'mean')
 
   # Identifying the progenies parameter values:
@@ -131,7 +131,7 @@ extract_params= function(data, model, leaves= 45, seed= sample.int(1000,1),
   VP_list=
     list(
       seed= seed,
-
+      MAP_requested= data$MAP_requested,
       nbLeafEmitted= mean(data$DataAll$Physio_age),
       # FIXED PARAMETERS PER PROGENY --------------------------------------------
       # Stem phylotaxis
