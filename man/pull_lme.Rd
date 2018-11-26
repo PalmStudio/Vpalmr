@@ -4,12 +4,15 @@
 \alias{pull_lme}
 \title{Pull lme output}
 \usage{
-pull_lme(data, epsilon = 10^-6)
+pull_lme(data, epsilon = 10^-6, type = c("sample", "mean"))
 }
 \arguments{
 \item{data}{The output from one of the \link[=mod_stem_diameter]{lme models}}
 
 \item{epsilon}{epsilon value for matrix inversion}
+
+\item{type}{The type of sampling performed on the parameter distribution (see
+\code{\link[=coef_sample]{coef_sample()}})}
 }
 \value{
 A \code{\link[tibble:tibble]{tibble::tibble()}} with model outputs

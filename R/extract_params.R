@@ -40,7 +40,7 @@ extract_trees= function(data, model, n, leaves= 45, seed= sample.int(1000,n),
       extract_params(data = data, model = model, leaves = leaves, seed = x,
                      init= init, type= 'sample')
     })
-  names(Trees_params)= 1:n
+  names(Trees_params)= paste0('Tree_',1:n)
 
   Average_params=
     extract_params(data = data, model = model, leaves = leaves, seed = NULL,
@@ -175,28 +175,28 @@ extract_params= function(data, model, leaves= 45, seed= sample.int(1000,1),
 
       # parameters Leaflet radial angle
       leafletRadialHighA0Sup=
-        model$radial.nls%>%filter(Type=="High"&Mode=="sup")%>%
+        model$radial.nls%>%dplyr::filter(Type=="High"&Mode=="sup")%>%
         dplyr::pull(A0),
       leafletRadialHighAmaxSup=
-        model$radial.nls%>%filter(Type=="High"&Mode=="sup")%>%
+        model$radial.nls%>%dplyr::filter(Type=="High"&Mode=="sup")%>%
         dplyr::pull(Amax),
       leafletRadialHighA0Inf=
-        model$radial.nls%>%filter(Type=="High"&Mode=="inf")%>%
+        model$radial.nls%>%dplyr::filter(Type=="High"&Mode=="inf")%>%
         dplyr::pull(A0),
       leafletRadialHighAmaxInf=
-        model$radial.nls%>%filter(Type=="High"&Mode=="inf")%>%
+        model$radial.nls%>%dplyr::filter(Type=="High"&Mode=="inf")%>%
         dplyr::pull(Amax),
       leafletRadialLowA0Sup=
-        model$radial.nls%>%filter(Type=="Low"&Mode=="sup")%>%
+        model$radial.nls%>%dplyr::filter(Type=="Low"&Mode=="sup")%>%
         dplyr::pull(A0),
       leafletRadialLowAmaxSup=
-        model$radial.nls%>%filter(Type=="Low"&Mode=="sup")%>%
+        model$radial.nls%>%dplyr::filter(Type=="Low"&Mode=="sup")%>%
         dplyr::pull(Amax),
       leafletRadialLowA0Inf=
-        model$radial.nls%>%filter(Type=="Low"&Mode=="inf")%>%
+        model$radial.nls%>%dplyr::filter(Type=="Low"&Mode=="inf")%>%
         dplyr::pull(A0),
       leafletRadialLowAmaxInf=
-        model$radial.nls%>%filter(Type=="Low"&Mode=="inf")%>%
+        model$radial.nls%>%dplyr::filter(Type=="Low"&Mode=="inf")%>%
         dplyr::pull(Amax),
 
       # Frequency of leaflets type
@@ -250,24 +250,24 @@ extract_params= function(data, model, leaves= 45, seed= sample.int(1000,1),
       bWidthSlope= model$leaflet_width_B.lme$coef_simu[[1]][2],
 
       # Relative leaflet length
-      lengthFirst= max(0,model$leafleftLength.nlme$coef_simu[[1]][,'L0']),
-      lengthLast= max(0,model$leafleftLength.nlme$coef_simu[[1]][,'Lfin']),
-      posLengthMax= model$leafleftLength.nlme$coef_simu[[1]][,'Pos_Lmax'],
+      lengthFirst= max(0,model$leafleftLength.nlme$coef_simu[[1]]['L0']),
+      lengthLast= max(0,model$leafleftLength.nlme$coef_simu[[1]]['Lfin']),
+      posLengthMax= model$leafleftLength.nlme$coef_simu[[1]]['Pos_Lmax'],
 
       # Relative leaflet width
-      widthFirst= max(0,model$leafletWidth.nlme$coef_simu[[1]][,'W0']),
-      widthLast= max(0,model$leafletWidth.nlme$coef_simu[[1]][,'Wfin']),
-      posWidthMax= model$leafletWidth.nlme$coef_simu[[1]][,'Pos_Wmax'],
+      widthFirst= max(0,model$leafletWidth.nlme$coef_simu[[1]]['W0']),
+      widthLast= max(0,model$leafletWidth.nlme$coef_simu[[1]]['Wfin']),
+      posWidthMax= model$leafletWidth.nlme$coef_simu[[1]]['Pos_Wmax'],
 
       # Parameters Leaflet axial angle
-      leafletAxialAngleC= model$axialAngle.nlme$coef_simu[[1]][,'angleC'],
-      leafletAxialAngleA= model$axialAngle.nlme$coef_simu[[1]][,'angleA'],
-      leafletAxialAngleSlope= model$axialAngle.nlme$coef_simu[[1]][,'slopeC'],
+      leafletAxialAngleC= model$axialAngle.nlme$coef_simu[[1]]['angleC'],
+      leafletAxialAngleA= model$axialAngle.nlme$coef_simu[[1]]['angleA'],
+      leafletAxialAngleSlope= model$axialAngle.nlme$coef_simu[[1]]['slopeC'],
       leafletAxialAngle_SDP= model$axialAngle.nlme$sigma,
 
       # Parameters width sectionC
-      frondCpointWidthIntercept= model$petioleWidthC.lme$coef_simu[[1]][,'(Intercept)'],
-      frondCpointWidthSlope= model$petioleWidthC.lme$coef_simu[[1]][,'CtoA'],
+      frondCpointWidthIntercept= model$petioleWidthC.lme$coef_simu[[1]]['(Intercept)'],
+      frondCpointWidthSlope= model$petioleWidthC.lme$coef_simu[[1]]['CtoA'],
 
       # Parameters rachis relative height (mean + sd)
       rachisHeightTappering=

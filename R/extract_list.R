@@ -10,10 +10,14 @@
 #' @param n      The number of samplings for each progeny, or in other words, the
 #'  number of trees to be generated for each progeny
 #' @param leaves The number of leaves needed
-#' @param seed   The seeds for random parameter generation. Should be a named list of length equal
-#' to the number of progenies (names = names of the progenies), with n seeds each. If it is
-#' a length n vector only, it will be recycled through each progeny. If `NULL`, take a random seed.
+#' @param seed   The seeds for random parameter generation, see details.
 #' @param init   Initialisation values (see [extract_trees()])
+#'
+#' @details `seed` should be a named list of length equal to the number of progenies, and each
+#' object with n seeds each. The names of the list objects should match the ones of the
+#' progenies. Alternatively, `seed` can be a vector of seeds of length n that will be recycled
+#' for each progeny. If `NULL`, a random seed is generated for each tree of each progeny
+#' using [base::sample()].
 #'
 #' @return A list of several VPalm parameters lists, one for each tree sampled per progeny
 #' and the average tree of the progeny, and one with the average (non-NA) values for all
@@ -31,17 +35,24 @@ extract_progenies= function(data, model, n, leaves= 45, seed= NULL,
     })
   Prog= unique(unlist(Progenies))
 
-  # Testing the number of seeds:
+
+  # Control/Making of seeds  ------------------------------------------------
+
+  if(is.null(seed)){
+    warning("No seeds provided, generating random seeds")
+    seed= sample.int(1000,n*length(Prog))%>%
+      split(., rep(Prog, each= n))
+  }
   if(length(seed)==n & !is.list(seed)){
     # Make a list with repeated seed value for each progeny:
     seed= setNames(rep(list(seed),length(Prog)),Prog)
     warning("Number of seeds match n, recycle seeds through progenies")
   }
-  if(length(unlist(seed))!=(n*length(Prog))&is.null(seed)){
+  if(length(unlist(seed))!=(n*length(Prog))){
     stop("Number of seeds should match n or total number of trees (n * number of progenies)")
   }
-  if(all(Prog%in%names(seed))){
-    stop("Missing seed for progeny",Prog[!(Prog%in%names(seed))])
+  if(!all(Prog%in%names(seed))){
+    stop("Missing seed for progeny: ",paste(Prog[!(Prog%in%names(seed))], ' '))
   }
 
   nprog=
@@ -55,10 +66,12 @@ extract_progenies= function(data, model, n, leaves= 45, seed= NULL,
     sapply(mod_missing, function(x){
       paste(x,collapse = ", ")
     })
-  missing_string= paste(names(missing_string),":",missing_string)
 
-  warning("Missing Progeny data to model:\n","* ",missing_string,
-          "\nUsing average data for all progenies")
+  if(length(missing_string)>0){
+    missing_string= paste0(names(missing_string),", progeny: ",missing_string)
+    warning("Missing Progeny data to model:",paste("\n* ",missing_string),
+            "\nUsing all progenies average data for these missing values")
+  }
 
   # Make the VPalm list for each Progeny, then take average data for
   # parameters that are missing for the progeny (should return NA first):
@@ -76,9 +89,9 @@ extract_progenies= function(data, model, n, leaves= 45, seed= NULL,
       })
     Prog_list[[i]]=
       suppressWarnings(
-        Vpalmr::extract_trees(data= data_pro, model= mod_pro,
-                              leaves= leaves, seed = seed[[i]],
-                              init = init)
+        extract_trees(data= data_pro, model= mod_pro, n = n,
+                      leaves= leaves, seed = seed[[i]],
+                      init = init)
       )
   }
 

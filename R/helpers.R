@@ -239,7 +239,7 @@ pull_lme= function(data, epsilon= 10^-6, type= c('sample','mean')){
     dplyr::mutate(intercept= nlme::fixed.effects(mod)[1],
                   slope= nlme::fixed.effects(mod)[2],
                   cov= list(vcov(mod)),
-                  coef_mean= list(c(intercept, slope)),
+                  coef_mean= list(nlme::fixed.effects(mod)),
                   sigma= summary(mod)$sigma,
                   label= list(colnames(nlme::random.effects(mod))),
                   SdG1= as.numeric(nlme::VarCorr(mod)['(Intercept)','StdDev']),

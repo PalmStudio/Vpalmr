@@ -4,12 +4,14 @@
 \alias{coef_sample}
 \title{Simulation coefficient}
 \usage{
-coef_sample(data, epsilon)
+coef_sample(data, epsilon, type = c("sample", "mean"))
 }
 \arguments{
 \item{data}{The output from one of the \link[=mod_stem_diameter]{lme models}}
 
 \item{epsilon}{epsilon value for matrix inversion}
+
+\item{type}{The type of sampling performed on the parameter distribution (see details)}
 }
 \value{
 The coefficients as a \code{\link[tibble:tibble]{tibble::tibble()}}
@@ -19,9 +21,13 @@ Computes the simulation coefficients from a sampling in
 the variance-covariance matrix for VPalm input.
 }
 \details{
-\code{data} must have a \code{MatG} column that represents the variance-covariance
-matrix, and a \code{coef_mean} for the mean coefficient values.
+If \code{type = sample}, \code{data} must have a \code{MatG} column that represents the variance-covariance
+matrix, and a \code{coef_mean} for the mean coefficient values. It \code{type = mean}, \code{data} must have
+a \code{coef_mean} column only.
 Epsilon is used to avoid non semi-positive matrices, and is added to the matrix
 diagonal to make it closer to the identity matrix.
-The sampling is made using a normal distribution: \code{rnorm(mean= 0,sd= 1)}.
+The sampling is made using a normal distribution: \code{rnorm(mean= 0,sd= 1)}. If the type
+is equal to 'sample', the function makes a random sample in the distribution of the
+parameter using the mean coefficient and a sampled standard deviation. If it is set to
+'mean', only the mean coefficient is used.
 }

@@ -247,7 +247,7 @@ mod_nb_leaflet= function(data){
            nbSlope= coef(mod)['nbSlope'],
            nbInfl= coef(mod)['nbInfl'],
            sigma= summary(mod)$sigma,
-           coef_mean= list(c(nbMax, nbSlope, nbInfl)),
+           coef_mean= list(coef(mod)),
            cov= list(vcov(mod)))
 }
 
@@ -397,19 +397,16 @@ mod_leaflet_length= function(data, control= nlme::nlmeControl(maxIter=500000,
                            fixed= L0+Lfin+Pos_Lmax~1,
                            random= L0+Lfin+Pos_Lmax~1|TreeNumber,
                            control= control))%>%
-    mutate(L0= summary(mod)$coefficients$fixed['L0'],
-           Lfin= summary(mod)$coefficients$fixed['Lfin'],
-           Pos_Lmax= summary(mod)$coefficients$fixed['Pos_Lmax'],
-           sigma= summary(mod)$sigma,
+    mutate(sigma= summary(mod)$sigma,
            SdG1= as.numeric(VarCorr(mod)['L0','StdDev']),
            SdG2= as.numeric(VarCorr(mod)['Lfin','StdDev']),
            SdG3= as.numeric(VarCorr(mod)['Pos_Lmax','StdDev']),
            corG12= as.numeric(VarCorr(mod)['Lfin','Corr']),
            corG13= as.numeric(VarCorr(mod)['Pos_Lmax','Corr']),
            corG23= as.numeric(VarCorr(mod)['Pos_Lmax',
-                                           length(summary(mod)$coefficients$fixed)+1]),
+                                           length(nlme::fixed.effects(mod))+1]),
            cov= list(vcov(mod)),
-           coef_mean= list(c(L0,Lfin,Pos_Lmax)),
+           coef_mean= list(nlme::fixed.effects(mod)),
            label= list(colnames(summary(mod)$coefficients$random$TreeNumber)),
            MatG= list(
              matrix(data=c(SdG1^2, SdG1*SdG2*corG12, SdG1*SdG3*corG13,
@@ -457,10 +454,7 @@ mod_leaflet_width= function(data, control= nlme::nlmeControl(maxIter=500000,
                            fixed=W0+Wfin+Pos_Wmax~1,
                            random=W0+Wfin+Pos_Wmax~1|TreeNumber,
                            control= control))%>%
-    mutate(W0=summary(mod)$coefficients$fixed['W0'],
-           Wfin=summary(mod)$coefficients$fixed['Wfin'],
-           Pos_Wmax=summary(mod)$coefficients$fixed['Pos_Wmax'],
-           Sigma= summary(mod)$sigma,
+    mutate(Sigma= summary(mod)$sigma,
            SdG1= as.numeric(VarCorr(mod)['W0','StdDev']),
            SdG2= as.numeric(VarCorr(mod)['Wfin','StdDev']),
            SdG3= as.numeric(VarCorr(mod)['Pos_Wmax','StdDev']),
@@ -468,9 +462,9 @@ mod_leaflet_width= function(data, control= nlme::nlmeControl(maxIter=500000,
            corG13= as.numeric(VarCorr(mod)['Pos_Wmax','Corr']),
            corG23=
              as.numeric(VarCorr(mod)['Pos_Wmax',
-                                     length(summary(mod)$coefficients$fixed)+1]),
+                                     length(nlme::fixed.effects(mod))+1]),
            cov= list(vcov(mod)),
-           coef_mean= list(c(W0,Wfin,Pos_Wmax)),
+           coef_mean= list(nlme::fixed.effects(mod)),
            label= list(colnames(summary(mod)$coefficients$random$TreeNumber)),
            MatG= list(
              matrix( data= c(SdG1^2, SdG1*SdG2*corG12, SdG1*SdG3*corG13,
@@ -497,10 +491,7 @@ mod_leaflet_axial_angle= function(data,control= nlme::nlmeControl(maxIter=500000
                            fixed= angleC+slopeC+angleA~1,
                            random= angleC+slopeC+angleA~1|TreeNumber,
                            control= control))%>%
-    mutate(angleC= summary(mod)$coefficients$fixed['angleC'],
-           slopeC= summary(mod)$coefficients$fixed['slopeC'],
-           angleA= summary(mod)$coefficients$fixed['angleA'],
-           sigma= summary(mod)$sigma,
+    mutate(sigma= summary(mod)$sigma,
            SdG1 =as.numeric(VarCorr(mod)['angleC','StdDev']),
            SdG2=as.numeric(VarCorr(mod)['slopeC','StdDev']),
            SdG3 =as.numeric(VarCorr(mod)['angleA','StdDev']),
@@ -508,9 +499,9 @@ mod_leaflet_axial_angle= function(data,control= nlme::nlmeControl(maxIter=500000
            corG13=as.numeric(VarCorr(mod)['angleA','Corr']),
            corG23=
              as.numeric(VarCorr(mod)['angleA',
-                                     length(summary(mod)$coefficients$fixed)+1]),
+                                     length(nlme::fixed.effects(mod))+1]),
            cov= list(vcov(mod)),
-           coef_mean= list(c(angleC,slopeC, angleA)),
+           coef_mean= list(nlme::fixed.effects(mod)),
            label= list(colnames(summary(mod)$coefficients$random$TreeNumber)),
            MatG= list(
              matrix(
@@ -648,7 +639,7 @@ mod_petiole_height= function(data,control= nlme::nlmeControl(maxIter=500000,nite
                            fixed= a~1,
                            random= a~1|TreeNumber,
                            control= control))%>%
-    mutate(coef_mean= summary(mod)$coefficients$fixed,
+    mutate(coef_mean= nlme::fixed.effects(mod),
            sigma= summary(mod)$sigma,
            SdG1= nlme::intervals(mod)$reStruct$TreeNumber[1,'est.'],
            cov= list(vcov(mod)))
