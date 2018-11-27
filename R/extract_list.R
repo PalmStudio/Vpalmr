@@ -111,6 +111,8 @@ extract_progeny= function(data, model, n, leaves= 45, seed= NULL,
   Average= setNames(do.call(mapply, c(FUN= pmean, lapply(Averages, `[`, keys))), keys)
   # Order the average by the key just to be sure:
   Average_list= Average[keys]
+  # nbLeafEmitted should remain an integer:
+  Average_list$nbLeafEmitted= round(Average_list$nbLeafEmitted)
 
   if(average){
     # Replacing missing values (if any) for each tree by the average value:

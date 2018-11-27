@@ -11,7 +11,7 @@
 #'
 write_progeny= function(data,path){
   prog= names(data)
-  name= mapply(function(x,y)paste(names(x),y,sep='_'),x=data, y=prog)
+  name= mapply(function(x,y)paste(y,names(x),sep='_'),x=data, y=prog)
 
   if(!is.null(data$Average)){
     write_tree(data$Average, path = path, name = "All_Progenies_Average")
@@ -57,7 +57,7 @@ write_tree= function(data, path= getwd(), name= "vpalm_input", age=NULL){
   }else{
     age= '_unknown'
   }
-  capture.output(data, file = file.path(path,paste0(name,age,'.txt')))
+  writeLines(paste(names(data),data),file.path(path,paste0(name,age,'.txt')))
   message("VPalm input file written in ",
           file.path(getwd(),path,paste0(name,age,'.txt')), "\n")
 }
