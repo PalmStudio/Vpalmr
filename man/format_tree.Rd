@@ -7,18 +7,18 @@
 format_tree(data)
 }
 \arguments{
-\item{data}{An \code{\link[=extract_params]{extract_params()}} list, or one from the \code{\link[=extract_list]{extract_list()}} lists}
+\item{data}{An \code{\link[=extract_params]{extract_params()}} list, or one from the \code{\link[=extract_progeny]{extract_progeny()}} lists}
 }
 \value{
 A string in the VPalm input format
 }
 \description{
-Format an \code{\link[=extract_params]{extract_params()}} list or one of the \code{\link[=extract_list]{extract_list()}} list
+Format an \code{\link[=extract_params]{extract_params()}} list or one of the \code{\link[=extract_progeny]{extract_progeny()}} list
 to prepare for writting
 }
 \examples{
 \dontrun{
-VPalm_out= Vpalmr::extract_list(data= Inputs, model= models, nb_leaves= 45, seed= 10)
+VPalm_out= Vpalmr::extract_progeny(data= Inputs, model= models, nb_leaves= 45, seed= 10)
 average_params= format_param(data = VPalm_out$Average)
 }
 }

@@ -3,9 +3,10 @@ Type: Package
 Title: A Package To Create Architectural Inputs For The VPalm Model Using Field Data
 Version: 0.1.0
 Authors@R: c(person("Remi", "Vezy",, "remi.vezy@cirad.fr", c("aut", "cre", "cph"),comment = c(ORCID = "0000-0002-0808-1461")),
-    person("Rafael", "Perez",, "rafael.perez@cirad.fr", c("aut", "cph")))
+    person("Rafael", "Perez",, "rafael.perez@cirad.fr", c("aut", "cph")),
+    person("Jean", "Dauzat",, "jean.dauzat@cirad.fr", c("aut", "cph")))
 Description: Vpalmr is designed to import field architectural data, compute the input parameters and opf/ops files for the VPalm model.
-License: file LICENSE
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
@@ -18,4 +19,7 @@ Imports:
     tidyr,
     ggplot2,
     magrittr,
-    data.table
+    data.table,
+    stats,
+    utils,
+    rlang

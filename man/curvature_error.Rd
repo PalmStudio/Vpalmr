@@ -39,6 +39,6 @@ The function must be applied to each leaf independently
 \examples{
 \dontrun{
 library(Vpalmr)
-curvature_error(angC,position,Length,coefCurv,decAInfl)
+curvature_error(angC,position,Length,X,Y,coefCurv,decAInfl)
 }
 }

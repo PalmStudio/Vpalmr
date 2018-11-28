@@ -2,12 +2,16 @@
 % Please edit documentation in R/helpers.R
 \name{pull_lme}
 \alias{pull_lme}
-\title{Pull lme output}
+\alias{pull_nlme}
+\title{Pull (n)lme output}
 \usage{
 pull_lme(data, epsilon = 10^-6, type = c("sample", "mean"))
+
+pull_nlme(data, epsilon = 10^-6, type = c("sample", "mean"))
 }
 \arguments{
-\item{data}{The output from one of the \link[=mod_stem_diameter]{lme models}}
+\item{data}{The output from one of the \link[=mod_stem_diameter]{lme models} or
+\link[=mod_stem_diameter]{nlme models}}
 
 \item{epsilon}{epsilon value for matrix inversion}
 
@@ -18,10 +22,10 @@ pull_lme(data, epsilon = 10^-6, type = c("sample", "mean"))
 A \code{\link[tibble:tibble]{tibble::tibble()}} with model outputs
 }
 \description{
-Format lme outputs in a standard \code{\link[tibble:tibble]{tibble::tibble()}} and computes
+Format lme or nlme outputs in a standard \code{\link[tibble:tibble]{tibble::tibble()}} and computes
 some usefull informations such as covariance matrices. Carefull, this function is
-poorly designed for the moment and is only applicable on the lme used in this context
-because only two factors can be used.
+poorly designed for the moment and is only applicable on the (n)lme used in the context
+of the package because only two or three factors (lme and nlme resp.) can be used.
 }
 \details{
 Epsilon is used to avoid non semi-positive matrices, and is added to the matrix

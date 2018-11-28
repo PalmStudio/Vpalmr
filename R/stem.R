@@ -12,6 +12,6 @@
 #'
 #' @return The stem height
 #' @export
-Stem_height=function(X,y0,coef){
+stem_height=function(X,y0,coef){
   y0*exp(coef*X)
 }

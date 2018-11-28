@@ -30,9 +30,9 @@ plot_stem_height(data, model)
 
 plot_rachis_length(data, model, nb_leaves)
 
-plot_petiole_ratio(data, model, Physio_age)
+plot_petiole_ratio(data, model)
 
-plot_B_position(data, model, Physio_age)
+plot_B_position(data, model)
 
 plot_nb_leaflet(data, model)
 
@@ -40,7 +40,7 @@ plot_C_declination(data, model)
 
 plot_leaf_curvature(data, model)
 
-plot_A_declination(data, model)
+plot_A_declination(data, model, decMaxA = 180, decSlopeA = 0.01)
 
 plot_A_deviation(data, model)
 
@@ -71,7 +71,11 @@ plot_petiole_height(data, model)
 
 \item{model}{Model fitted from one of \link[=mod_stem_diameter]{models}}
 
-\item{Physio_age}{Physiological age, in number of leaves emmitted from birth}
+\item{nb_leaves}{Number of leaves required for model prediction}
+
+\item{decMaxA}{The maximum allowed declination angle at the A point}
+
+\item{decSlopeA}{The declination slope at point A}
 
 \item{mode}{Information level of the plot: "Progeny" for progeny scale, or "Tree"
 for tree scale.}
@@ -119,10 +123,6 @@ Leaflets can be positionned up, medium or down.
 \item \code{\link[=plot_petiole_width_C]{plot_petiole_width_C()}}: plot the petiole width at C point
 \item \code{\link[=plot_petiole_height]{plot_petiole_height()}}: plot the petiole heigth
 }
-
-@importFrom dplyr group_by do mutate filter rename do
-@importFrom tidyr unnest
-@importFrom ggplot2 ggplot facet_wrap geom_point geom_line ylab xlab aes
 }
 
 \examples{

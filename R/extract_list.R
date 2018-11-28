@@ -25,6 +25,8 @@
 #' progenies. Each list in the list has as many n lists that represents each sampled tree
 #' for each progeny.
 #'
+#' @importFrom rlang .data
+#'
 #' @export
 extract_progeny= function(data, model, n, leaves= 45, seed= NULL,
                           init= init_list(),average= T){
@@ -46,7 +48,7 @@ extract_progeny= function(data, model, n, leaves= 45, seed= NULL,
   }
   if(length(seed)==n & !is.list(seed)){
     # Make a list with repeated seed value for each progeny:
-    seed= setNames(rep(list(seed),length(Prog)),Prog)
+    seed= stats::setNames(rep(list(seed),length(Prog)),Prog)
     warning("Number of seeds match n, recycle seeds through progenies")
   }
   if(length(unlist(seed))!=(n*length(Prog))){
@@ -86,12 +88,12 @@ extract_progeny= function(data, model, n, leaves= 45, seed= NULL,
   for(i in Prog){
     mod_pro=
       lapply(model, function(x){
-        try({x= x%>%dplyr::filter(Progeny==i)}, silent = T)
+        try({x= x%>%dplyr::filter(.data$Progeny==i)}, silent = T)
         x
       })
     data_pro=
-      lapply(Inputs, function(x){
-        try({x= x%>%dplyr::filter(Progeny==i)}, silent = T)
+      lapply(data, function(x){
+        try({x= x%>%dplyr::filter(.data$Progeny==i)}, silent = T)
         x
       })
     Prog_list[[i]]=
@@ -108,7 +110,10 @@ extract_progeny= function(data, model, n, leaves= 45, seed= NULL,
   # Identifying all parameter names:
   keys= unique(unlist(lapply(Prog_list[[1]], names)))
   # Computing the averages from the average Tree of each progeny:
-  Average= setNames(do.call(mapply, c(FUN= pmean, lapply(Averages, `[`, keys))), keys)
+  Average=
+    stats::setNames(
+      do.call(mapply, c(FUN= pmean, lapply(Averages, `[`, keys))),
+      keys)
   # Order the average by the key just to be sure:
   Average_list= Average[keys]
   # nbLeafEmitted should remain an integer:

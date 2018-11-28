@@ -6,9 +6,6 @@
 \usage{
 init_list()
 }
-\arguments{
-\item{seed}{The seed to use for random generation}
-}
 \value{
 The default parameter list
 }

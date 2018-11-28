@@ -84,6 +84,8 @@ mod_petiole_height(data, control = nlme::nlmeControl(maxIter = 5e+05, niterEM
 \item{decMaxA}{The maximum allowed declination angle at the A point}
 
 \item{decSlopeA}{The declination slope at point A}
+
+\item{Area}{The area data from \code{\link[=import_data]{import_data()}}}
 }
 \value{
 A \code{\link[tibble:tibble]{tibble::tibble()}} of the model outputs, eventually grouped by Progeny

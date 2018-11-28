@@ -2,8 +2,6 @@
 #'
 #' @description Return the default initialisation for the parameters
 #'
-#' @param seed The seed to use for random generation
-#'
 #' @return The default parameter list
 #'
 #' @examples

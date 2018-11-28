@@ -12,7 +12,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' VPalm_out= Vpalmr::extract_list(data= Inputs, model= models, nb_leaves= 45, seed= 10)
+#' VPalm_out= Vpalmr::extract_progeny(data= Inputs, model= models, nb_leaves= 45, seed= 10)
 #' out= format_list(data = VPalm_out)
 #' }
 #'
@@ -28,16 +28,16 @@ format_progeny= function(data){
 
 #' Format a VPalm input list
 #'
-#' @description Format an [extract_params()] list or one of the [extract_list()] list
+#' @description Format an [extract_params()] list or one of the [extract_progeny()] list
 #' to prepare for writting
 #'
-#' @param data An [extract_params()] list, or one from the [extract_list()] lists
+#' @param data An [extract_params()] list, or one from the [extract_progeny()] lists
 #'
 #' @return A string in the VPalm input format
 #' @export
 #' @examples
 #' \dontrun{
-#' VPalm_out= Vpalmr::extract_list(data= Inputs, model= models, nb_leaves= 45, seed= 10)
+#' VPalm_out= Vpalmr::extract_progeny(data= Inputs, model= models, nb_leaves= 45, seed= 10)
 #' average_params= format_param(data = VPalm_out$Average)
 #' }
 format_tree=function(data){

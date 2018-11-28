@@ -4,7 +4,7 @@
 \alias{find_angle}
 \title{Compute the leaflet angles}
 \usage{
-find_angle(x, y)
+find_angle(x, y, res = 1, method = "smooth.spline", ...)
 }
 \arguments{
 \item{x}{The values in the x axis}
@@ -42,7 +42,7 @@ sampling resolution of \code{res}.
 \examples{
 \dontrun{
 library(Vpalmr)
-object_tans(x= 1:10,y= rep(1,10))
+find_angle(x= 1:10,y= rep(1,10))
 }
 }
 \seealso{

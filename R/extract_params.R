@@ -95,6 +95,8 @@ extract_trees= function(data, model, n, leaves= 45, seed= sample.int(1000,n),
 #' parameters as in [init_list()]. The user can use [init_list()] as a
 #' template to change the values of the init argument (see examples).
 #'
+#' @importFrom rlang .data
+#'
 #' @return A list of the parameters used as VPalm input
 #' @export
 #'
@@ -116,9 +118,9 @@ extract_params= function(data, model, leaves= 45, seed= sample.int(1000,1),
   set.seed(seed)
 
   # nlme:
-  model$leafleftLength.nlme%<>%coef_sample(epsilon= 5e-06, type= type)
-  model$leafletWidth.nlme%<>%coef_sample(epsilon= 10^-6, type= type)
-  model$axialAngle.nlme%<>%coef_sample(epsilon= 10^-2, type= type)
+  model$leafleftLength.nlme%<>%pull_nlme(epsilon= 5e-06, type= type)
+  model$leafletWidth.nlme%<>%pull_nlme(epsilon= 10^-6, type= type)
+  model$axialAngle.nlme%<>%pull_nlme(epsilon= 10^-2, type= type)
 
   # lme:
   model$rachisLength.lme%<>%pull_lme(epsilon= 10^-6, type= type)
@@ -136,7 +138,7 @@ extract_params= function(data, model, leaves= 45, seed= sample.int(1000,1),
       # FIXED PARAMETERS PER PROGENY --------------------------------------------
       # Stem phylotaxis
       frondPhyllo_M= mean(data$Phylo$Phylo,na.rm=T),
-      frondPhyllo_SD= sd(data$Phylo$Phylo,na.rm=T),
+      frondPhyllo_SD= stats::sd(data$Phylo$Phylo,na.rm=T),
 
       # stem height
       residStemHeight= model$model.stemHeight$sigma,
@@ -153,7 +155,7 @@ extract_params= function(data, model, leaves= 45, seed= sample.int(1000,1),
 
       # frond twist
       rachisTwistFinalAngle_M= mean(data$Tor$TwistA,na.rm=T),
-      rachisTwistFinalAngle_SD= sd(data$Tor$TwistA,na.rm=T),
+      rachisTwistFinalAngle_SD= stats::sd(data$Tor$TwistA,na.rm=T),
 
       # frond deviation
       rachisDevFinalAngle_M= model$Dev$DevA_deg,
@@ -175,29 +177,35 @@ extract_params= function(data, model, leaves= 45, seed= sample.int(1000,1),
 
       # parameters Leaflet radial angle
       leafletRadialHighA0Sup=
-        model$radial.nls%>%dplyr::filter(Type=="High"&Mode=="sup")%>%
-        dplyr::pull(A0),
+        model$radial.nls%>%
+        dplyr::filter(.data$Type=="High"&.data$Mode=="sup")%>%
+        dplyr::pull(.data$A0),
       leafletRadialHighAmaxSup=
-        model$radial.nls%>%dplyr::filter(Type=="High"&Mode=="sup")%>%
-        dplyr::pull(Amax),
+        model$radial.nls%>%
+        dplyr::filter(.data$Type=="High"&.data$Mode=="sup")%>%
+        dplyr::pull(.data$Amax),
       leafletRadialHighA0Inf=
-        model$radial.nls%>%dplyr::filter(Type=="High"&Mode=="inf")%>%
-        dplyr::pull(A0),
+        model$radial.nls%>%
+        dplyr::filter(.data$Type=="High"&.data$Mode=="inf")%>%
+        dplyr::pull(.data$A0),
       leafletRadialHighAmaxInf=
-        model$radial.nls%>%dplyr::filter(Type=="High"&Mode=="inf")%>%
-        dplyr::pull(Amax),
+        model$radial.nls%>%dplyr::filter(.data$Type=="High"&.data$Mode=="inf")%>%
+        dplyr::pull(.data$Amax),
       leafletRadialLowA0Sup=
-        model$radial.nls%>%dplyr::filter(Type=="Low"&Mode=="sup")%>%
-        dplyr::pull(A0),
+        model$radial.nls%>%
+        dplyr::filter(.data$Type=="Low"&.data$Mode=="sup")%>%
+        dplyr::pull(.data$A0),
       leafletRadialLowAmaxSup=
-        model$radial.nls%>%dplyr::filter(Type=="Low"&Mode=="sup")%>%
-        dplyr::pull(Amax),
+        model$radial.nls%>%dplyr::filter(.data$Type=="Low"&.data$Mode=="sup")%>%
+        dplyr::pull(.data$Amax),
       leafletRadialLowA0Inf=
-        model$radial.nls%>%dplyr::filter(Type=="Low"&Mode=="inf")%>%
-        dplyr::pull(A0),
+        model$radial.nls%>%
+        dplyr::filter(.data$Type=="Low"&.data$Mode=="inf")%>%
+        dplyr::pull(.data$A0),
       leafletRadialLowAmaxInf=
-        model$radial.nls%>%dplyr::filter(Type=="Low"&Mode=="inf")%>%
-        dplyr::pull(Amax),
+        model$radial.nls%>%
+        dplyr::filter(.data$Type=="Low"&.data$Mode=="inf")%>%
+        dplyr::pull(.data$Amax),
 
       # Frequency of leaflets type
       leafletFrequencyHigh= model$Rep[model$Rep$Type==1,]$Prop,
@@ -234,8 +242,8 @@ extract_params= function(data, model, leaves= 45, seed= sample.int(1000,1),
       APointAngle_SDP = model$decliA_nls$sigma,
 
       # Rachis curvature
-      coefCurve= rnorm(n=1,mean=mean(model$df_optim$coefCurv),
-                       sd=sd(model$df_optim$coefCurv)),
+      coefCurve= stats::rnorm(n=1,mean= mean(model$df_optim$coefCurv),
+                              sd= stats::sd(model$df_optim$coefCurv)),
 
       # Leaflets position
       coefDispo= model$dispo_nls$coefDispo,
@@ -272,7 +280,7 @@ extract_params= function(data, model, leaves= 45, seed= sample.int(1000,1),
       # Parameters rachis relative height (mean + sd)
       rachisHeightTappering=
         model$rachisRelativeHeight.nlme$coef_mean +
-        rnorm(n= 1, mean= 0, sd= model$rachisRelativeHeight.nlme$SdG1)
+        stats::rnorm(n= 1, mean= 0, sd= model$rachisRelativeHeight.nlme$SdG1)
     )
 
   c(init,VP_list)

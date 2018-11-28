@@ -21,7 +21,7 @@ progenies and to the average list.
 }
 \examples{
 \dontrun{
-VPalm_out= Vpalmr::extract_list(data= Inputs, model= models, nb_leaves= 45, seed= 10)
+VPalm_out= Vpalmr::extract_progeny(data= Inputs, model= models, nb_leaves= 45, seed= 10)
 out= format_list(data = VPalm_out)
 }
 

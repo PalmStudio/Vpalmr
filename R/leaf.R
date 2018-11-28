@@ -32,6 +32,7 @@ curvature=function(position,coefCurv){
 #' @return The leaf curvature as a data.frame of the X and Y coordinates of the input relative positions
 #'
 #' @importFrom dplyr mutate transmute "%>%"
+#' @importFrom rlang .data
 #'
 #' @examples
 #'\dontrun{
@@ -50,13 +51,13 @@ leaf_curvature=function(position,angC,angA,coefCurv,Length){
     curvature(position= position, coefCurv= coefCurv)*
     (angA*pi/180-angC*pi/180)
 
-  data.frame(position,angleSimu=angleSimu,segment=Length/nbSegment)%>%
-    mutate(xSimu= segment*sin(lag(angleSimu,default=0)),
-           ySimu= segment*cos(lag(angleSimu)))%>%
-    mutate(xSimu= replace(xSimu,1,0),
-           ySimu= replace(ySimu,1,0))%>%
-    transmute(X= cumsum(xSimu),
-              Y= cumsum(ySimu))
+  data.frame(position, angleSimu= angleSimu, segment= Length/nbSegment)%>%
+    mutate(xSimu= .data$segment*sin(lag(.data$angleSimu,default=0)),
+           ySimu= .data$segment*cos(lag(.data$angleSimu)))%>%
+    mutate(xSimu= replace(.data$xSimu,1,0),
+           ySimu= replace(.data$ySimu,1,0))%>%
+    transmute(X= cumsum(.data$xSimu),
+              Y= cumsum(.data$ySimu))
 }
 
 
@@ -81,21 +82,23 @@ leaf_curvature=function(position,angC,angA,coefCurv,Length){
 #'
 #' @return The error of prediction of the leaf curvature
 #'
+#' @importFrom rlang .data
+#'
 #' @examples
 #'\dontrun{
 #' library(Vpalmr)
-#' curvature_error(angC,position,Length,coefCurv,decAInfl)
+#' curvature_error(angC,position,Length,X,Y,coefCurv,decAInfl)
 #'}
 #' @export
 curvature_error= function(angC,position,Length,X_pos,Y_pos,coefCurv,decAInfl){
   angA= sigmoid(X= angC, max= 160, slope= 0.02,infl= decAInfl)
 
   leaf_curvature(position= position,
-                  angC= angC, angA= angA, coefCurv= coefCurv,
-                  Length= Length)%>%
-    mutate(dmin= sqrt((X_pos-X)**2 +
-                        (Y_pos-Y)**2))%>%
-    summarise(dmin= sum(dmin))%>%.$dmin
+                 angC= angC, angA= angA, coefCurv= coefCurv,
+                 Length= Length)%>%
+    mutate(dmin= sqrt((X_pos-.data$X)**2 +
+                        (Y_pos-.data$Y)**2))%>%
+    summarise(dmin= sum(.data$dmin))%>%.$dmin
 }
 
 
@@ -121,6 +124,8 @@ curvature_error= function(angC,position,Length,X_pos,Y_pos,coefCurv,decAInfl){
 #'
 #' @importFrom dplyr group_by summarise "%>%" ungroup
 #' @importFrom stats optim
+#' @importFrom rlang .data
+#'
 #' @examples
 #'\dontrun{
 #' library(Vpalmr)
@@ -134,13 +139,17 @@ optim_Leaf_Curv_Infl= function(data){
     optim(par= list(coefCurv=0.5,decAInfl=30),
           fn= function(par){
             data%>%
-              group_by(Rank)%>%
-              summarise(curv= curvature_error(angC= angC, position = RelativePositionRachisEstim,
-                                              Length = rachisLength, X_pos= X_distance_cm,
-                                              Y_pos= Y_distance_cm, coefCurv=par[1],
-                                              decAInfl=par[2]))%>%
+              group_by(.data$Rank)%>%
+              summarise(curv=
+                          curvature_error(angC= .data$angC,
+                                          position = .data$RelativePositionRachisEstim,
+                                          Length = .data$rachisLength,
+                                          X_pos= .data$X_distance_cm,
+                                          Y_pos= .data$Y_distance_cm,
+                                          coefCurv= par[1],
+                                          decAInfl= par[2]))%>%
               ungroup()%>%
-              summarise(curv= sum(curv))%>%as.data.frame()
+              summarise(curv= sum(.data$curv))%>%as.data.frame()
           },
           method="L-BFGS-B")
   data.frame(decAInfl= optimDist$par[["decAInfl"]],
@@ -175,7 +184,7 @@ deviation_A=function(devC,Length){
     sapply(devCm$devA, function(x){
       leaf_curvature(position = seq(0,1,0.01), angC = 0,
                      angA = x,coefCurv = 2,
-                     Length = Length)$X%>%tail(.,1)
+                     Length = Length)$X%>%utils::tail(.,1)
     })
 
   devCm$dif= abs(devCm$devCm-devCm$devC)

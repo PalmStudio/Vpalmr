@@ -79,6 +79,7 @@ distance_2D= function(x,y){
 #'
 #' @importFrom dplyr lag "%>%"
 #' @importFrom stats smooth.spline loess
+#' @importFrom rlang .data
 #'
 #' @examples
 #'\dontrun{
@@ -103,20 +104,21 @@ object_lenght= function(x,y,res = 1,method = c("loess","smooth.spline"),...){
     df_model=
       predict(object= smooth.spline(x,y,...),
               x= seq(0,max(x),res)%>%dplyr::union(x))%>%
-      data.frame()%>%dplyr::rename(x_res= x, y_res=y)
+      data.frame()%>%dplyr::rename(x_res= .data$x, y_res= .data$y)
   }else if(method=="loess"){
     df_model=
-      predict(object= stats::loess(y~x,...),x_pred)%>%
-      data.frame(x_res= x_pred,y_res= .)
+      stats::predict(object= stats::loess(y~x,...), x_pred)%>%
+      data.frame(x_res= x_pred, y_res= .)
   }
 
   df_model%>%
-    mutate(Distance= distance_2D(x = x_res,y = y_res),
-           x=cut(x_res,x,labels=x[-1]))%>%dplyr::slice(-1)%>%
-    group_by(x)%>%
-    summarise(Distance= sum(Distance))%>%
-    merge(data.frame(x,y),.,by="x",all.x=T)%>%
-    mutate(Distance= replace(Distance,1,0))
+    mutate(Distance= distance_2D(x = .data$x_res,y = .data$y_res),
+           x= cut(.data$x_res, x, labels= x[-1]))%>%
+    dplyr::slice(-1)%>%
+    group_by(.data$x)%>%
+    summarise(Distance= sum(.data$Distance))%>%
+    merge(data.frame(x,y),., by="x", all.x= TRUE)%>%
+    mutate(Distance= replace(.data$Distance,1,0))
 }
 
 
@@ -145,7 +147,7 @@ object_lenght= function(x,y,res = 1,method = c("loess","smooth.spline"),...){
 #'
 #' @return The tangent for each point of a curved object
 #' @seealso [object_lenght()]
-#' @importFrom dplyr lead "%>%"
+#' @importFrom dplyr lead "%>%" n
 #' @importFrom stats smooth.spline loess
 #'
 #' @examples
@@ -154,7 +156,7 @@ object_lenght= function(x,y,res = 1,method = c("loess","smooth.spline"),...){
 #' object_tans(x= 1:10,y= rep(1,10))
 #'}
 #' @export
-object_tans= function(x,y,res = 1,method = c("loess","smooth.spline"),...){
+object_tans= function(x,y,res = 1, method = c("loess","smooth.spline"),...){
 
   if(length(x)!=length(y)){stop("x and y must have the same length")}
   if(length(x)<4 & method=="smooth.spline"){
@@ -167,19 +169,21 @@ object_tans= function(x,y,res = 1,method = c("loess","smooth.spline"),...){
 
   if(method=="smooth.spline"){
     df_model=
-      predict(object= smooth.spline(x,y,...),
-              x= seq(0,max(x),res)%>%dplyr::union(x))%>%
-      data.frame()%>%dplyr::rename(x_res= x, y_res=y)
+      stats::predict(object= smooth.spline(x,y,...),
+                     x= seq(0,max(x),res)%>%dplyr::union(x))%>%
+      data.frame()%>%
+      dplyr::rename(x_res= .data$x, y_res= .data$y)
   }else if(method=="loess"){
     df_model=
-      predict(object= stats::loess(y~x,...),x_pred)%>%
-      data.frame(x_res= x_pred,y_res= .)
+      stats::predict(object= stats::loess(y~x,...),x_pred)%>%
+      data.frame(x_res= x_pred, y_res= .)
   }
 
   df_model%>%
-    dplyr::mutate(angle= atan((lead(x_res)-x_res)/(lead(y_res)-y_res)))%>%
-    dplyr::mutate(angle= replace(angle,n(),lag(angle)%>%.[n()]))%>%
-    dplyr::filter(x_res%in%x)
+    dplyr::mutate(angle= atan((lead(.data$x_res)-.data$x_res)/
+                                (lead(.data$y_res)-.data$y_res)))%>%
+    dplyr::mutate(angle= replace(.data$angle,n(),lag(.data$angle)%>%.[n()]))%>%
+    dplyr::filter(.data$x_res%in%x)
 }
 
 
@@ -216,14 +220,15 @@ warn_inc= function(warn,x){
 
 
 
-#' Pull lme output
+#' Pull (n)lme output
 #'
-#' @description Format lme outputs in a standard [tibble::tibble()] and computes
+#' @description Format lme or nlme outputs in a standard [tibble::tibble()] and computes
 #' some usefull informations such as covariance matrices. Carefull, this function is
-#' poorly designed for the moment and is only applicable on the lme used in this context
-#' because only two factors can be used.
+#' poorly designed for the moment and is only applicable on the (n)lme used in the context
+#' of the package because only two or three factors (lme and nlme resp.) can be used.
 #'
-#' @param data The output from one of the [lme models][mod_stem_diameter()]
+#' @param data The output from one of the [lme models][mod_stem_diameter()] or
+#' [nlme models][mod_stem_diameter()]
 #' @param epsilon epsilon value for matrix inversion
 #' @param type The type of sampling performed on the parameter distribution (see
 #'  [coef_sample()])
@@ -236,23 +241,51 @@ warn_inc= function(warn,x){
 #' @export
 pull_lme= function(data, epsilon= 10^-6, type= c('sample','mean')){
   data%>%
-    dplyr::mutate(intercept= nlme::fixed.effects(mod)[1],
-                  slope= nlme::fixed.effects(mod)[2],
-                  cov= list(vcov(mod)),
-                  coef_mean= list(nlme::fixed.effects(mod)),
-                  sigma= summary(mod)$sigma,
-                  label= list(colnames(nlme::random.effects(mod))),
-                  SdG1= as.numeric(nlme::VarCorr(mod)['(Intercept)','StdDev']),
-                  SdG2= as.numeric(nlme::VarCorr(mod)[2,'StdDev']),
-                  corG= as.numeric(nlme::VarCorr(mod)[2,'Corr']),
+    dplyr::mutate(intercept= nlme::fixed.effects(.data$mod)[1],
+                  slope= nlme::fixed.effects(.data$mod)[2],
+                  cov= list(stats::vcov(.data$mod)),
+                  coef_mean= list(nlme::fixed.effects(.data$mod)),
+                  sigma= summary(.data$mod)$sigma,
+                  label= list(colnames(nlme::random.effects(.data$mod))),
+                  SdG1= as.numeric(nlme::VarCorr(.data$mod)['(Intercept)','StdDev']),
+                  SdG2= as.numeric(nlme::VarCorr(.data$mod)[2,'StdDev']),
+                  corG= as.numeric(nlme::VarCorr(.data$mod)[2,'Corr']),
                   MatG= list(matrix(
-                    data=c(SdG1^2,SdG1 * SdG2 * corG,
-                           SdG1 * SdG2 * corG,SdG2^2),
-                    nrow= length(coef_mean), ncol=length(coef_mean),
-                    dimnames=list(label, label))))%>%
+                    data=c(.data$SdG1^2,
+                           .data$SdG1*.data$SdG2*.data$corG,
+                           .data$SdG1*.data$SdG2*.data$corG,
+                           .data$SdG2^2),
+                    nrow= length(.data$coef_mean), ncol= length(.data$coef_mean),
+                    dimnames=list(.data$label, .data$label))))%>%
     coef_sample(epsilon, type= type)
 }
 
+#' @rdname pull_lme
+#' @export
+pull_nlme= function(data, epsilon= 10^-6, type= c('sample','mean')){
+  data%>%
+    mutate(sigma= summary(.data$mod)$sigma,
+           SdG1= as.numeric(nlme::VarCorr(.data$mod)[1,'StdDev']),
+           SdG2= as.numeric(nlme::VarCorr(.data$mod)[2,'StdDev']),
+           SdG3= as.numeric(nlme::VarCorr(.data$mod)[3,'StdDev']),
+           corG12= as.numeric(nlme::VarCorr(.data$mod)[2,'Corr']),
+           corG13= as.numeric(nlme::VarCorr(.data$mod)[3,'Corr']),
+           corG23= as.numeric(utils::tail(nlme::VarCorr(.data$mod)[3,],1)),
+           cov= list(stats::vcov(.data$mod)),
+           coef_mean= list(nlme::fixed.effects(.data$mod)),
+           label= list(colnames(nlme::random.effects(.data$mod))),
+           MatG= list(
+             matrix(
+               data= c(.data$SdG1^2, .data$SdG1*.data$SdG2*.data$corG12,
+                       .data$SdG1*.data$SdG3*.data$corG13,
+                       .data$SdG1*.data$SdG2*.data$corG12,
+                       .data$SdG2^2, .data$SdG2*.data$SdG3*.data$corG23,
+                       .data$SdG1*.data$SdG3*.data$corG13,
+                       .data$SdG2*.data$SdG3*.data$corG23, .data$SdG3^2),
+               nrow=length(.data$coef_mean), ncol=length(.data$coef_mean),
+               dimnames=list(.data$label, .data$label))))%>%
+    coef_sample(epsilon, type= type)
+}
 
 #' Simulation coefficient
 #'
@@ -275,6 +308,8 @@ pull_lme= function(data, epsilon= 10^-6, type= c('sample','mean')){
 #'
 #' @return The coefficients as a [tibble::tibble()]
 #'
+#' @importFrom rlang .data
+#'
 #' @export
 coef_sample= function(data, epsilon, type= c('sample','mean')){
 
@@ -289,18 +324,18 @@ coef_sample= function(data, epsilon, type= c('sample','mean')){
 
     data$coef_sd=
       lapply(data$MatG, function(x){
-        matrix(data= rnorm(n=ncol(x)),ncol=ncol(x))%*%chol(x)
+        matrix(data= stats::rnorm(n=ncol(x)),ncol=ncol(x))%*%chol(x)
       })
 
     data$coef_simu=
       data%>%
       dplyr::do(coef_simu= .$coef_mean + .$coef_sd)%>%
-      dplyr::pull(coef_simu)
+      dplyr::pull(.data$coef_simu)
   }else{
     data$coef_simu=
       data%>%
       dplyr::do(coef_simu= .$coef_mean)%>%
-      dplyr::pull(coef_simu)
+      dplyr::pull(.data$coef_simu)
   }
   data
 }

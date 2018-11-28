@@ -30,15 +30,15 @@
 #' @examples
 #'\dontrun{
 #' library(Vpalmr)
-#' object_tans(x= 1:10,y= rep(1,10))
+#' find_angle(x= 1:10,y= rep(1,10))
 #'}
 #' @export
-find_angle= function(x,y){
-  angles= object_tans(x,y,method= "smooth.spline")$angle
+find_angle= function(x, y, res=1, method= "smooth.spline", ...){
+  angles= object_tans(x, y, res= res, method= method, ...)$angle
   angles[angles<0]= pi + angles[angles<0]
   angles= angles*180/pi
   angle_C= angles[1]
-  angle_A= tail(angles,1)
+  angle_A= utils::tail(angles,1)
   return(c(angle_C,angle_A))
 }
 

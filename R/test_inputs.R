@@ -10,7 +10,8 @@
 #'
 #' @details The outputs of the functions are used to make global warnings, messages or errors
 #'
-#' @importFrom dplyr group_by "%>%" arrange summarise filter mutate
+#' @importFrom dplyr group_by "%>%" arrange summarise filter mutate n
+#' @importFrom rlang .data
 #'
 #' @examples
 #'\dontrun{
@@ -26,13 +27,13 @@ test_Area= function(x){
 
   Test=
     x%>%
-    group_by(TreeNumber,LeafIndex,Section)%>%
+    group_by(.data$TreeNumber, .data$LeafIndex, .data$Section)%>%
     arrange(.by_group = T)%>%
-    summarise(LeafletRankOnSection= length(unique(LeafletRankOnSection)),
-              NbLeaflets= length(unique(NbLeaflets)))%>%
-    filter(NbLeaflets>1|LeafletRankOnSection>1)%>%
-    mutate(LeafletRankOnSection= ifelse(LeafletRankOnSection>1,"Problem","OK"),
-           NbLeaflets= ifelse(NbLeaflets>1,"Problem","OK"))
+    summarise(LeafletRankOnSection= length(unique(.data$LeafletRankOnSection)),
+              NbLeaflets= length(unique(.data$NbLeaflets)))%>%
+    filter(.data$NbLeaflets>1|.data$LeafletRankOnSection>1)%>%
+    mutate(LeafletRankOnSection= ifelse(.data$LeafletRankOnSection>1,"Problem","OK"),
+           NbLeaflets= ifelse(.data$NbLeaflets>1,"Problem","OK"))
 
   if(nrow(Test)>0){
     warn_inc(paste("* Problem on input Area data: wrong value. Hint:",
@@ -43,13 +44,13 @@ test_Area= function(x){
   # Test for potential error on maximum length:
   Lf=
     x%>%
-    filter(Width==0 & PositionOnLeaflet!=0)%>%
-    mutate(Position_rachis_rel= PositionOnRachis/LeafLength)%>%
-    group_by(Progeny,TreeNumber,LeafIndex)%>%
-    mutate(Max_length= max(PositionOnLeaflet))%>%
+    filter(.data$Width==0 & .data$PositionOnLeaflet!=0)%>%
+    mutate(Position_rachis_rel= .data$PositionOnRachis/.data$LeafLength)%>%
+    group_by(.data$Progeny,.data$TreeNumber,.data$LeafIndex)%>%
+    mutate(Max_length= max(.data$PositionOnLeaflet))%>%
     ungroup()%>%
-    mutate(Relative_length= PositionOnLeaflet/Max_length,
-           leafID= paste(TreeNumber,'Leaf', LeafIndex))
+    mutate(Relative_length= .data$PositionOnLeaflet/.data$Max_length,
+           leafID= paste(.data$TreeNumber,'Leaf', .data$LeafIndex))
 
   potential_error=
     Lf[Lf$Relative_length==1 &
@@ -67,17 +68,17 @@ test_Area= function(x){
   # Test for potential error in leaflets width:
   WidthAll=
     x%>%
-    filter(PositionOnLeaflet!=0)%>%
-    group_by(Progeny,TreeNumber,LeafIndex,Section)%>%
-    mutate(Leaflet_length= max(PositionOnLeaflet),
-           Leaflet_max_width= max(Width),
-           Position_rachis_rel= PositionOnRachis/LeafLength,
-           Width_rel= Width/Leaflet_max_width)%>%
-    filter(Width==0)%>%ungroup()%>%
-    group_by(TreeNumber,LeafIndex)%>%
-    mutate(Max_max_width= max(Leaflet_max_width),
-           Relative_max_width= Leaflet_max_width/Max_max_width,
-           leafID= paste(TreeNumber,'Leaf',LeafIndex))
+    filter(.data$PositionOnLeaflet!=0)%>%
+    group_by(.data$Progeny, .data$TreeNumber, .data$LeafIndex, .data$Section)%>%
+    mutate(Leaflet_length= max(.data$PositionOnLeaflet),
+           Leaflet_max_width= max(.data$Width),
+           Position_rachis_rel= .data$PositionOnRachis/.data$LeafLength,
+           Width_rel= .data$Width/.data$Leaflet_max_width)%>%
+    filter(.data$Width==0)%>%ungroup()%>%
+    group_by(.data$TreeNumber,.data$LeafIndex)%>%
+    mutate(Max_max_width= max(.data$Leaflet_max_width),
+           Relative_max_width= .data$Leaflet_max_width/.data$Max_max_width,
+           leafID= paste(.data$TreeNumber,'Leaf',.data$LeafIndex))
 
   potential_error=
     WidthAll[WidthAll$Relative_max_width ==1 &
@@ -101,11 +102,11 @@ test_development= function(x){
 
   Pet=
     x%>%
-    filter(TotalEmitted <= Physio_age+60 &
-             TotalEmitted >= Physio_age-60 &
-             FrondRank > 17 &
-             RatioPetiole > 0.5)%>%
-    group_by(Progeny,TreeNumber,LeafIndex)%>%
+    filter(.data$TotalEmitted <= .data$Physio_age+60 &
+             .data$TotalEmitted >= .data$Physio_age-60 &
+             .data$FrondRank > 17 &
+             .data$RatioPetiole > 0.5)%>%
+    group_by(.data$Progeny, .data$TreeNumber, .data$LeafIndex)%>%
     summarise(Pot_error= n())
 
   if(nrow(Pet)>0){

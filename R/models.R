@@ -7,6 +7,7 @@
 #' @param decMaxA   The maximum allowed declination angle at the A point
 #' @param decSlopeA The declination slope at point A
 #' @param control   The control parameters for each kind of model
+#' @param Area      The area data from [import_data()]
 #'
 #' @section Purpose of each function:
 #'
@@ -87,24 +88,25 @@
 #' @return A [tibble::tibble()] of the model outputs, eventually grouped by Progeny
 #'  if several in input
 #'
-#' @importFrom dplyr group_by do mutate filter rename
+#' @importFrom dplyr group_by do mutate filter rename ungroup
 #' @importFrom nlme VarCorr
+#' @importFrom rlang .data
 #'
 #' @export
 #'
 mod_stem_diameter= function(data){
   data%>%
-    dplyr::group_by(Progeny)%>%
+    dplyr::group_by(.data$Progeny)%>%
     dplyr::do(mod=
                 nls(data = .,
                     formula =
                       StemDiameter~sigmoid(X= RachisLength,max= finalStemDiam,
                                            slope= StemDiamSlope,infl= StemDiamInfl),
                     start= c(finalStemDiam= 300, StemDiamSlope= 0.01, StemDiamInfl= 200)))%>%
-    dplyr::mutate(finalStemDiam= coef(mod)['finalStemDiam'],
-                  slope= coef(mod)['StemDiamSlope'],
-                  Infl= coef(mod)['StemDiamInfl'],
-                  sigma= summary(mod)$sigma)
+    dplyr::mutate(finalStemDiam= stats::coef(.data$mod)['finalStemDiam'],
+                  slope= stats::coef(.data$mod)['StemDiamSlope'],
+                  Infl= stats::coef(.data$mod)['StemDiamInfl'],
+                  sigma= summary(.data$mod)$sigma)
 }
 
 
@@ -112,15 +114,15 @@ mod_stem_diameter= function(data){
 #' @export
 mod_stem_height= function(data){
   data%>%
-    dplyr::filter(!is.na(StemHeight17))%>%
-    dplyr::group_by(Progeny)%>%
+    dplyr::filter(!is.na(.data$StemHeight17))%>%
+    dplyr::group_by(.data$Progeny)%>%
     dplyr::do(mod=
                 nls(data = .,
                     formula =
-                      StemHeight17 ~ Stem_height(X= TotalEmitted, y0= 5, coef= coefStem),
+                      StemHeight17 ~ stem_height(X= TotalEmitted, y0= 5, coef= coefStem),
                     start= c(coefStem= 0.1)))%>%
-    dplyr::mutate(coef= coef(mod),
-                  sigma= summary(mod)$sigma)
+    dplyr::mutate(coef= stats::coef(.data$mod),
+                  sigma= summary(.data$mod)$sigma)
 }
 
 #' @rdname mod_stem_diameter
@@ -129,9 +131,10 @@ mod_rachis_length= function(data,
                             control= nlme::lmeControl(maxIter=500000,
                                                       niterEM=25000)){
   data%>%
-    filter(TotalEmitted<= Physio_age+30 & TotalEmitted>= Physio_age-30 &
-             !is.na(RachisLength))%>%
-    group_by(Progeny)%>%
+    filter(.data$TotalEmitted<= .data$Physio_age+30 &
+             .data$TotalEmitted>= .data$Physio_age-30 &
+             !is.na(.data$RachisLength))%>%
+    group_by(.data$Progeny)%>%
     dplyr::do(mod=
                 nlme::lme(RachisLength ~ LeafNumber,
                           data= .,
@@ -146,32 +149,32 @@ mod_petiole_ratio= function(data){
 
   Pet=
     data%>%
-    group_by(Progeny)%>%
-    filter(TotalEmitted<= Physio_age+60 &
-             TotalEmitted>= Physio_age-60 &
-             FrondRank>17)%>%
-    summarise(RatioPetiole_age= mean(RatioPetiole, na.rm= T),
-              RatioPetiole_age_sd= sd(RatioPetiole, na.rm= T))
+    group_by(.data$Progeny)%>%
+    filter(.data$TotalEmitted<= .data$Physio_age+60 &
+             .data$TotalEmitted>= .data$Physio_age-60 &
+             .data$FrondRank>17)%>%
+    summarise(RatioPetiole_age= mean(.data$RatioPetiole, na.rm= T),
+              RatioPetiole_age_sd= stats::sd(.data$RatioPetiole, na.rm= T))
 
   All_data=
     data%>%
-    group_by(Progeny)%>%
-    filter(FrondRank>17)%>%
-    summarise(RatioPetiole_all= mean(RatioPetiole, na.rm= T),
-              RatioPetiole_all_sd= sd(RatioPetiole, na.rm= T))
+    group_by(.data$Progeny)%>%
+    filter(.data$FrondRank>17)%>%
+    summarise(RatioPetiole_all= mean(.data$RatioPetiole, na.rm= T),
+              RatioPetiole_all_sd= stats::sd(.data$RatioPetiole, na.rm= T))
 
   out=
     merge(Pet,All_data,by= "Progeny")%>%
     mutate(RatioPetiole=
-             ifelse(is.na(RatioPetiole_age),
-                    RatioPetiole_all,
-                    RatioPetiole_age),
+             ifelse(is.na(.data$RatioPetiole_age),
+                    .data$RatioPetiole_all,
+                    .data$RatioPetiole_age),
            RatioPetiole_sd=
-             ifelse(is.na(RatioPetiole_age),
-                    RatioPetiole_all_sd,
-                    RatioPetiole_age_sd),
+             ifelse(is.na(.data$RatioPetiole_age),
+                    .data$RatioPetiole_all_sd,
+                    .data$RatioPetiole_age_sd),
            na_ratio=
-             ifelse(is.na(RatioPetiole_age),
+             ifelse(is.na(.data$RatioPetiole_age),
                     FALSE,TRUE))
 
   if(length(out$Progeny[!out$na_ratio])){
@@ -180,7 +183,7 @@ mod_petiole_ratio= function(data){
             "using average from all leaf ranks > 17")
   }
 
-  out%>%select(Progeny,RatioPetiole,RatioPetiole_sd)
+  out%>%select(.data$Progeny,.data$RatioPetiole,.data$RatioPetiole_sd)
 }
 
 
@@ -191,32 +194,32 @@ mod_B_position= function(data){
 
   Pet=
     data%>%
-    group_by(Progeny)%>%
-    filter(TotalEmitted<= Physio_age+60 &
-             TotalEmitted>= Physio_age-60 &
-             FrondRank>17 & !is.na(PosB))%>%
-    summarise(PosB_age= mean(PosB, na.rm= T),
-              PosB_age_sd= sd(PosB, na.rm= T))
+    group_by(.data$Progeny)%>%
+    filter(.data$TotalEmitted<= .data$Physio_age+60 &
+             .data$TotalEmitted>= .data$Physio_age-60 &
+             .data$FrondRank>17 & !is.na(.data$PosB))%>%
+    summarise(PosB_age= mean(.data$PosB, na.rm= T),
+              PosB_age_sd= stats::sd(.data$PosB, na.rm= T))
 
   All_data=
     data%>%
-    group_by(Progeny)%>%
-    filter(FrondRank>17)%>%
-    summarise(PosB_all= mean(PosB, na.rm= T),
-              PosB_all_sd= sd(PosB, na.rm= T))
+    group_by(.data$Progeny)%>%
+    filter(.data$FrondRank>17)%>%
+    summarise(PosB_all= mean(.data$PosB, na.rm= T),
+              PosB_all_sd= stats::sd(.data$PosB, na.rm= T))
 
   out=
     merge(Pet,All_data,by= "Progeny")%>%
     mutate(PosB=
-             ifelse(is.na(PosB_age),
-                    PosB_all,
-                    PosB_age),
+             ifelse(is.na(.data$PosB_age),
+                    .data$PosB_all,
+                    .data$PosB_age),
            PosB_sd=
-             ifelse(is.na(PosB_age),
-                    PosB_all_sd,
-                    PosB_age_sd),
+             ifelse(is.na(.data$PosB_age),
+                    .data$PosB_all_sd,
+                    .data$PosB_age_sd),
            na_ratio=
-             ifelse(is.na(PosB_age),
+             ifelse(is.na(.data$PosB_age),
                     FALSE,TRUE))
 
   if(length(out$Progeny[!out$na_ratio])){
@@ -225,7 +228,7 @@ mod_B_position= function(data){
             "using average from all leaf ranks > 17")
   }
 
-  out%>%select(Progeny,PosB,PosB_sd)
+  out%>%select(.data$Progeny,.data$PosB,.data$PosB_sd)
 }
 
 
@@ -233,8 +236,8 @@ mod_B_position= function(data){
 #' @export
 mod_nb_leaflet= function(data){
   data%>%
-    filter(!is.na(Nb_leaflets))%>%
-    group_by(Progeny)%>%
+    filter(!is.na(.data$Nb_leaflets))%>%
+    group_by(.data$Progeny)%>%
     dplyr::do(mod=
                 nls(data = .,
                     formula =
@@ -243,12 +246,12 @@ mod_nb_leaflet= function(data){
                     upper=c(nbMax=180,nbSlope=10,nbInfl=300),
                     lower= list(nbMax=0,nbSlope=-10,nbInfl=0),
                     algorithm='port'))%>%
-    mutate(nbMax= coef(mod)['nbMax'],
-           nbSlope= coef(mod)['nbSlope'],
-           nbInfl= coef(mod)['nbInfl'],
-           sigma= summary(mod)$sigma,
-           coef_mean= list(coef(mod)),
-           cov= list(vcov(mod)))
+    mutate(nbMax= stats::coef(.data$mod)['nbMax'],
+           nbSlope= stats::coef(.data$mod)['nbSlope'],
+           nbInfl= stats::coef(.data$mod)['nbInfl'],
+           sigma= summary(.data$mod)$sigma,
+           coef_mean= list(stats::coef(.data$mod)),
+           cov= list(stats::vcov(.data$mod)))
 }
 
 
@@ -257,8 +260,8 @@ mod_nb_leaflet= function(data){
 mod_C_declination= function(data, control= nlme::lmeControl(maxIter=500000,
                                                             niterEM=25000)){
   data%>%
-    filter(!is.na(Decli_C))%>%
-    group_by(Progeny)%>%
+    filter(!is.na(.data$Decli_C))%>%
+    group_by(.data$Progeny)%>%
     dplyr::do(mod=
                 nlme::lme(Decli_C ~ Rank,
                           data= .,
@@ -272,7 +275,7 @@ mod_C_declination= function(data, control= nlme::lmeControl(maxIter=500000,
 #' @export
 mod_leaf_curvature= function(data){
   data%>%
-    group_by(Progeny, TreeNumber)%>%
+    group_by(.data$Progeny, .data$TreeNumber)%>%
     dplyr::do(optim_Leaf_Curv_Infl(data= .))
 }
 
@@ -283,21 +286,23 @@ mod_A_declination= function(data, decMaxA= 180, decSlopeA= 0.01){
   # Checking if decAInfl was already computed, and if not, compute it:
   if(is.null(data$decAInfl)){
     data=
-      merge(data,mod_leaf_curvature(data)%>%select(-value,-conv),
+      merge(data,mod_leaf_curvature(data)%>%
+              select(-.data$value,-.data$conv),
             by = c('Progeny','TreeNumber'),all.x = T, sort = F)%>%
-      arrange(Progeny, TreeNumber, Rank, RelativePositionRachisEstim)
+      arrange(.data$Progeny, .data$TreeNumber, .data$Rank,
+              .data$RelativePositionRachisEstim)
   }
 
   data%>%
-    group_by(Progeny)%>%
-    dplyr::do(decliA_nls=
+    group_by(.data$Progeny)%>%
+    dplyr::do(mod=
                 nls(data = .,
                     formula =
                       angA~sigmoid(X= angC, max= decMaxA, slope= decSlopeA, infl= decAInfl),
                     start=list(decAInfl= mean(.$decAInfl)),upper=c(decAInfl =120),
                     lower= list(infl=0),algorithm='port'))%>%
-    mutate(decInflA= coef(decliA_nls),
-           sigma= summary(decliA_nls)$sigma)
+    mutate(decInflA= stats::coef(.data$mod),
+           sigma= summary(.data$mod)$sigma)
 }
 
 
@@ -305,13 +310,14 @@ mod_A_declination= function(data, decMaxA= 180, decSlopeA= 0.01){
 #' @export
 mod_A_deviation= function(data){
   data%>%
-    filter(Point=='A' & !is.na(Z_distance_cm))%>%
-    group_by(Progeny,TreeNumber,Rank)%>%
-    mutate(DevA_deg= deviation_A(devC = Z_distance_cm,
-                                 Length= rachisLength))%>%
-    group_by(Progeny)%>%
-    summarise(DevA_deg_sd= sd(DevA_deg),
-              DevA_deg= mean(DevA_deg))
+    filter(.data$Point=='A' & !is.na(.data$Z_distance_cm))%>%
+    group_by(.data$Progeny,.data$TreeNumber,.data$Rank)%>%
+    mutate(DevA_deg= deviation_A(devC = .data$Z_distance_cm,
+                                 Length= .data$rachisLength))%>%
+    ungroup()%>%
+    group_by(.data$Progeny)%>%
+    summarise(DevA_deg_sd= stats::sd(.data$DevA_deg),
+              DevA_deg= mean(.data$DevA_deg))
 }
 
 #' @rdname mod_stem_diameter
@@ -319,21 +325,21 @@ mod_A_deviation= function(data){
 mod_leaflet_position= function(data, Area,
                                control= stats::nls.control(maxiter=500000)){
   data%>%
-    group_by(TreeNumber,LeafIndex)%>%
-    summarise(LeafNumber= min(LeafNumber,na.rm = T))%>%
+    group_by(.data$TreeNumber,.data$LeafIndex)%>%
+    summarise(LeafNumber= min(.data$LeafNumber,na.rm = T))%>%
     merge(Area,., by=c("TreeNumber","LeafIndex"), sort= F)%>%
-    filter(PositionOnLeaflet==0)%>%
-    group_by(Progeny)%>%
-    dplyr::do(dispo_nls=
+    filter(.data$PositionOnLeaflet==0)%>%
+    group_by(.data$Progeny)%>%
+    dplyr::do(mod=
                 nls(data = .,
                     formula =
                       RelativePositionRachis~
                       leaflet_position(Rank= RelativeLeafletRank, param= coefDispo),
                     start= list(coefDispo=2),
                     control=control))%>%
-    mutate(coefDispo= coef(dispo_nls),
-           coefDispo_SD= summary(dispo_nls)$parameters[,'Std. Error'],
-           sigma= summary(dispo_nls)$sigma)
+    mutate(coefDispo= stats::coef(.data$mod),
+           coefDispo_SD= summary(.data$mod)$parameters[,'Std. Error'],
+           sigma= summary(.data$mod)$sigma)
 }
 
 
@@ -342,8 +348,8 @@ mod_leaflet_position= function(data, Area,
 mod_leaflet_length_B= function(data,control= nlme::lmeControl(maxIter=500000,
                                                               niterEM=25000)){
   data%>%
-    filter(!is.na(LeafletBLength))%>%
-    group_by(Progeny)%>%
+    filter(!is.na(.data$LeafletBLength))%>%
+    group_by(.data$Progeny)%>%
     dplyr::do(mod=
                 nlme::lme(LeafletBLength ~ RachisLength,
                           data= .,
@@ -357,8 +363,8 @@ mod_leaflet_length_B= function(data,control= nlme::lmeControl(maxIter=500000,
 mod_leaflet_width_B= function(data, control= nlme::lmeControl(maxIter=500000,
                                                               niterEM=25000)){
   data%>%
-    filter(!is.na(LeafletBLength))%>%
-    group_by(Progeny)%>%
+    filter(!is.na(.data$LeafletBLength))%>%
+    group_by(.data$Progeny)%>%
     dplyr::do(mod=
                 nlme::lme(LeafletBWidth ~ RachisLength,
                           data= .,
@@ -372,19 +378,19 @@ mod_leaflet_width_B= function(data, control= nlme::lmeControl(maxIter=500000,
 mod_leaflet_length= function(data, control= nlme::nlmeControl(maxIter=500000,
                                                               niterEM=25000)){
   data%>%
-    filter(Width==0 & PositionOnLeaflet!=0)%>%
-    mutate(Position_rachis_rel= PositionOnRachis/LeafLength)%>%
-    group_by(Progeny,TreeNumber,LeafIndex)%>%
-    mutate(Max_length= max(PositionOnLeaflet))%>%
+    filter(.data$Width==0 & .data$PositionOnLeaflet!=0)%>%
+    mutate(Position_rachis_rel= .data$PositionOnRachis/.data$LeafLength)%>%
+    group_by(.data$Progeny,.data$TreeNumber,.data$LeafIndex)%>%
+    mutate(Max_length= max(.data$PositionOnLeaflet))%>%
     ungroup()%>%
-    mutate(Relative_length= PositionOnLeaflet/Max_length)%>%
-    group_by(Progeny)%>%
+    mutate(Relative_length= .data$PositionOnLeaflet/.data$Max_length)%>%
+    group_by(.data$Progeny)%>%
     mutate(L0_obs=
-             mean(Relative_length[Position_rachis_rel==
-                                    min(Position_rachis_rel, na.rm=T)]),
+             mean(.data$Relative_length[.data$Position_rachis_rel==
+                                          min(.data$Position_rachis_rel, na.rm=T)]),
            Pos_Lmax_obs=
-             mean(Position_rachis_rel[Relative_length==
-                                        max(Relative_length,na.rm=T)]))%>%
+             mean(.data$Position_rachis_rel[.data$Relative_length==
+                                              max(.data$Relative_length,na.rm=T)]))%>%
     dplyr::do(mod=
                 nlme::nlme(Relative_length~
                              leaflet_length(X=Position_rachis_rel,
@@ -396,24 +402,7 @@ mod_leaflet_length= function(data, control= nlme::nlmeControl(maxIter=500000,
                                            Pos_Lmax= mean(.$Pos_Lmax_obs))),
                            fixed= L0+Lfin+Pos_Lmax~1,
                            random= L0+Lfin+Pos_Lmax~1|TreeNumber,
-                           control= control))%>%
-    mutate(sigma= summary(mod)$sigma,
-           SdG1= as.numeric(VarCorr(mod)['L0','StdDev']),
-           SdG2= as.numeric(VarCorr(mod)['Lfin','StdDev']),
-           SdG3= as.numeric(VarCorr(mod)['Pos_Lmax','StdDev']),
-           corG12= as.numeric(VarCorr(mod)['Lfin','Corr']),
-           corG13= as.numeric(VarCorr(mod)['Pos_Lmax','Corr']),
-           corG23= as.numeric(VarCorr(mod)['Pos_Lmax',
-                                           length(nlme::fixed.effects(mod))+1]),
-           cov= list(vcov(mod)),
-           coef_mean= list(nlme::fixed.effects(mod)),
-           label= list(colnames(summary(mod)$coefficients$random$TreeNumber)),
-           MatG= list(
-             matrix(data=c(SdG1^2, SdG1*SdG2*corG12, SdG1*SdG3*corG13,
-                           SdG1*SdG2*corG12, SdG2^2, SdG2*SdG3*corG23,
-                           SdG1*SdG3*corG13, SdG2*SdG3*corG23, SdG3^2),
-                    nrow= length(coef_mean), ncol= length(coef_mean),
-                    dimnames=list(label,label))))
+                           control= control))
 }
 
 
@@ -423,24 +412,23 @@ mod_leaflet_length= function(data, control= nlme::nlmeControl(maxIter=500000,
 mod_leaflet_width= function(data, control= nlme::nlmeControl(maxIter=500000,
                                                              niterEM=25000)){
   data%>%
-    filter(PositionOnLeaflet!=0)%>%
-    group_by(Progeny,TreeNumber,LeafIndex,Section)%>%
-    mutate(Leaflet_length= max(PositionOnLeaflet),
-           Leaflet_max_width= max(Width),
-           Position_rachis_rel= PositionOnRachis/LeafLength,
-           Width_rel= Width/Leaflet_max_width)%>%
-    filter(Width==0)%>%ungroup()%>%
-    group_by(TreeNumber,LeafIndex)%>%
-    mutate(Max_max_width= max(Leaflet_max_width),
-           Relative_max_width= Leaflet_max_width/Max_max_width,
-           leafID= paste(TreeNumber,'Leaf',LeafIndex))%>%
-    group_by(Progeny)%>%
+    filter(.data$PositionOnLeaflet!=0)%>%
+    group_by(.data$Progeny,.data$TreeNumber,.data$LeafIndex,.data$Section)%>%
+    mutate(Leaflet_length= max(.data$PositionOnLeaflet),
+           Leaflet_max_width= max(.data$Width),
+           Position_rachis_rel= .data$PositionOnRachis/.data$LeafLength,
+           Width_rel= .data$Width/.data$Leaflet_max_width)%>%
+    filter(.data$Width==0)%>%ungroup()%>%
+    group_by(.data$TreeNumber,.data$LeafIndex)%>%
+    mutate(Max_max_width= max(.data$Leaflet_max_width),
+           Relative_max_width= .data$Leaflet_max_width/.data$Max_max_width)%>%
+    group_by(.data$Progeny)%>%
     mutate(Wfin_obs=
-             mean(Relative_max_width[Position_rachis_rel==
-                                       max(Position_rachis_rel,na.rm=T)]),
+             mean(.data$Relative_max_width[.data$Position_rachis_rel==
+                                             max(.data$Position_rachis_rel,na.rm=T)]),
            Pos_Wmax_obs=
-             mean(Position_rachis_rel[Relative_max_width==
-                                        max(Relative_max_width,na.rm=T)])
+             mean(.data$Position_rachis_rel[.data$Relative_max_width==
+                                              max(.data$Relative_max_width,na.rm=T)])
     )%>%
     dplyr::do(mod=
                 nlme::nlme(Relative_max_width~
@@ -453,25 +441,7 @@ mod_leaflet_width= function(data, control= nlme::nlmeControl(maxIter=500000,
                                            Pos_Wmax= mean(.$Pos_Wmax_obs))),
                            fixed=W0+Wfin+Pos_Wmax~1,
                            random=W0+Wfin+Pos_Wmax~1|TreeNumber,
-                           control= control))%>%
-    mutate(Sigma= summary(mod)$sigma,
-           SdG1= as.numeric(VarCorr(mod)['W0','StdDev']),
-           SdG2= as.numeric(VarCorr(mod)['Wfin','StdDev']),
-           SdG3= as.numeric(VarCorr(mod)['Pos_Wmax','StdDev']),
-           corG12= as.numeric(VarCorr(mod)['Wfin','Corr']),
-           corG13= as.numeric(VarCorr(mod)['Pos_Wmax','Corr']),
-           corG23=
-             as.numeric(VarCorr(mod)['Pos_Wmax',
-                                     length(nlme::fixed.effects(mod))+1]),
-           cov= list(vcov(mod)),
-           coef_mean= list(nlme::fixed.effects(mod)),
-           label= list(colnames(summary(mod)$coefficients$random$TreeNumber)),
-           MatG= list(
-             matrix( data= c(SdG1^2, SdG1*SdG2*corG12, SdG1*SdG3*corG13,
-                             SdG1*SdG2*corG12, SdG2^2, SdG2*SdG3*corG23,
-                             SdG1*SdG3*corG13, SdG2*SdG3*corG23, SdG3^2),
-                     nrow= length(coef_mean), ncol= length(coef_mean),
-                     dimnames= list(label,label))))
+                           control= control))
 }
 
 
@@ -480,8 +450,8 @@ mod_leaflet_width= function(data, control= nlme::nlmeControl(maxIter=500000,
 mod_leaflet_axial_angle= function(data,control= nlme::nlmeControl(maxIter=500000,
                                                                   niterEM=25000)){
   data%>%
-    filter(!is.na(Axial))%>%
-    group_by(Progeny)%>%
+    filter(!is.na(.data$Axial))%>%
+    group_by(.data$Progeny)%>%
     dplyr::do(mod=
                 nlme::nlme(Axial~
                              leaflet_axial_angle(position= Position_rel, angle_C=angleC,
@@ -490,26 +460,7 @@ mod_leaflet_axial_angle= function(data,control= nlme::nlmeControl(maxIter=500000
                            start= list(fixed=c(angleC=101,slopeC=-2,angleA=10)),
                            fixed= angleC+slopeC+angleA~1,
                            random= angleC+slopeC+angleA~1|TreeNumber,
-                           control= control))%>%
-    mutate(sigma= summary(mod)$sigma,
-           SdG1 =as.numeric(VarCorr(mod)['angleC','StdDev']),
-           SdG2=as.numeric(VarCorr(mod)['slopeC','StdDev']),
-           SdG3 =as.numeric(VarCorr(mod)['angleA','StdDev']),
-           corG12=as.numeric(VarCorr(mod)['slopeC','Corr']),
-           corG13=as.numeric(VarCorr(mod)['angleA','Corr']),
-           corG23=
-             as.numeric(VarCorr(mod)['angleA',
-                                     length(nlme::fixed.effects(mod))+1]),
-           cov= list(vcov(mod)),
-           coef_mean= list(nlme::fixed.effects(mod)),
-           label= list(colnames(summary(mod)$coefficients$random$TreeNumber)),
-           MatG= list(
-             matrix(
-               data= c(SdG1^2, SdG1*SdG2*corG12, SdG1*SdG3*corG13,
-                       SdG1*SdG2*corG12, SdG2^2, SdG2*SdG3*corG23,
-                       SdG1*SdG3*corG13, SdG2*SdG3*corG23, SdG3^2),
-               nrow=length(coef_mean), ncol=length(coef_mean),
-               dimnames=list(label, label))))
+                           control= control))
 }
 
 
@@ -519,15 +470,18 @@ mod_leaflet_axial_angle= function(data,control= nlme::nlmeControl(maxIter=500000
 mod_leaflet_radial_angle= function(data){
   dataAngle=
     data%>%
-    group_by(Progeny,Type,Section)%>%
-    summarise(position= unique(Section/10),
-              mean= mean(Radial_deg,na.rm=T),
-              sd= sd(Radial_deg,na.rm=T))%>%
-    mutate(up= mean+2*sd,
-           dwn= mean-2*sd)
+    group_by(.data$Progeny,.data$Type,.data$Section)%>%
+    summarise(position= unique(.data$Section/10),
+              mean= mean(.data$Radial_deg,na.rm=T),
+              sd= stats::sd(.data$Radial_deg,na.rm=T))%>%
+    mutate(up= .data$mean+2*.data$sd,
+           dwn= .data$mean-2*.data$sd)%>%
+    ungroup()
 
   radialHigh.nls=
-    dataAngle%>%filter(Type!=-1)%>%na.omit()%>%group_by(Progeny,Type)%>%
+    dataAngle%>%
+    filter(.data$Type!=-1)%>%stats::na.omit()%>%
+    group_by(.data$Progeny,.data$Type)%>%
     dplyr::do(mod=
                 nls(formula =
                       up~
@@ -535,21 +489,25 @@ mod_leaflet_radial_angle= function(data){
                     data = .,start= list(A0= 10, Amax= max(.$up)), trace= F,
                     control= list(maxiter= 5000000, minFactor= 0.000000000001,
                                   warnOnly= T)))%>%
-    mutate(Mode= ifelse(Type==1,"sup","inf"),Type= "High")
+    mutate(Mode= ifelse(.data$Type==1,"sup","inf"), Type= "High")
 
   radialLow.nls=
-    dataAngle%>%filter(Type!=1)%>%na.omit()%>%group_by(Progeny,Type)%>%
+    dataAngle%>%
+    filter(.data$Type!=1)%>%stats::na.omit()%>%
+    group_by(.data$Progeny,.data$Type)%>%
     dplyr::do(mod=
                 nls(formula =
                       dwn~
                       leaflet_radial_angle(position= position, A0= A0, Amax= Amax, Xm= 0.5),
                     data = .,start= list(A0= -10, Amax= max(.$up)), trace= F,
                     control= list(maxiter= 5000000, minFactor= 0.000000000001, warnOnly= T)))%>%
-    mutate(Mode= ifelse(Type==0,"sup","inf"),Type= "Low")
+    mutate(Mode= ifelse(.data$Type==0,"sup","inf"), Type= "Low")
 
-  radial= rbind(radialHigh.nls,radialLow.nls)%>%arrange(Progeny,Type,Mode)
-  radial$A0= sapply(radial%>%.$mod,function(x){coef(x)['A0']})
-  radial$Amax= sapply(radial%>%.$mod,function(x){coef(x)['Amax']})
+  radial=
+    rbind(radialHigh.nls,radialLow.nls)%>%
+    arrange(.data$Progeny,.data$Type,.data$Mode)
+  radial$A0= sapply(radial%>%.$mod,function(x){stats::coef(x)['A0']})
+  radial$Amax= sapply(radial%>%.$mod,function(x){stats::coef(x)['Amax']})
   radial
 }
 
@@ -580,36 +538,39 @@ mod_leaflet_type_freq= function(data){
 mod_leaflet_shape= function(data){
   Shape=
     data%>%
-    group_by(TreeNumber,Section)%>%
-    mutate(Leaflet_length= max(PositionOnLeaflet),
-           Leaflet_max_width= max(Width),
-           Position_rachis_rel= PositionOnRachis/LeafLength,
-           Position_leaflet_rel= PositionOnLeaflet/Leaflet_length,
-           Width_rel= Width/Leaflet_max_width,
-           PositionRelative= Section/10)%>%
+    group_by(.data$TreeNumber,.data$Section)%>%
+    mutate(Leaflet_length= max(.data$PositionOnLeaflet),
+           Leaflet_max_width= max(.data$Width),
+           Position_rachis_rel= .data$PositionOnRachis/.data$LeafLength,
+           Position_leaflet_rel= .data$PositionOnLeaflet/.data$Leaflet_length,
+           Width_rel= .data$Width/.data$Leaflet_max_width,
+           PositionRelative= .data$Section/10)%>%
     summarise(
-      Progeny= unique(Progeny),
-      PositionRelative= unique(PositionRelative),
-      shape= list(suppressWarnings(leaflet_shape_nls(Width_rel,Position_leaflet_rel))))
+      Progeny= unique(.data$Progeny),
+      PositionRelative= unique(.data$PositionRelative),
+      shape=
+        list(suppressWarnings(
+          leaflet_shape_nls(.data$Width_rel,.data$Position_leaflet_rel))))
 
   Shape=
-    data.frame(Shape%>%select(-shape),
+    data.frame(Shape%>%select(-.data$shape),
                unlist(Shape$shape)%>%matrix(ncol = 2, byrow = T))%>%
-    rename(xm= X1, ym= X2)%>%
-    group_by(Progeny)%>%
-    mutate(xm.lm= list(lm(data=.,xm~PositionRelative)),
-           ym.lm= list(lm(data=.,ym~PositionRelative)))
+    rename(xm= .data$X1, ym= .data$X2)%>%
+    group_by(.data$Progeny)%>%
+    mutate(xm.lm= list(stats::lm(data=.,xm~PositionRelative)),
+           ym.lm= list(stats::lm(data=.,ym~PositionRelative)))%>%
+    ungroup()
 
-  Shape$xm_intercept= sapply(Shape$xm.lm, function(x){coef(x)[1]})
-  Shape$xm_slope= sapply(Shape$xm.lm, function(x){coef(x)[2]})
-  Shape$ym_intercept= sapply(Shape$ym.lm, function(x){coef(x)[1]})
-  Shape$ym_slope= sapply(Shape$ym.lm, function(x){coef(x)[2]})
+  Shape$xm_intercept= sapply(Shape$xm.lm, function(x){stats::coef(x)[1]})
+  Shape$xm_slope= sapply(Shape$xm.lm, function(x){stats::coef(x)[2]})
+  Shape$ym_intercept= sapply(Shape$ym.lm, function(x){stats::coef(x)[1]})
+  Shape$ym_slope= sapply(Shape$ym.lm, function(x){stats::coef(x)[2]})
   Shape%>%
-    group_by(Progeny)%>%
-    summarise(xm_intercept= mean(xm_intercept, na.rm= T),
-              xm_slope= mean(xm_slope, na.rm= T),
-              ym_intercept= mean(ym_intercept, na.rm= T),
-              ym_slope= mean(ym_slope, na.rm= T))
+    group_by(.data$Progeny)%>%
+    summarise(xm_intercept= mean(.data$xm_intercept, na.rm= T),
+              xm_slope= mean(.data$xm_slope, na.rm= T),
+              ym_intercept= mean(.data$ym_intercept, na.rm= T),
+              ym_slope= mean(.data$ym_slope, na.rm= T))
 }
 
 #' @rdname mod_stem_diameter
@@ -617,7 +578,7 @@ mod_leaflet_shape= function(data){
 mod_petiole_width_C= function(data, control= nlme::lmeControl(maxIter=500000,
                                                               niterEM=25000)){
   data%>%
-    group_by(Progeny)%>%
+    group_by(.data$Progeny)%>%
     dplyr::do(mod=
                 nlme::lme(Petiole_width_C_cm~CtoA,
                           data= .,
@@ -629,8 +590,8 @@ mod_petiole_width_C= function(data, control= nlme::lmeControl(maxIter=500000,
 #' @export
 mod_petiole_height= function(data,control= nlme::nlmeControl(maxIter=500000,niterEM=25000)){
   data%>%
-    filter(!is.na(Petiole_relative_height))%>%
-    group_by(Progeny)%>%
+    filter(!is.na(.data$Petiole_relative_height))%>%
+    group_by(.data$Progeny)%>%
     dplyr::do(mod=
                 nlme::nlme(Petiole_relative_height~
                              section_height(Position= Position_rachis_rel, a),
@@ -639,16 +600,16 @@ mod_petiole_height= function(data,control= nlme::nlmeControl(maxIter=500000,nite
                            fixed= a~1,
                            random= a~1|TreeNumber,
                            control= control))%>%
-    mutate(coef_mean= nlme::fixed.effects(mod),
-           sigma= summary(mod)$sigma,
-           SdG1= nlme::intervals(mod)$reStruct$TreeNumber[1,'est.'],
-           cov= list(vcov(mod)))
+    mutate(coef_mean= nlme::fixed.effects(.data$mod),
+           sigma= summary(.data$mod)$sigma,
+           SdG1= nlme::intervals(.data$mod)$reStruct$TreeNumber[1,'est.'],
+           cov= list(stats::vcov(.data$mod)))
 }
 
 
 #' Fit all models
 #'
-#' @param data  A list of all data (generally from [import_data()])
+#' @param x  A list of all data (generally from [import_data()])
 #'
 #' @return A list of all model fits
 #' @export
@@ -684,9 +645,10 @@ mod_all= function(x){
   df_optim= mod_leaf_curvature(x$Curve)
 
   x$Curve=
-    merge(x$Curve,df_optim%>%select(-value,-conv),
+    merge(x$Curve,df_optim%>%select(-.data$value,-.data$conv),
           by = c('Progeny','TreeNumber'),all.x = T, sort = F)%>%
-    dplyr::arrange(Progeny, TreeNumber, Rank, RelativePositionRachisEstim)
+    dplyr::arrange(.data$Progeny, .data$TreeNumber, .data$Rank,
+                   .data$RelativePositionRachisEstim)
 
   # Declination at A point
   decliA_nls= mod_A_declination(x$Curve)

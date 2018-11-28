@@ -7,7 +7,7 @@
 mod_all(x)
 }
 \arguments{
-\item{data}{A list of all data (generally from \code{\link[=import_data]{import_data()}})}
+\item{x}{A list of all data (generally from \code{\link[=import_data]{import_data()}})}
 }
 \value{
 A list of all model fits
