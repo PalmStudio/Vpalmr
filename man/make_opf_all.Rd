@@ -4,7 +4,7 @@
 \alias{make_opf_all}
 \title{Make a set of opf file}
 \usage{
-make_opf_all(parameter, opf, AMAPStudio)
+make_opf_all(parameter, opf, AMAPStudio, overwrite = T)
 }
 \arguments{
 \item{parameter}{The folder of the parameter files}
@@ -12,6 +12,8 @@ make_opf_all(parameter, opf, AMAPStudio)
 \item{opf}{The target folder for resulting OPF files}
 
 \item{AMAPStudio}{The root path to AMAPStudio where VPalm lives}
+
+\item{overwrite}{Boolean. Should pre-existing OPF files overwriten ?}
 }
 \value{
 Creates one OPF file from each VPalm parameter file

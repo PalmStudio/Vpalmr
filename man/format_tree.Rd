@@ -10,7 +10,11 @@ format_tree(data)
 \item{data}{An \code{\link[=extract_params]{extract_params()}} list, or one from the \code{\link[=extract_progeny]{extract_progeny()}} lists}
 }
 \value{
-A string in the VPalm input format
+A \code{\link[tibble:tibble]{tibble::tibble()}} with two columns:
+\itemize{
+\item name: the Java-formatted variable initialization for VPalm
+\item value: the variable value
+}
 }
 \description{
 Format an \code{\link[=extract_params]{extract_params()}} list or one of the \code{\link[=extract_progeny]{extract_progeny()}} list

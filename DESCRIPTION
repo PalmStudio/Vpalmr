@@ -22,4 +22,5 @@ Imports:
     data.table,
     stats,
     utils,
-    rlang
+    rlang,
+    tibble

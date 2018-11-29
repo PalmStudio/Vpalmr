@@ -7,7 +7,7 @@
 #'
 #' @param data A [extract_progeny()] output
 #'
-#' @return A list of VPalm inputs
+#' @return A list of VPalm inputs in the [format_tree()] format.
 #' @export
 #'
 #' @examples
@@ -33,7 +33,11 @@ format_progeny= function(data){
 #'
 #' @param data An [extract_params()] list, or one from the [extract_progeny()] lists
 #'
-#' @return A string in the VPalm input format
+#' @return A [tibble::tibble()] with two columns:
+#'
+#' * name: the Java-formatted variable initialization for VPalm
+#' * value: the variable value
+#'
 #' @export
 #' @examples
 #' \dontrun{
@@ -255,8 +259,6 @@ format_tree=function(data){
                collapse = ", "))
   }
 
-  output= as.matrix(unlist(paramValue))
-  rownames(output)= paramNames
+  tibble::tibble(name= paramNames, value= unlist(paramValue))
 
-  return(output)
 }

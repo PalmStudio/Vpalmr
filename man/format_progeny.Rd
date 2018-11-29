@@ -10,7 +10,7 @@ format_progeny(data)
 \item{data}{A \code{\link[=extract_progeny]{extract_progeny()}} output}
 }
 \value{
-A list of VPalm inputs
+A list of VPalm inputs in the \code{\link[=format_tree]{format_tree()}} format.
 }
 \description{
 Format all the lists from \code{\link[=extract_progeny]{extract_progeny()}} output to prepare for writting.

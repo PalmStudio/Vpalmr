@@ -4,7 +4,8 @@
 \alias{write_tree}
 \title{Write VPalm tree parameter file}
 \usage{
-write_tree(data, path = getwd(), name = "vpalm_input", age = NULL)
+write_tree(data, path = getwd(), name = "vpalm_input", age = NULL,
+  overwrite = TRUE, verbose = TRUE)
 }
 \arguments{
 \item{data}{A formated matrix input}
@@ -15,6 +16,14 @@ write_tree(data, path = getwd(), name = "vpalm_input", age = NULL)
 
 \item{age}{(Optionnal) The age at which the progeny parameters were
 computed from (see details)}
+
+\item{overwrite}{Boolean. Overwrite a pre-existing VPalm input file if set to \code{TRUE}}
+
+\item{verbose}{Prints a message if the writing is successfull}
+}
+\value{
+\code{TRUE} if the file was successfully written, \code{FALSE} if any error
+was encountered during the process.
 }
 \description{
 Writes the input parameter file for VPalm from a pre-formated

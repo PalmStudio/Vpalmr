@@ -4,12 +4,25 @@
 \alias{write_progeny}
 \title{Writes all progenies VPalm inputs}
 \usage{
-write_progeny(data, path)
+write_progeny(data, path = getwd(), wforce = FALSE, overwrite = TRUE,
+  verbose = TRUE)
 }
 \arguments{
 \item{data}{A pre-formated \code{\link[=format_progeny]{format_progeny()}} output list of matrices}
 
 \item{path}{The path of the directory to write in}
+
+\item{wforce}{Boolean. If \code{TRUE} (the default), continue to write files even if one
+returned an error, and return warnings instead. If \code{FALSE}, stop at first error.}
+
+\item{overwrite}{Boolean. Overwrite a pre-existing VPalm input file if set to \code{TRUE}}
+
+\item{verbose}{Prints a messages during writing. Especially usefull for debugging.}
+}
+\value{
+A matrix informing about the success of the writing of the files. All values
+should be \code{TRUE} if all file were successfully written. If any error was encountered, and if
+\code{wforce= TRUE} all file writing the file name if any error occured.
 }
 \description{
 Applies \code{\link[=write_tree]{write_tree()}} successively to a \code{\link[=format_progeny]{format_progeny()}} output to

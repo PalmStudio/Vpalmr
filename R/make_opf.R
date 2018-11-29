@@ -7,11 +7,12 @@
 #' or [write_tree()])
 #' @param opf The target OPF file path and name
 #' @param AMAPStudio The root path to AMAPStudio
+#' @param overwrite Boolean. Should pre-existing OPF files overwriten ?
 #'
 #' @return Writes an OPF file
 #' @export
 #'
-make_opf= function(parameter,opf,AMAPStudio){
+make_opf= function(parameter,opf,AMAPStudio,overwrite=T){
 
   if(!dir.exists(file.path(dirname(opf)))){
     dir.create(file.path(dirname(opf)))
@@ -30,6 +31,12 @@ make_opf= function(parameter,opf,AMAPStudio){
     )
 
   opf= normalizePath(opf, winslash= "/", mustWork = F)
+
+  if(file.exists(opf)){
+    stop("OPF file ", basename(opf)," already exist in ", dirname(opf),
+         "\nPlease set overwrite= TRUE, or change the destination or file name.")
+  }
+
   setwd(AMAPStudio)
   exportFile=
     paste('java -cp bin;ext/* jeeb.workspace.palms.elaeisRaphael.ElaeisArchiTree',
@@ -53,6 +60,7 @@ make_opf= function(parameter,opf,AMAPStudio){
 #' @param parameter The folder of the parameter files
 #' @param opf The target folder for resulting OPF files
 #' @param AMAPStudio The root path to AMAPStudio where VPalm lives
+#' @param overwrite Boolean. Should pre-existing OPF files overwriten ?
 #'
 #' @details The parameter folder should only contain parameter files. Subfolders
 #' are tolerated though.
@@ -60,7 +68,7 @@ make_opf= function(parameter,opf,AMAPStudio){
 #' @return Creates one OPF file from each VPalm parameter file
 #' @export
 #'
-make_opf_all= function(parameter,opf,AMAPStudio){
+make_opf_all= function(parameter,opf,AMAPStudio,overwrite=T){
   param_files=
     list.files(parameter,full.names = T)%>%
     .[!file.info(.)$isdir]%>%
@@ -74,6 +82,14 @@ make_opf_all= function(parameter,opf,AMAPStudio){
     basename(param_files)%>%gsub("\\.txt","\\.opf",.)%>%
     file.path(opf,.)%>%
     normalizePath(., winslash= "/", mustWork = F)
+
+  existing_opfs= sapply(opf_path, file.exists)
+  existing_opfs= existing_opfs[existing_opfs]
+  if(length(existing_opfs)>0 & overwrite== FALSE){
+    stop("One or more OPF file already exist:\n",
+         paste(basename(names(existing_opfs)), collapse= ", "),
+         "\nPlease set overwrite= TRUE, or change the destination folder.")
+  }
 
   AMAPStudio=
     tryCatch(normalizePath(AMAPStudio, winslash= "/", mustWork = T),
