@@ -1,6 +1,6 @@
 #' Pipe operator
 #'
-#' See \code{magrittr::\link[magrittr]{\%>\%}} for details.
+#' See [magrittr::%>%()] for details.
 #'
 #' @name %>%
 #' @rdname pipe
@@ -13,7 +13,7 @@ NULL
 
 #' Compound assignment pipe-operator
 #'
-#' See \code{magrittr::\link[magrittr]{\%<>\%}} for details.
+#' See [magrittr::%<>%()] for details
 #'
 #' @name %<>%
 #' @rdname pipeassign

@@ -15,10 +15,10 @@ pmean(..., na.rm = T)
 A vector of the parallel mean of same length as the arguments.
 }
 \description{
-Returns the parallel mean, in the same fashion as \code{\link[base:pmax]{base::pmax()}}
+Returns the parallel mean, in the same fashion as \code{\link[base:Extremes]{base::Extremes()}}
 }
 \details{
-The function uses a combination of \code{\link[base:cbind]{base::cbind()}} and \code{\link[base:rowMeans]{base::rowMeans()}}.
+The function uses a combination of \code{\link[base:cbind]{base::cbind()}} and \link[base:colSums]{rowMeans}.
 The function can take one or more vectors or matrices as arguments and returns a single
 'parallel' mean of the vectors. The first element of the result is the mean of the first
 elements of all the arguments and so on.

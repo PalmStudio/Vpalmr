@@ -4,12 +4,14 @@
 \alias{write_ops}
 \title{Write OPS}
 \usage{
-write_ops(data, path)
+write_ops(data, path, overwrite = T)
 }
 \arguments{
 \item{data}{A pre-formated OPS file, generally the output from \code{\link[=format_ops]{format_ops()}}}
 
 \item{path}{File path and name}
+
+\item{overwrite}{Boolean. Should pre-existing OPS files overwriten ?}
 }
 \value{
 Writes an OPS to disk

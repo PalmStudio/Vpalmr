@@ -343,12 +343,12 @@ coef_sample= function(data, epsilon, type= c('sample','mean')){
 
 #' Parallel mean
 #'
-#' @description Returns the parallel mean, in the same fashion as [base::pmax()]
+#' @description Returns the parallel mean, in the same fashion as [base::Extremes()]
 #'
 #' @param ...   Numeric arguments
 #' @param na.rm A logical indicating whether missing values should be removed.
 #'
-#' @details The function uses a combination of [base::cbind()] and [base::rowMeans()].
+#' @details The function uses a combination of [base::cbind()] and [rowMeans][base::colSums()].
 #' The function can take one or more vectors or matrices as arguments and returns a single
 #' 'parallel' mean of the vectors. The first element of the result is the mean of the first
 #' elements of all the arguments and so on.

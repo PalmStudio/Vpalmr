@@ -4,7 +4,8 @@
 \alias{make_opf_all}
 \title{Make a set of opf file}
 \usage{
-make_opf_all(parameter, opf, AMAPStudio, overwrite = T)
+make_opf_all(parameter, opf, AMAPStudio, overwrite = T, parallel = T,
+  NbCores = NULL)
 }
 \arguments{
 \item{parameter}{The folder of the parameter files}
@@ -14,6 +15,11 @@ make_opf_all(parameter, opf, AMAPStudio, overwrite = T)
 \item{AMAPStudio}{The root path to AMAPStudio where VPalm lives}
 
 \item{overwrite}{Boolean. Should pre-existing OPF files overwriten ?}
+
+\item{parallel}{Boolean. Is the OPF making to be distributed on available machine cores?}
+
+\item{NbCores}{The number of cores to use for parallel making. If \code{NULL} (the default)
+uses all cores minus one.}
 }
 \value{
 Creates one OPF file from each VPalm parameter file
@@ -25,5 +31,7 @@ each.
 }
 \details{
 The parameter folder should only contain parameter files. Subfolders
-are tolerated though.
+are tolerated though. The function uses \code{\link[parallel:detectCores]{parallel::detectCores()}} to find how many
+cores are available on the machine. This function has known issues, see help for more
+details.
 }

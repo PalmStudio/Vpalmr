@@ -61,14 +61,19 @@ make_opf= function(parameter,opf,AMAPStudio,overwrite=T){
 #' @param opf The target folder for resulting OPF files
 #' @param AMAPStudio The root path to AMAPStudio where VPalm lives
 #' @param overwrite Boolean. Should pre-existing OPF files overwriten ?
+#' @param parallel  Boolean. Is the OPF making to be distributed on available machine cores?
+#' @param NbCores   The number of cores to use for parallel making. If `NULL` (the default)
+#' uses all cores minus one.
 #'
 #' @details The parameter folder should only contain parameter files. Subfolders
-#' are tolerated though.
+#' are tolerated though. The function uses [parallel::detectCores()] to find how many
+#' cores are available on the machine. This function has known issues, see help for more
+#' details.
 #'
 #' @return Creates one OPF file from each VPalm parameter file
 #' @export
 #'
-make_opf_all= function(parameter,opf,AMAPStudio,overwrite=T){
+make_opf_all= function(parameter,opf,AMAPStudio,overwrite=T,parallel=T,NbCores=NULL){
   param_files=
     list.files(parameter,full.names = T)%>%
     .[!file.info(.)$isdir]%>%
@@ -98,7 +103,28 @@ make_opf_all= function(parameter,opf,AMAPStudio,overwrite=T){
                return(FALSE)
              })
 
-  mapply(function(x,y){
-    make_opf(parameter = x, opf = y, AMAPStudio = AMAPStudio)
-  },x= param_files, y= opf_path)
+  if(parallel){
+    if(is.null(NbCores)){
+      NbCores= parallel::detectCores()-1
+    }
+    cl= parallel::makeCluster(min(NbCores,length(param_files)))
+    parallel::makeCluster(cl)
+    parallel::clusterExport(cl=cl, varlist=c("AMAPStudio","make_opf"),
+                            envir=environment())
+
+    parallel::clusterMap(
+      cl = cl,
+      fun = function(x,y){
+        make_opf(parameter = x, opf = y, AMAPStudio = AMAPStudio)
+      }, x= param_files, y= opf_path)
+
+    parallel::stopCluster(cl)
+
+  }else{
+    mapply(function(x,y){
+      make_opf(parameter = x, opf = y, AMAPStudio = AMAPStudio)
+    },x= param_files, y= opf_path)
+  }
+
+
 }

@@ -19,19 +19,19 @@
 #'             x_distance = 8)
 #'
 design_plot= function(nRow,nCol,x0,y_distance,x_distance){
-  plan= data.frame(x=rep(NA,nbRow*nbCol),y=rep(NA,nbRow*nbCol),
-                   Row=rep(c(1:nbRow),each=nbCol),Col=rep(c(1:nbCol)))
+  plan= data.frame(x=rep(NA,nRow*nCol),y=rep(NA,nRow*nCol),
+                   Row=rep(c(1:nRow),each=nCol),Col=rep(c(1:nCol)))
 
   plan$x= (plan$Row-1/2)*x_distance
 
-  for (i in 1:nbRow){
+  for (i in 1:nRow){
     if (i%%2==0){
       plan[plan$Row==i,]$y=
-        seq(y_distance-y_distance/4,y_distance*(nbCol),y_distance)
+        seq(y_distance-y_distance/4,y_distance*(nCol),y_distance)
     }
     if (i%%2==1){
       plan[plan$Row==i,]$y=
-        seq(-y_distance/4,y_distance*(nbCol-1),y_distance)+y_distance/2
+        seq(-y_distance/4,y_distance*(nCol-1),y_distance)+y_distance/2
     }
   }
 
@@ -43,10 +43,10 @@ design_plot= function(nRow,nCol,x0,y_distance,x_distance){
          plan$Col!=min(plan$Col),]$Border='In'
 
   # Test for eventual issues:
-  if (round(plan[1,]$y-plan[nbCol,]$y,4)!=round(L,4)){
+  if (round(plan[1,]$y-plan[nCol,]$y,4)!= round(y_distance,4)){
     warning('Toricity issue for intra-row spacing')
   }
-  if (round(plan[1,]$x-plan[nbRow*nbCol,]$x,4)!=round(l,4)){
+  if (round(plan[1,]$x-plan[nRow*nCol,]$x,4)!=round(x_distance,4)){
     warning('Toricity issue for inter-row spacing')
   }
 
@@ -102,7 +102,7 @@ format_ops=function(design,Progeny,map){
   opf_table=NULL
   for (t in 1:nbTree){
     tableSub=
-      paste(1,t,paste('opf/',Progeny,'_Tree',t,'_',map,'MAP.opf',sep=''),
+      paste(1,t,paste('opf/',Progeny,'_Tree_',t,'_MAP_',map,'.opf',sep=''),
             design$x[t],design$y[t],design$z[t],design$scale[t],
             design$inclinationAzimut [t],design$inclinationAngle[t],
             design$stemTwist[t],sep='\t')
@@ -110,8 +110,8 @@ format_ops=function(design,Progeny,map){
   }
 
   c(
-    paste('# T xOrigin yOrigin zOrigin xSize ySize flat'),
-    paste('T 0 0 0 ',xmax,' ',ymax,' flat',sep=''),
+    # paste('# T xOrigin yOrigin zOrigin xSize ySize flat'),
+    # paste('T 0 0 0 ',xmax,' ',ymax,' flat',sep=''),
     paste('# Part 1: one line per plant in the scene'),
     paste('#sceneId plantId plantFileName x y z scale inclinationAzimut inclinationAngle stemTwist'),
     paste(opf_table[1,]),
@@ -146,11 +146,22 @@ format_ops=function(design,Progeny,map){
 #'
 #' @param data A pre-formated OPS file, generally the output from [format_ops()]
 #' @param path File path and name
+#' @param overwrite Boolean. Should pre-existing OPS files overwriten ?
 #'
 #' @return Writes an OPS to disk
 #' @export
 #'
-write_ops= function(data, path){
+write_ops= function(data, path, overwrite= T){
+  if(!dir.exists(file.path(dirname(path)))){
+    dir.create(file.path(dirname(path)))
+  }else{
+    if(file.exists(path) & !overwrite){
+      warning("OPS file ", basename(path), " already exists",
+              " and overwrite is set to FALSE. Please set overwrite= TRUE or change the",
+              " file name or directory")
+      return(basename(file_name))
+    }
+  }
   write(data, file= path)
 }
 

@@ -81,9 +81,9 @@ write_progeny= function(data, path= getwd(), wforce= FALSE,
 write_tree= function(data, path= getwd(), name= "vpalm_input", age=NULL,
                      overwrite= TRUE, verbose= TRUE){
 
-  MAP= grep('Modelled Months After Planting',rownames(data))
+  MAP= grep('Modelled Months After Planting',data$name)
   if(is.null(age)&length(MAP)>0){
-    age= paste0('_',data[MAP,])
+    age= paste0('_MAP_',data$value[MAP])
     data= data[-MAP,]
   }else{
     age= '_unknown'
@@ -102,13 +102,13 @@ write_tree= function(data, path= getwd(), name= "vpalm_input", age=NULL,
   }else{
     if(file.exists(file_name) & !overwrite){
       warning("VPalm parameter file ", basename(file_name), " already exists",
-              " and overwrite is set to TRUE. Please set overwrite= FALSE or change the",
+              " and overwrite is set to FALSE. Please set overwrite= TRUE or change the",
               " file name or directory")
       return(basename(file_name))
     }
   }
   tryCatch({
-    writeLines(paste(names(data),data),file_name)
+    writeLines(paste(data$name,data$value),file_name)
     if(verbose){message("VPalm input file written in ",file_name)}
     return(TRUE)
   },
