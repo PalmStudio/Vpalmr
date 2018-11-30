@@ -3,7 +3,6 @@
 \name{leaflet_length}
 \alias{leaflet_length}
 \alias{leaflet_max_width}
-\alias{leaflet_max_width}
 \title{Leaflet dimensions}
 \usage{
 leaflet_length(X, Ymax, Y0, Yfin, X_Ymax)

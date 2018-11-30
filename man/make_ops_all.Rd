@@ -7,7 +7,13 @@
 make_ops_all(Progeny, design, map, path)
 }
 \arguments{
-\item{path}{}
+\item{Progeny}{The progenies}
+
+\item{design}{The design of experiment, generally computed using \code{\link[=design_plot]{design_plot()}}}
+
+\item{map}{The age of the plantation in month after planting}
+
+\item{path}{The path of the target folder}
 }
 \value{
 An OPS for each progeny, each design and each map.

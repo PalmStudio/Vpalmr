@@ -160,10 +160,10 @@ write_ops= function(data, path){
 #' @description Format and write OPS from a set of design experiment(s),
 #' map and progenies, by applying [format_ops()] and [write_ops()] sequentially
 #'
-#' @param Progeny
-#' @param design
-#' @param map
-#' @param path
+#' @param Progeny The progenies
+#' @param design  The design of experiment, generally computed using [design_plot()]
+#' @param map     The age of the plantation in month after planting
+#' @param path    The path of the target folder
 #'
 #' @details The function uses [base::mapply()] to apply both [format_ops()] and
 #'  [write_ops()] to any number of progeny, design, or map. So if these arguments

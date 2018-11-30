@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Import all data — import_data • Vpalmr</title>
+<title>Make a set of opf file — make_opf_all • Vpalmr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,11 @@
 
 
 
-<meta property="og:title" content="Import all data — import_data" />
+<meta property="og:title" content="Make a set of opf file — make_opf_all" />
 
-<meta property="og:description" content="Import and pre-compute the input data for VPalm" />
+<meta property="og:description" content="Make a call to make_opf() successively on all VPalm parameter
+files present on the parameter folder to create an Open Plant Format from
+each." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -97,89 +99,52 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Import all data</h1>
+    <h1>Make a set of opf file</h1>
     
-    <div class="hidden name"><code>import_data.Rd</code></div>
+    <div class="hidden name"><code>make_opf_all.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Import and pre-compute the input data for VPalm</p>
+    <p>Make a call to <code><a href='make_opf.html'>make_opf()</a></code> successively on all VPalm parameter
+files present on the <code>parameter</code> folder to create an Open Plant Format from
+each.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>import_data</span>(<span class='no'>parameter</span>, <span class='no'>development</span>, <span class='no'>phylotaxy</span>, <span class='no'>declination</span>, <span class='no'>curvature</span>,
-  <span class='no'>toricity</span>, <span class='no'>leaf_area</span>, <span class='no'>axial_angle</span>, <span class='no'>petiole_width</span>, <span class='no'>twist</span>, <span class='no'>map</span>)</pre>
+    <pre class="usage"><span class='fu'>make_opf_all</span>(<span class='no'>parameter</span>, <span class='no'>opf</span>, <span class='no'>AMAPStudio</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='no'>T</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>parameter</th>
-      <td><p>File path to the parameter file (ParameterSimu.csv)</p></td>
+      <td><p>The folder of the parameter files</p></td>
     </tr>
     <tr>
-      <th>development</th>
-      <td><p>File path to the development file (Development_Rep4_SMSE.csv)</p></td>
+      <th>opf</th>
+      <td><p>The target folder for resulting OPF files</p></td>
     </tr>
     <tr>
-      <th>phylotaxy</th>
-      <td><p>File path to the phylotaxy file (Stem_SMSE14.csv)</p></td>
+      <th>AMAPStudio</th>
+      <td><p>The root path to AMAPStudio where VPalm lives</p></td>
     </tr>
     <tr>
-      <th>declination</th>
-      <td><p>File path to the declination file (A_SMSE_Nov14.csv)</p></td>
-    </tr>
-    <tr>
-      <th>curvature</th>
-      <td><p>File path to the leaf curvature file (LeafCurvature_SMSE14.csv)</p></td>
-    </tr>
-    <tr>
-      <th>toricity</th>
-      <td><p>File path to the leaf toricity file (AnglesC&amp;A_SMSE_Nov14.csv)</p></td>
-    </tr>
-    <tr>
-      <th>leaf_area</th>
-      <td><p>File path to the leaf area file (LeafArea_monitoring_SMSE.csv)</p></td>
-    </tr>
-    <tr>
-      <th>axial_angle</th>
-      <td><p>File path to the leaf axial angle file (LeafDispositionComp_SMSE14.csv)</p></td>
-    </tr>
-    <tr>
-      <th>petiole_width</th>
-      <td><p>File path to the leaf petiole width file (Petiole_SMSE14.csv)</p></td>
-    </tr>
-    <tr>
-      <th>twist</th>
-      <td><p>File path to the leaf twist file (Torsion_SMSE14.csv), used to compute
-leaf nerve height.</p></td>
-    </tr>
-    <tr>
-      <th>map</th>
-      <td><p>Physiological age requested in month after planting</p></td>
+      <th>overwrite</th>
+      <td><p>Boolean. Should pre-existing OPF files overwriten ?</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list of the imported and pre-processed files</p>
+    <p>Creates one OPF file from each VPalm parameter file</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The parameter folder should only contain parameter files. Subfolders
+are tolerated though.</p>
     
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='kw pkg'>Vpalmr</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/Vpalmr/topics/import_data'>import_data</a></span>(<span class='kw'>parameter</span><span class='kw'>=</span> <span class='st'>'Archi/ParameterSimu.csv'</span>,
-                    <span class='kw'>development</span><span class='kw'>=</span> <span class='st'>'Archi/Development_Rep4_SMSE.csv'</span>,
-                    <span class='kw'>phylotaxy</span><span class='kw'>=</span> <span class='st'>"Archi/Stem_SMSE14.csv"</span>,
-                    <span class='kw'>declination</span><span class='kw'>=</span> <span class='st'>"Archi/AnglesC&amp;A_SMSE_Nov14.csv"</span>,
-                    <span class='kw'>curvature</span><span class='kw'>=</span> <span class='st'>"Archi/LeafCurvature_SMSE14.csv"</span>,
-                    <span class='kw'>toricity</span><span class='kw'>=</span> <span class='st'>'Archi/AnglesC&amp;A_SMSE_Nov14.csv'</span>,
-                    <span class='kw'>leaf_area</span><span class='kw'>=</span> <span class='st'>'Archi/LeafArea_monitoring_SMSE.csv'</span>,
-                    <span class='kw'>axial_angle</span><span class='kw'>=</span> <span class='st'>"Archi/LeafDispositionComp_SMSE14.csv"</span>,
-                    <span class='kw'>petiole_width</span><span class='kw'>=</span> <span class='st'>"Archi/Petiole_SMSE14.csv"</span>,
-                    <span class='kw'>twist</span><span class='kw'>=</span> <span class='st'>"Archi/Torsion_SMSE14.csv"</span>)
-<span class='co'># }</span><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -187,9 +152,9 @@ leaf nerve height.</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+
+      <li><a href="#details">Details</a></li>
+          </ul>
 
   </div>
 </div>

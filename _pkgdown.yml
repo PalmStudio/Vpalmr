@@ -37,7 +37,7 @@ reference:
   - title: "Stem functions"
     desc: "VPalm functions for the stem, used to find the parameters"
     contents:
-      - Stem_height
+      - stem_height
   - title: "Extract"
     desc: "Extract the VPalm parameters from the models outputs"
     contents:
@@ -50,6 +50,14 @@ reference:
     desc: "Writting the pre-formatted parameter lists in a VPalm input file"
     contents:
       - starts_with("write_")
+  - title: "Design of experiment"
+    desc: "Computes a planting pattern for the OPS file"
+    contents:
+      - design_plot
+  - title: "Make"
+    desc: "Make VPalm input files"
+    contents:
+      - starts_with("make_")
   - title: "Helpers"
     desc: "Different helpers (Al-Kashi, curvature, distances...)"
     contents:
@@ -58,6 +66,9 @@ reference:
       - object_lenght
       - object_tans
       - sigmoid
+      - pmean
+      - coef_sample
+      - pull_lme
   - title: "Tests"
     desc: "Helper functions for testing the input data format or missing values"
     contents:
