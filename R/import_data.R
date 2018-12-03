@@ -17,8 +17,9 @@
 #'
 #' @return A list of the imported and pre-processed files
 #'
-#' @importFrom dplyr ungroup group_by summarise select "%>%"
+#' @importFrom dplyr ungroup group_by summarise select "%>%" mutate filter
 #' @importFrom data.table fread
+#' @importFrom rlang .data
 #'
 #' @examples
 #' \dontrun{
@@ -33,8 +34,6 @@
 #'                     petiole_width= "Archi/Petiole_SMSE14.csv",
 #'                     twist= "Archi/Torsion_SMSE14.csv")
 #' }
-#'
-#' @importFrom rlang .data
 #'
 #' @export
 #'
@@ -53,6 +52,9 @@ import_data= function(parameter,development,phylotaxy,declination,curvature,tori
     group_by(.data$Progeny)%>%
     summarise(Physio_age= unique(.data$nbLeaves))
 
+  if(nrow(nbLeafEmitted)<1){
+    stop("map requested by the user not found in the data provided")
+  }
 
   # DataAll -----------------------------------------------------------------
 

@@ -32,7 +32,7 @@
 
 <meta property="og:title" content="Parallel mean — pmean" />
 
-<meta property="og:description" content="Returns the parallel mean, in the same fashion as base::pmax()" />
+<meta property="og:description" content="Returns the parallel mean, in the same fashion as base::Extremes()" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -104,7 +104,7 @@
 
     <div class="ref-description">
     
-    <p>Returns the parallel mean, in the same fashion as <code><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>base::pmax()</a></code></p>
+    <p>Returns the parallel mean, in the same fashion as <code>base::Extremes()</code></p>
     
     </div>
 
@@ -129,7 +129,7 @@
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The function uses a combination of <code><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>base::cbind()</a></code> and <code><a href='https://www.rdocumentation.org/packages/base/topics/colSums'>base::rowMeans()</a></code>.
+    <p>The function uses a combination of <code><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>base::cbind()</a></code> and <a href='https://www.rdocumentation.org/packages/base/topics/colSums'>rowMeans</a>.
 The function can take one or more vectors or matrices as arguments and returns a single
 'parallel' mean of the vectors. The first element of the result is the mean of the first
 elements of all the arguments and so on.</p>

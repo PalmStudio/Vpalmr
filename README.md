@@ -1,20 +1,23 @@
-# Vpalmr
 
-The goal of Vpalmr is to ease the process of developping virtual palm plants from field data. 
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+Vpalmr
+======
 
-## Installation
+The goal of Vpalmr is to ease the process of making virtual palm plants from field data.
 
-You can install the released version of Vpalmr from [CRAN](https://CRAN.R-project.org) with:
+Installation
+------------
 
-``` r
-install.packages("Vpalmr")
-```
-
-## Example
-
-This is a basic example which shows you how to solve a common problem:
+The development version from [GitHub](https://github.com/) can be installed with:
 
 ``` r
-## basic example code
+# install.packages("devtools")
+devtools::install_github("VEZY/DynACof")
 ```
 
+Or using the lightweight [remotes](https://github.com/r-lib/remotes#readme) package:
+
+``` r
+# install.packages("remotes")
+remotes::install_github("VEZY/DynACof")
+```

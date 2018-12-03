@@ -147,7 +147,52 @@ but more options will be added with time</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>design_plot</span>(<span class='kw'>nRow</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>nCol</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>x0</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>y_distance</span> <span class='kw'>=</span> <span class='fl'>9.2</span>,
-            <span class='kw'>x_distance</span> <span class='kw'>=</span> <span class='fl'>8</span>)</div><div class='output co'>#&gt; <span class='error'>Error in data.frame(x = rep(NA, nbRow * nbCol), y = rep(NA, nbRow * nbCol),     Row = rep(c(1:nbRow), each = nbCol), Col = rep(c(1:nbCol))): objet 'nbRow' introuvable</span></div><div class='input'>
+            <span class='kw'>x_distance</span> <span class='kw'>=</span> <span class='fl'>8</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Toricity issue for intra-row spacing</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Toricity issue for inter-row spacing</span></div><div class='output co'>#&gt;    sceneId plantId            plantFileName  x    y  z scale inclinationAzimut
+#&gt; 1        1       1  opf/DA1_Tree1_47MAP.opf  4  2.3  0     1                 0
+#&gt; 2        1       2  opf/DA1_Tree2_47MAP.opf  4 11.5  0     1                 0
+#&gt; 3        1       3  opf/DA1_Tree3_47MAP.opf  4 20.7  0     1                 0
+#&gt; 4        1       4  opf/DA1_Tree4_47MAP.opf  4 29.9  0     1                 0
+#&gt; 5        1       5  opf/DA1_Tree5_47MAP.opf  4 39.1  0     1                 0
+#&gt; 6        1       6  opf/DA1_Tree6_47MAP.opf 12  6.9  0     1                 0
+#&gt; 7        1       7  opf/DA1_Tree7_47MAP.opf 12 16.1  0     1                 0
+#&gt; 8        1       8  opf/DA1_Tree8_47MAP.opf 12 25.3  0     1                 0
+#&gt; 9        1       9  opf/DA1_Tree9_47MAP.opf 12 34.5  0     1                 0
+#&gt; 10       1      10 opf/DA1_Tree10_47MAP.opf 12 43.7  0     1                 0
+#&gt; 11       1      11 opf/DA1_Tree11_47MAP.opf 20  2.3  0     1                 0
+#&gt; 12       1      12 opf/DA1_Tree12_47MAP.opf 20 11.5  0     1                 0
+#&gt; 13       1      13 opf/DA1_Tree13_47MAP.opf 20 20.7  0     1                 0
+#&gt; 14       1      14 opf/DA1_Tree14_47MAP.opf 20 29.9  0     1                 0
+#&gt; 15       1      15 opf/DA1_Tree15_47MAP.opf 20 39.1  0     1                 0
+#&gt; 16       1      16 opf/DA1_Tree16_47MAP.opf 28  6.9  0     1                 0
+#&gt; 17       1      17 opf/DA1_Tree17_47MAP.opf 28 16.1  0     1                 0
+#&gt; 18       1      18 opf/DA1_Tree18_47MAP.opf 28 25.3  0     1                 0
+#&gt; 19       1      19 opf/DA1_Tree19_47MAP.opf 28 34.5  0     1                 0
+#&gt; 20       1      20 opf/DA1_Tree20_47MAP.opf 28 43.7  0     1                 0
+#&gt; 21      NA     min                     &lt;NA&gt;  0  0.0 NA    NA                NA
+#&gt; 22      NA     max                     &lt;NA&gt; 32 46.0 NA    NA                NA
+#&gt;    inclinationAngle stemTwist Border
+#&gt; 1                 0         0    out
+#&gt; 2                 0         0    out
+#&gt; 3                 0         0    out
+#&gt; 4                 0         0    out
+#&gt; 5                 0         0    out
+#&gt; 6                 0         0    out
+#&gt; 7                 0         0     In
+#&gt; 8                 0         0     In
+#&gt; 9                 0         0     In
+#&gt; 10                0         0    out
+#&gt; 11                0         0    out
+#&gt; 12                0         0     In
+#&gt; 13                0         0     In
+#&gt; 14                0         0     In
+#&gt; 15                0         0    out
+#&gt; 16                0         0    out
+#&gt; 17                0         0    out
+#&gt; 18                0         0    out
+#&gt; 19                0         0    out
+#&gt; 20                0         0    out
+#&gt; 21               NA        NA Border
+#&gt; 22               NA        NA Border</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

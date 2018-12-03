@@ -32,7 +32,7 @@ make_opf= function(parameter,opf,AMAPStudio,overwrite=T){
 
   opf= normalizePath(opf, winslash= "/", mustWork = F)
 
-  if(file.exists(opf)){
+  if(file.exists(opf)&!overwrite){
     stop("OPF file ", basename(opf)," already exist in ", dirname(opf),
          "\nPlease set overwrite= TRUE, or change the destination or file name.")
   }
@@ -90,7 +90,7 @@ make_opf_all= function(parameter,opf,AMAPStudio,overwrite=T,parallel=T,NbCores=N
 
   existing_opfs= sapply(opf_path, file.exists)
   existing_opfs= existing_opfs[existing_opfs]
-  if(length(existing_opfs)>0 & overwrite== FALSE){
+  if(length(existing_opfs)>0 & !overwrite){
     stop("One or more OPF file already exist:\n",
          paste(basename(names(existing_opfs)), collapse= ", "),
          "\nPlease set overwrite= TRUE, or change the destination folder.")
@@ -109,20 +109,23 @@ make_opf_all= function(parameter,opf,AMAPStudio,overwrite=T,parallel=T,NbCores=N
     }
     cl= parallel::makeCluster(min(NbCores,length(param_files)))
     parallel::makeCluster(cl)
-    parallel::clusterExport(cl=cl, varlist=c("AMAPStudio","make_opf"),
+    parallel::clusterExport(cl=cl,
+                            varlist=c("AMAPStudio","make_opf","overwrite"),
                             envir=environment())
 
     parallel::clusterMap(
       cl = cl,
       fun = function(x,y){
-        make_opf(parameter = x, opf = y, AMAPStudio = AMAPStudio)
+        make_opf(parameter = x, opf = y, AMAPStudio = AMAPStudio,
+                 overwrite = overwrite)
       }, x= param_files, y= opf_path)
 
     parallel::stopCluster(cl)
 
   }else{
     mapply(function(x,y){
-      make_opf(parameter = x, opf = y, AMAPStudio = AMAPStudio)
+      make_opf(parameter = x, opf = y, AMAPStudio = AMAPStudio,
+               overwrite = overwrite)
     },x= param_files, y= opf_path)
   }
 

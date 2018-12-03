@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Make a set of opf file — make_opf_all • Vpalmr</title>
+<title>Compute Architectural parameters — compute_archi • Vpalmr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,11 +30,10 @@
 
 
 
-<meta property="og:title" content="Make a set of opf file — make_opf_all" />
+<meta property="og:title" content="Compute Architectural parameters — compute_archi" />
 
-<meta property="og:description" content="Make a call to make_opf() successively on all VPalm parameter
-files present on the parameter folder to create an Open Plant Format from
-each." />
+<meta property="og:description" content="Imports the data and fit the models to compute the architectural
+parameters for VPalm." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -99,62 +98,45 @@ each." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Make a set of opf file</h1>
+    <h1>Compute Architectural parameters</h1>
     
-    <div class="hidden name"><code>make_opf_all.Rd</code></div>
+    <div class="hidden name"><code>compute_archi.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Make a call to <code><a href='make_opf.html'>make_opf()</a></code> successively on all VPalm parameter
-files present on the <code>parameter</code> folder to create an Open Plant Format from
-each.</p>
+    <p>Imports the data and fit the models to compute the architectural
+parameters for VPalm.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>make_opf_all</span>(<span class='no'>parameter</span>, <span class='no'>opf</span>, <span class='no'>AMAPStudio</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='no'>T</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>NbCores</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>compute_archi</span>(<span class='no'>map</span>, <span class='no'>data_path</span>, <span class='kw'>write_path</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>parameter</th>
-      <td><p>The folder of the parameter files</p></td>
+      <th>map</th>
+      <td><p>Palm trees age desired in months after planting</p></td>
     </tr>
     <tr>
-      <th>opf</th>
-      <td><p>The target folder for resulting OPF files</p></td>
+      <th>data_path</th>
+      <td><p>Path to the folder were all data files resides</p></td>
     </tr>
     <tr>
-      <th>AMAPStudio</th>
-      <td><p>The root path to AMAPStudio where VPalm lives</p></td>
-    </tr>
-    <tr>
-      <th>overwrite</th>
-      <td><p>Boolean. Should pre-existing OPF files overwriten ?</p></td>
-    </tr>
-    <tr>
-      <th>parallel</th>
-      <td><p>Boolean. Is the OPF making to be distributed on available machine cores?</p></td>
-    </tr>
-    <tr>
-      <th>NbCores</th>
-      <td><p>The number of cores to use for parallel making. If <code>NULL</code> (the default)
-uses all cores minus one.</p></td>
+      <th>write_path</th>
+      <td><p>Path were to write the models output. If <code>NULL</code>, the default,
+the data is not written.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Creates one OPF file from each VPalm parameter file</p>
+    <p>Returns invisibly the input data and the models fit as a list for each progeny.</p>
     
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
-    <p>The parameter folder should only contain parameter files. Subfolders
-are tolerated though. The function uses <code><a href='https://www.rdocumentation.org/packages/parallel/topics/detectCores'>parallel::detectCores()</a></code> to find how many
-cores are available on the machine. This function has known issues, see help for more
-details.</p>
+    <p>Uses <code><a href='import_data.html'>import_data()</a></code> and <code><a href='mod_all.html'>mod_all()</a></code> under the hood</p>
     
 
   </div>
@@ -165,7 +147,7 @@ details.</p>
       
       <li><a href="#value">Value</a></li>
 
-      <li><a href="#details">Details</a></li>
+      <li><a href="#note">Note</a></li>
           </ul>
 
   </div>
