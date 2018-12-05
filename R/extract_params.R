@@ -31,20 +31,26 @@
 #'
 extract_trees= function(data, model, n, leaves= 45, seed= sample.int(1000,n),
                         init= init_list()){
-  if(length(seed)!=n){
+  if(length(seed)!=n & n>0){
     stop("Number of seeds do not match number of samples (n)")
   }
-
-  Trees_params=
-    lapply(seed, function(x){
-      extract_params(data = data, model = model, leaves = leaves, seed = x,
-                     init= init, type= 'sample')
-    })
-  names(Trees_params)= paste0('Tree_',1:n)
 
   Average_params=
     extract_params(data = data, model = model, leaves = leaves, seed = 0,
                    init= init, type= 'mean')
+
+  if(n>0){
+    Trees_params=
+      lapply(seed, function(x){
+        extract_params(data = data, model = model, leaves = leaves, seed = x,
+                       init= init, type= 'sample')
+      })
+    names(Trees_params)= paste0('Tree_',1:n)
+  }else{
+    # If no sampled trees, only return the average trees
+    return(list(Average= Average_params))
+  }
+
 
   # Identifying the progenies parameter values:
   keys= unique(unlist(lapply(Trees_params, names)))
@@ -128,6 +134,8 @@ extract_params= function(data, model, leaves= 45, seed= sample.int(1000,1),
   model$leaflet_length_B.lme%<>%pull_lme(epsilon= 2e-06, type= type)
   model$leaflet_width_B.lme%<>%pull_lme(epsilon= 2e-06, type= type)
   model$petioleWidthC.lme%<>%pull_lme(epsilon= 10^-6, type= type)
+  model$df_optim%<>%pull_others(type= type, stats::sd(.$coef_mean))
+  model$rachisRelativeHeight.nlme%<>%pull_others(type= type, .$SdG1)
 
 
   VP_list=
@@ -242,8 +250,7 @@ extract_params= function(data, model, leaves= 45, seed= sample.int(1000,1),
       APointAngle_SDP = model$decliA_nls$sigma,
 
       # Rachis curvature
-      coefCurve= stats::rnorm(n=1,mean= mean(model$df_optim$coefCurv),
-                              sd= stats::sd(model$df_optim$coefCurv)),
+      coefCurve= model$df_optim$coef_simu,
 
       # Leaflets position
       coefDispo= model$dispo_nls$coefDispo,
@@ -278,9 +285,7 @@ extract_params= function(data, model, leaves= 45, seed= sample.int(1000,1),
       frondCpointWidthSlope= model$petioleWidthC.lme$coef_simu[[1]]['CtoA'],
 
       # Parameters rachis relative height (mean + sd)
-      rachisHeightTappering=
-        model$rachisRelativeHeight.nlme$coef_mean +
-        stats::rnorm(n= 1, mean= 0, sd= model$rachisRelativeHeight.nlme$SdG1)
+      rachisHeightTappering= model$rachisRelativeHeight.nlme$coef_simu
     )
 
   c(init,VP_list)

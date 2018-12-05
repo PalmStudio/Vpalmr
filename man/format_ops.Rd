@@ -4,7 +4,8 @@
 \alias{format_ops}
 \title{Format ops information}
 \usage{
-format_ops(design, Progeny, map, id = 1)
+format_ops(design, Progeny, map, id = 1, bounds = FALSE,
+  pavement = NULL)
 }
 \arguments{
 \item{design}{The planting design, generally computed using \code{\link[=design_plot]{design_plot()}}}
@@ -14,6 +15,12 @@ format_ops(design, Progeny, map, id = 1)
 \item{map}{The tree age in month after planting}
 
 \item{id}{The scene ID}
+
+\item{bounds}{Are the plot bounds written in the OPS file ? Used for backward
+compatibility}
+
+\item{pavement}{Pavement file path. Only used if the pavement file (\code{.gwa}) has to
+be linked in the OPS. Used for backward compatibility.}
 }
 \value{
 A pre-formatted OPS

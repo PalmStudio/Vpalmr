@@ -3,11 +3,14 @@
 \name{pull_lme}
 \alias{pull_lme}
 \alias{pull_nlme}
+\alias{pull_others}
 \title{Pull (n)lme output}
 \usage{
 pull_lme(data, epsilon = 10^-6, type = c("sample", "mean"))
 
 pull_nlme(data, epsilon = 10^-6, type = c("sample", "mean"))
+
+pull_others(data, type = c("sample", "mean"), sd)
 }
 \arguments{
 \item{data}{The output from one of the \link[=mod_stem_diameter]{lme models} or

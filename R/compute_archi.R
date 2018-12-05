@@ -5,7 +5,7 @@
 #'
 #' @param map        Palm trees age desired in months after planting
 #' @param data_path  Path to the folder were all data files resides
-#' @param write_path Path were to write the models output. If `NULL`, the default,
+#' @param write_path Path were to write the function outputs. If `NULL` (the default),
 #' the data is not written.
 #'
 #' @note Uses [import_data()] and [mod_all()] under the hood
@@ -29,7 +29,7 @@ compute_archi= function(map, data_path, write_path= NULL){
   # Fit the models on data:
   mods= mod_all(x= Inputs)
   if(!is.null(write_path)){
-    write_models(data = mods, path = write_path)
+    write_models(data = list(input= Inputs, model= mods), path = write_path)
   }
   invisible(list(input= Inputs, model= mods))
 }

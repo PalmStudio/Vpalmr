@@ -287,6 +287,24 @@ pull_nlme= function(data, epsilon= 10^-6, type= c('sample','mean')){
     coef_sample(epsilon, type= type)
 }
 
+#' @rdname pull_lme
+#' @export
+pull_others= function(data, type= c('sample','mean'),sd){
+  type= match.arg(type,c('sample','mean'))
+  if(nrow(data)>0){
+    if(type=="sample"){
+      data$coef_simu=
+        stats::rnorm(n=1,mean= mean(data$coef_mean),
+                     sd= sd)
+    }else{
+      data$coef_simu= mean(data$coef_mean)
+    }
+  }else{
+    warning("No data to pull")
+  }
+  data
+}
+
 #' Simulation coefficient
 #'
 #' @description Computes the simulation coefficients from a sampling in

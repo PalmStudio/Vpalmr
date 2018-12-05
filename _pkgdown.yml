@@ -1,4 +1,9 @@
 reference:
+  - title: "Main functions"
+    desc: Higher level, more user-friendly functions that call the other using few parameters
+    contents:
+      - compute_archi
+      - make_scene
   - title: "Model fitting functions (nls, lme, nlme)"
     desc: >
       Functions that fits particular models to the input data

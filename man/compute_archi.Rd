@@ -11,7 +11,7 @@ compute_archi(map, data_path, write_path = NULL)
 
 \item{data_path}{Path to the folder were all data files resides}
 
-\item{write_path}{Path were to write the models output. If \code{NULL}, the default,
+\item{write_path}{Path were to write the function outputs. If \code{NULL} (the default),
 the data is not written.}
 }
 \value{

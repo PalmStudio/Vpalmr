@@ -41,20 +41,20 @@ extract_progeny= function(data, model, n, leaves= 45, seed= NULL,
 
   # Control/Making of seeds  ------------------------------------------------
 
-  if(is.null(seed)){
+  if(is.null(seed)&n>0){
     warning("No seeds provided, generating random seeds")
     seed= sample.int(1000,n*length(Prog))%>%
       split(., rep(Prog, each= n))
   }
-  if(length(seed)==n & !is.list(seed)){
+  if(length(seed)==n & n>0 & !is.list(seed)){
     # Make a list with repeated seed value for each progeny:
     seed= stats::setNames(rep(list(seed),length(Prog)),Prog)
     warning("Number of seeds match n, recycle seeds through progenies")
   }
-  if(length(unlist(seed))!=(n*length(Prog))){
+  if(length(unlist(seed))!=(n*length(Prog)) & n>0){
     stop("Number of seeds should match n or total number of trees (n * number of progenies)")
   }
-  if(!all(Prog%in%names(seed))){
+  if(!all(Prog%in%names(seed)) & n>0){
     stop("Missing seed for progeny: ",paste(Prog[!(Prog%in%names(seed))], ' '))
   }
 
@@ -104,7 +104,7 @@ extract_progeny= function(data, model, n, leaves= 45, seed= NULL,
       )
   }
 
-  # Extract average tree from each progeny in Prog_list
+  # Extract average tree from all progenies in Prog_list
   Averages= lapply(Prog_list, function(x)x$Average)
 
   # Identifying all parameter names:

@@ -4,31 +4,47 @@
 \alias{design_plot}
 \title{Design the plot}
 \usage{
-design_plot(nRow, nCol, x0, y_distance, x_distance)
+design_plot(ntrees = 2, x_dist = NULL, y_dist = NULL, x0 = 0)
 }
 \arguments{
-\item{nRow}{Number of tree rows}
+\item{ntrees}{The numbers of trees required in the scene}
 
-\item{nCol}{Number of tree columns}
+\item{x_dist}{The inter-row distance (m). See details.}
+
+\item{y_dist}{The intra-row distance (m). See details.}
 
 \item{x0}{The minimum X coordinates}
-
-\item{y_distance}{The intra-row distance}
-
-\item{x_distance}{The inter-row distance}
 }
 \value{
-A data.frame with all information to make an Open Plant Scene file.
+A list of two:
+\itemize{
+\item the data.frame with all information to make an Open Plant Scene file.
+\item the ggplot object associated to the design
+}
 }
 \description{
-Help designing the planting pattern of the plot
+Help designing a quincunx planting pattern of palm stand.
 }
 \details{
-For the moment the function only creates triangular planting pattern,
-but more options will be added with time
+If only one of \eqn{x_{dist}}{x_dist} or \eqn{y_{dist}}{y_dist} is given, the function
+will compute the other distance using the following equation:
+\deqn{\sqrt{z_{dist}^2-\left(\frac{z_{dist}}{2}\right)^2}}{sqrt(x_dist*x_dist-((x_dist/2)**2))}
+with \eqn{z_{dist}}{z_dist} being \eqn{y_{dist}}{y_dist} if only \eqn{x_{dist}}{x_dist} is provided,
+and reciprocally.
 }
+\note{
+If \eqn{y_{dist}}{y_dist} and \eqn{x_{dist}}{x_dist} are given for the distance
+between trees and not intra/inter-row distance, a transformation has to be done beforehand (see example)
+}
+\section{Torricity in ARCHIMED}{
+
+If the user wants to use the ARCHIMED model for further computations, and if the torricty option
+is activated, only the Voronoï sample of the design is needed (\emph{i.e.} the smaller possible
+representation of the system) because the design will be virtually duplicated to infinity.
+}
+
 \examples{
-design_plot(nRow = 4, nCol = 5, x0 = 0, y_distance = 9.2,
-            x_distance = 8)
+# design a plot with a distance of 9.2 m between each palm trees:
+  design_plot(ntrees = 5, y_dist = 9.2)
 
 }

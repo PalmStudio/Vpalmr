@@ -1,77 +1,113 @@
 #' Design the plot
 #'
-#' @description Help designing the planting pattern of the plot
+#' @description Help designing a quincunx planting pattern of palm stand.
 #'
-#' @param nRow Number of tree rows
-#' @param nCol Number of tree columns
-#' @param x0   The minimum X coordinates
-#' @param x_distance The inter-row distance
-#' @param y_distance The intra-row distance
+#' @param ntrees The numbers of trees required in the scene
+#' @param x_dist The inter-row distance (m). See details.
+#' @param y_dist The intra-row distance (m). See details.
+#' @param x0     The minimum X coordinates
 #'
-#' @details For the moment the function only creates triangular planting pattern,
-#' but more options will be added with time
+#' @details If only one of \eqn{x_{dist}}{x_dist} or \eqn{y_{dist}}{y_dist} is given, the function
+#'  will compute the other distance using the following equation:
+#'  \deqn{\sqrt{z_{dist}^2-\left(\frac{z_{dist}}{2}\right)^2}}{sqrt(x_dist*x_dist-((x_dist/2)**2))}
+#' with \eqn{z_{dist}}{z_dist} being \eqn{y_{dist}}{y_dist} if only \eqn{x_{dist}}{x_dist} is provided,
+#' and reciprocally.
 #'
-#' @return A data.frame with all information to make an Open Plant Scene file.
+#' @section Torricity in ARCHIMED:
+#' If the user wants to use the ARCHIMED model for further computations, and if the torricty option
+#' is activated, only the Voronoï sample of the design is needed (*i.e.* the smaller possible
+#' representation of the system) because the design will be virtually duplicated to infinity.
+#'
+#' @note  If \eqn{y_{dist}}{y_dist} and \eqn{x_{dist}}{x_dist} are given for the distance
+#' between trees and not intra/inter-row distance, a transformation has to be done beforehand (see example)
+#'
+#' @return A list of two:
+#' * the data.frame with all information to make an Open Plant Scene file.
+#' * the ggplot object associated to the design
+#'
+#' @importFrom rlang .data
+#'
 #' @export
 #'
 #' @examples
-#' design_plot(nRow = 4, nCol = 5, x0 = 0, y_distance = 9.2,
-#'             x_distance = 8)
+#' # design a plot with a distance of 9.2 m between each palm trees:
+#'   design_plot(ntrees = 5, y_dist = 9.2)
 #'
-design_plot= function(nRow,nCol,x0,y_distance,x_distance){
-  plan= data.frame(x=rep(NA,nRow*nCol),y=rep(NA,nRow*nCol),
-                   Row=rep(c(1:nRow),each=nCol),Col=rep(c(1:nCol)))
+design_plot= function(ntrees= 2, x_dist= NULL, y_dist= NULL, x0= 0){
 
-  plan$x= (plan$Row-1/2)*x_distance
-
-  for (i in 1:nRow){
-    if (i%%2==0){
-      plan[plan$Row==i,]$y=
-        seq(y_distance-y_distance/4,y_distance*(nCol),y_distance)
-    }
-    if (i%%2==1){
-      plan[plan$Row==i,]$y=
-        seq(-y_distance/4,y_distance*(nCol-1),y_distance)+y_distance/2
-    }
+  if(is.null(y_dist)){
+    if(is.null(x_dist)){stop('At least x_dist or y_dist are required')}
+    y_dist= sqrt(x_dist*x_dist-((x_dist/2)**2))
+  }else if(is.null(x_dist)){
+    x_dist= sqrt(y_dist*y_dist-((y_dist/2)**2))
   }
 
-  # inner palms:
-  plan$Border='out'
-  plan[plan$Row!=max(plan$Row) &
-         plan$Row!=min(plan$Row) &
-         plan$Col!=max(plan$Col) &
-         plan$Col!=min(plan$Col),]$Border='In'
-
-  # Test for eventual issues:
-  if (round(plan[1,]$y-plan[nCol,]$y,4)!= round(y_distance,4)){
-    warning('Toricity issue for intra-row spacing')
-  }
-  if (round(plan[1,]$x-plan[nRow*nCol,]$x,4)!=round(x_distance,4)){
-    warning('Toricity issue for inter-row spacing')
+  if(ntrees<9){
+    ntrees_tot= 9
+  }else{
+    ntrees_tot= ntrees
   }
 
-  # borders:
-  ymin= min(plan$y)-y_distance/4
-  ymax= max(plan$y)+y_distance/4
-  xmin= min(plan$x)-x_distance/2
-  xmax= max(plan$x)+x_distance/2
+  plan=
+    data.frame(x= rep(NA,ntrees_tot), y= rep(NA,ntrees_tot),
+               Row= rep(seq_len(floor(sqrt(ntrees_tot))),length.out= ntrees_tot))%>%
+    dplyr::mutate(Col= rep(seq_len(ceiling(sqrt(ntrees_tot))),
+                           each= length(unique(.data$Row)))[1:ntrees_tot])%>%
+    dplyr::mutate(odd= .data$Row%%2,
+                  x= (.data$Row-1/2)*x_dist+x0,
+                  y= ifelse(.data$odd==1,(.data$Col-1/2)*y_dist, .data$Col*y_dist))
 
-  result= data.frame(sceneId=1,
-                     plantId=paste(rownames(plan)),
-                     plantFileName= paste('opf/DA1_Tree',rownames(plan),
-                                          '_47MAP.opf',sep=''),
-                     x= plan$x, y= plan$y, z= 0.0, scale= 1.0,
-                     inclinationAzimut= 0.0, inclinationAngle= 0.0,
-                     stemTwist= 0.0, Border= plan$Border)
+  # Particular cases:
+  if(ntrees!=2){
+    plan=
+      plan%>%
+      dplyr::arrange(.data$y,.data$x)
+  }
+  if(ntrees==4){
+    plan=
+      plan%>%
+      dplyr::filter(.data$x!=max(.data$x))
+  }
 
+  if(ntrees<9){
+    plan= plan[1:ntrees,]
+  }
+
+  # # Test for eventual issues:
+  # if (round(plan[1,]$y-plan[nCol,]$y,4)!= round(y_dist,4)){
+  #   warning('Toricity issue for intra-row spacing')
+  # }
+  # if (round(plan[1,]$x-plan[nRow*nCol,]$x,4)!=round(x_dist,4)){
+  #   warning('Toricity issue for inter-row spacing')
+  # }
+
+  result=
+    plan%>%
+    dplyr::mutate(z= 0.0, scale= 1.0,
+                  inclinationAzimut= 0.0, inclinationAngle= 0.0,
+                  stemTwist= 0.0,
+                  ymin= min(.data$y)-y_dist/2,
+                  ymax= max(.data$y)+y_dist/2,
+                  xmin= min(.data$x)-x_dist/2,
+                  xmax= max(.data$x)+x_dist/2)%>%
+    dplyr::group_by(.data$Col)%>%
+    dplyr::mutate(Border_x= ifelse(.data$x==min(.data$x)|
+                                     .data$x==max(.data$x),"out","in"))%>%
+    dplyr::group_by(.data$Row)%>%
+    dplyr::mutate(Border_y= ifelse(.data$y==min(.data$y)|
+                                     .data$y==max(.data$y),"out","in"))%>%
+    dplyr::ungroup()%>%
+    dplyr::mutate(Border= ifelse(Border_x=="out"|Border_y=="out","out","in"))
+
+
+  # plot:
   plot_bounds=
-    result[1:2,]%>%
-    dplyr::mutate_all(function(x)x=NA)%>%
-    dplyr::mutate(plantId= c('min','max'),
-                  x= c(xmin,xmax),y= c(ymin,ymax),
-                  Border= 'Border')
+    result%>%
+    ggplot2::ggplot(ggplot2::aes(x= x, y= y, color= Border))+
+    ggplot2::geom_point()+
+    ggplot2::ylim(low= min(result$y), high= max(result$y))
 
-  rbind(result,plot_bounds)
+  list(design= result, plot= plot_bounds)
 }
 
 
@@ -87,17 +123,16 @@ design_plot= function(nRow,nCol,x0,y_distance,x_distance){
 #' @param Progeny The progeny name
 #' @param map     The tree age in month after planting
 #' @param id      The scene ID
+#' @param bounds  Are the plot bounds written in the OPS file ? Used for backward
+#' compatibility
+#' @param pavement Pavement file path. Only used if the pavement file (`.gwa`) has to
+#'  be linked in the OPS. Used for backward compatibility.
 #'
 #' @return A pre-formatted OPS
 #' @export
 #'
-format_ops=function(design,Progeny,map,id= 1){
+format_ops=function(design, Progeny, map, id= 1, bounds= FALSE, pavement= NULL){
 
-  xmax= max(design$x) # max x in the scene (not max x of trees)
-  ymax= max(design$y)
-
-  # take all rows but the last 2 because it corresponds to xmax and ymax:
-  design= head(design,-2)
   nbTree= nrow(design)
 
   # generate a line of config file for each tree
@@ -111,16 +146,36 @@ format_ops=function(design,Progeny,map,id= 1){
               .data$inclinationAngle, .data$stemTwist,sep='\t')
     )%>%dplyr::select(-.data$plantId)%>%as.matrix
 
-  c(
-    # paste('# T xOrigin yOrigin zOrigin xSize ySize flat'), # no need now
-    # paste('T 0 0 0 ',xmax,' ',ymax,' flat',sep=''),
+  if(bounds){
+    plot_box=
+      design%>%
+      dplyr::mutate(zmin= 0, zmax= 0)%>%
+      dplyr::select(.data$xmin, .data$ymin, .data$zmin,
+                    .data$xmax, .data$ymax, .data$zmax)%>%
+      dplyr::summarise_all(function(x){round(unique(x),3)})%>%
+      dplyr::transmute("# T xOrigin yOrigin zOrigin xSize ySize flat"=
+                         glue::glue("T {xmin} {ymin} {zmin} {xmax} {ymax} {zmax} flat"))%>%
+      as.matrix()
+  }else{
+    plot_box= NULL
+  }
+
+  if(!is.null(pavement)){
+    pav=
+      paste(1,21,pavement,unique(design$xmax/2),unique(design$ymax/2),0,1,0,0,0,sep='	')
+  }else{
+    pav= NULL
+  }
+
+  c(plot_box,
     paste('# Part 1: one line per plant in the scene'),
     paste('#sceneId plantId plantFileName x y z scale inclinationAzimut inclinationAngle stemTwist'),
     paste(opf_table),
-    # paste(1,21, paste('opf/pavement4x5.gwa',sep=''),xmax/2,ymax/2,0,1,0,0,0,sep='	'), # Generated by archimed
+    pav,
     paste('# [Optional] Part 2, chaining: only if scenario or project, one line per sceneId in part1'),
     paste('#motherId sceneId date'),
-    paste(-1,id,1,sep='	'))
+    paste(-1,id,1)
+  )
 }
 
 

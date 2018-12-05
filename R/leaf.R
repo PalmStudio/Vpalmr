@@ -153,7 +153,7 @@ optim_Leaf_Curv_Infl= function(data){
           },
           method="L-BFGS-B")
   data.frame(decAInfl= optimDist$par[["decAInfl"]],
-             coefCurv= optimDist$par[["coefCurv"]],
+             coef_mean= optimDist$par[["coefCurv"]],
              value= optimDist$value/nrows,
              conv=optimDist$convergence)
 }

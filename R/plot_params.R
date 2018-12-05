@@ -207,11 +207,11 @@ plot_nb_leaflet= function(data,model){
     dplyr::ungroup()%>%
     dplyr::group_by(.data$Progeny)%>%
     dplyr::do(df=
-         data.frame(RachisLength= seq(50,700,1),
-                    Nb_leaflets=
-                      sigmoid(X= seq(50,700,1), max = .$nbMax,
-                              slope = .$nbSlope,
-                              infl = .$nbInfl)))%>%
+                data.frame(RachisLength= seq(50,700,1),
+                           Nb_leaflets=
+                             sigmoid(X= seq(50,700,1), max = .$nbMax,
+                                     slope = .$nbSlope,
+                                     infl = .$nbInfl)))%>%
     tidyr::unnest()
 
   data%>%
@@ -233,10 +233,10 @@ plot_C_declination= function(data,model){
     ungroup()%>%
     dplyr::group_by(.data$Progeny)%>%
     dplyr::do(df=
-         data.frame(Rank= seq(0,60,1),
-                    Decli_C=
-                      f.linear(X= seq(0,60,1), intercept = .$decliC_intercept,
-                               slope = .$decliC_slope)))%>%
+                data.frame(Rank= seq(0,60,1),
+                           Decli_C=
+                             f.linear(X= seq(0,60,1), intercept = .$decliC_intercept,
+                                      slope = .$decliC_slope)))%>%
     tidyr::unnest()
 
   data%>%
@@ -262,23 +262,23 @@ plot_leaf_curvature= function(data,model){
       angA_sim= sigmoid(X= .data$angC, max= 160, slope= 0.02,infl= .data$decAInfl),
       X_sim= leaf_curvature(position = .data$RelativePositionRachisEstim,
                             angC = .data$angC, angA = .data$angA_sim,
-                            coefCurv = .data$coefCurv,
+                            coefCurv = .data$coef_mean,
                             Length = .data$rachisLength)$X,
       Y_sim= leaf_curvature(position = .data$RelativePositionRachisEstim,
                             angC = .data$angC, angA = .data$angA_sim,
-                            coefCurv = .data$coefCurv,
+                            coefCurv = .data$coef_mean,
                             Length = .data$rachisLength)$Y)
 
   df_plot_sim=
     df_plot%>%
     select(.data$Progeny, .data$TreeNumber, .data$Rank, .data$angC,
-           .data$angA_sim, .data$coefCurv, .data$rachisLength)%>%
+           .data$angA_sim, .data$coef_mean, .data$rachisLength)%>%
     summarise_all(mean)%>%
     dplyr::group_by(.data$Progeny, .data$TreeNumber, .data$Rank)%>%
     dplyr::do(leaf_curvature(position = seq(0,1,0.01),
-                      angC = .$angC, angA = .$angA_sim,
-                      coefCurv = .$coefCurv,
-                      Length = .$rachisLength))
+                             angC = .$angC, angA = .$angA_sim,
+                             coefCurv = .$coef_mean,
+                             Length = .$rachisLength))
 
   ggplot2::ggplot(df_plot, aes(group= paste(Progeny,TreeNumber,Rank)))+
     ggplot2::facet_wrap(Progeny~.)+
@@ -321,7 +321,7 @@ plot_A_deviation= function(data,model){
     dplyr::filter(.data$Point=='A' & !is.na(.data$Z_distance_cm))%>%
     dplyr::group_by(.data$Progeny, .data$TreeNumber, .data$Rank)%>%
     dplyr::mutate(DevA_deg= deviation_A(devC = .data$Z_distance_cm,
-                                 Length= .data$rachisLength))%>%
+                                        Length= .data$rachisLength))%>%
     merge(model%>%dplyr::rename(DevA_deg_sim= .data$DevA_deg),
           by = c('Progeny'),all.x = T, sort = F)%>%
     ggplot2::ggplot(aes(x= rachisLength))+
@@ -350,9 +350,9 @@ plot_leaflet_position= function(data, model, mode= c("Progeny","Tree")){
     ungroup()%>%
     dplyr::group_by(.data$Progeny)%>%
     dplyr::do(posrachis_sim=
-         data.frame(RelativeLeafletRank= seq(0,1,0.01),
-                    RelativePositionRachis=
-                      leaflet_position(Rank= seq(0,1,0.01), param= .$coefDispo)))%>%
+                data.frame(RelativeLeafletRank= seq(0,1,0.01),
+                           RelativePositionRachis=
+                             leaflet_position(Rank= seq(0,1,0.01), param= .$coefDispo)))%>%
     tidyr::unnest()
 
   if(mode=="Progeny"){
@@ -376,7 +376,7 @@ plot_leaflet_position= function(data, model, mode= c("Progeny","Tree")){
              .data$RelativeLeafletRank)%>%
       merge(pred%>%
               dplyr::rename(RelativeLeafletRank_sim= .data$RelativeLeafletRank,
-                     RelativePositionRachis_sim= .data$RelativePositionRachis),
+                            RelativePositionRachis_sim= .data$RelativePositionRachis),
             by="Progeny")%>%
       dplyr::mutate(PositionRachis_sim= .data$RelativePositionRachis_sim*.data$LeafLength)%>%
       ggplot2::ggplot()+
@@ -401,9 +401,9 @@ plot_leaflet_length_B= function(data, model){
     ungroup()%>%
     dplyr::group_by(.data$Progeny)%>%
     dplyr::do(leaflet_length=
-         data.frame(RachisLength= seq(50,700,1),
-                    LeafletBLength=
-                      .$Length_B_intercept+.$Length_B_slope*seq(50,700,1)))%>%
+                data.frame(RachisLength= seq(50,700,1),
+                           LeafletBLength=
+                             .$Length_B_intercept+.$Length_B_slope*seq(50,700,1)))%>%
     tidyr::unnest()
 
   data%>%
@@ -425,9 +425,9 @@ plot_leaflet_width_B= function(data, model){
     ungroup()%>%
     dplyr::group_by(.data$Progeny)%>%
     dplyr::do(leaflet_width=
-         data.frame(RachisLength= seq(50,700,1),
-                    LeafletBWidth=
-                      .$width_B_intercept+.$width_B_slope*seq(50,700,1)))%>%
+                data.frame(RachisLength= seq(50,700,1),
+                           LeafletBWidth=
+                             .$width_B_intercept+.$width_B_slope*seq(50,700,1)))%>%
     tidyr::unnest()
 
   data%>%
@@ -449,11 +449,11 @@ plot_leaflet_length= function(data, model){
     ungroup()%>%
     dplyr::group_by(.data$Progeny)%>%
     dplyr::do(leaflet_length=
-         data.frame(Position_rachis_rel= seq(0,1,0.01),
-                    Relative_length=
-                      leaflet_length(X= seq(0,1,0.01),Ymax=1,
-                                     Y0= .$L0,Yfin= .$Lfin,
-                                     X_Ymax= .$Pos_Lmax)))%>%
+                data.frame(Position_rachis_rel= seq(0,1,0.01),
+                           Relative_length=
+                             leaflet_length(X= seq(0,1,0.01),Ymax=1,
+                                            Y0= .$L0,Yfin= .$Lfin,
+                                            X_Ymax= .$Pos_Lmax)))%>%
     tidyr::unnest()
 
   data%>%
@@ -482,24 +482,24 @@ plot_leaflet_width= function(data, model){
     ungroup()%>%
     dplyr::group_by(.data$Progeny)%>%
     dplyr::do(leaflet_width=
-         data.frame(Position_rachis_rel= seq(0,1,0.01),
-                    Relative_max_width=
-                      leaflet_max_width(X= seq(0,1,0.01), Ymax= 1,
-                                        Y0= .$W0, Yfin= .$Wfin,
-                                        X_Ymax= .$Pos_Wmax)))%>%
+                data.frame(Position_rachis_rel= seq(0,1,0.01),
+                           Relative_max_width=
+                             leaflet_max_width(X= seq(0,1,0.01), Ymax= 1,
+                                               Y0= .$W0, Yfin= .$Wfin,
+                                               X_Ymax= .$Pos_Wmax)))%>%
     tidyr::unnest()
 
   data%>%
     dplyr::filter(.data$PositionOnLeaflet!=0)%>%
     dplyr::group_by(.data$Progeny, .data$TreeNumber, .data$LeafIndex, .data$Section)%>%
     dplyr::mutate(Leaflet_length= max(.data$PositionOnLeaflet),
-           Leaflet_max_width= max(.data$Width),
-           Position_rachis_rel= .data$PositionOnRachis/.data$LeafLength,
-           Width_rel= .data$Width/.data$Leaflet_max_width)%>%
+                  Leaflet_max_width= max(.data$Width),
+                  Position_rachis_rel= .data$PositionOnRachis/.data$LeafLength,
+                  Width_rel= .data$Width/.data$Leaflet_max_width)%>%
     dplyr::filter(.data$Width==0)%>%ungroup()%>%
     dplyr::group_by(.data$TreeNumber, .data$LeafIndex)%>%
     dplyr::mutate(Max_max_width= max(.data$Leaflet_max_width),
-           Relative_max_width= .data$Leaflet_max_width/.data$Max_max_width)%>%
+                  Relative_max_width= .data$Leaflet_max_width/.data$Max_max_width)%>%
     ggplot2::ggplot(aes(y=Relative_max_width, x= Position_rachis_rel, color= "Observed"))+
     ggplot2::facet_wrap(Progeny~.)+
     ggplot2::geom_point()+
@@ -518,10 +518,10 @@ plot_leaflet_axial_angle= function(data, model){
     ungroup()%>%
     dplyr::group_by(.data$Progeny)%>%
     dplyr::do(leaflet_width=
-         data.frame(Position_rel= seq(0,1,0.01),
-                    Axial=
-                      leaflet_axial_angle(position= seq(0,1,0.01), angle_C= .$angleC,
-                                          slope_C= .$slopeC, angle_A= .$angleA)))%>%
+                data.frame(Position_rel= seq(0,1,0.01),
+                           Axial=
+                             leaflet_axial_angle(position= seq(0,1,0.01), angle_C= .$angleC,
+                                                 slope_C= .$slopeC, angle_A= .$angleA)))%>%
     tidyr::unnest()
 
   data%>%
@@ -543,11 +543,11 @@ plot_leaflet_radial_angle= function(data, model){
     ungroup()%>%
     dplyr::group_by(.data$Progeny, .data$Type, .data$Mode)%>%
     dplyr::do(df=
-         data.frame(Position_rel= seq(0,1,0.01),
-                    Radial_deg=
-                      leaflet_radial_angle(position= seq(0,1,0.01),
-                                           A0= stats::coef(.$mod[[1]])['A0'],
-                                           Amax= stats::coef(.$mod[[1]])['Amax'],Xm=0.5)))%>%
+                data.frame(Position_rel= seq(0,1,0.01),
+                           Radial_deg=
+                             leaflet_radial_angle(position= seq(0,1,0.01),
+                                                  A0= stats::coef(.$mod[[1]])['A0'],
+                                                  Amax= stats::coef(.$mod[[1]])['Amax'],Xm=0.5)))%>%
     tidyr::unnest()%>%
     tidyr::spread(.data$Mode, .data$Radial_deg, sep="_")
 
@@ -604,9 +604,9 @@ plot_petiole_width_C= function(data,model){
     dplyr::ungroup()%>%
     dplyr::group_by(.data$Progeny)%>%
     dplyr::do(leaflet_length=
-         data.frame(CtoA= seq(0,700,1),
-                    Petiole_width_C_cm=
-                      .$widthC_intercept+.$widthC_slope*seq(0,700,1)))%>%
+                data.frame(CtoA= seq(0,700,1),
+                           Petiole_width_C_cm=
+                             .$widthC_intercept+.$widthC_slope*seq(0,700,1)))%>%
     tidyr::unnest()
 
   data%>%
@@ -626,10 +626,10 @@ plot_petiole_height= function(data,model){
     dplyr::ungroup()%>%
     dplyr::group_by(.data$Progeny)%>%
     dplyr::do(rachis_height=
-         data.frame(Position_rachis_rel= seq(0,1,0.1),
-                    Petiole_relative_height=
-                      section_height(Position = seq(0,1,0.1),
-                                     a = .$coef.rachisRelativeHeight_mean)))%>%
+                data.frame(Position_rachis_rel= seq(0,1,0.1),
+                           Petiole_relative_height=
+                             section_height(Position = seq(0,1,0.1),
+                                            a = .$coef.rachisRelativeHeight_mean)))%>%
     tidyr::unnest()
 
   data%>%

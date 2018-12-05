@@ -1,0 +1,71 @@
+#' Make a full 3D scene
+#'
+#' @description Sample trees for each progenies from the models provided, write parameters, call
+#' VPalm to create OPF files, and write the OPS files to disk for each progeny.
+#'
+#' @param data    The output from [compute_archi()]
+#' @param ntrees  The number of trees to be sampled for each progeny if genetic variability
+#' is required
+#' @param nleaves    The numbers of leaves desired for the 3D palms
+#' @param Progeny    The progeny desired. If `NULL` (the default), uses all progenies from `data`.
+#' @param path       The path for writing the scene
+#' @param AMAPStudio The path to AMAPStudio were VPalm lives
+#' @param plot_design The design of the plot if custom. If `NULL`, calls [design_plot()]
+#' with a quincunx disposition
+#' @param plant_dist The distance between palm trees, used as y_dist in [design_plot()]
+#' @param seed  The seed for random parameter generation (must be length ntrees)
+#'
+#' @note To extract only average trees from progenies, simply set `ntrees= 0`.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+make_scene= function(data, ntrees= 0, nleaves= 45, Progeny= NULL,
+                     path, AMAPStudio,
+                     plant_dist= 9.2, plot_design= NULL,
+                     seed= sample.int(1000,ntrees)){
+
+  # Formating the VPalm outputs
+  VPalm_list= Vpalmr::extract_progeny(data= data$input, model= data$model,
+                                      n= ntrees, leaves= nleaves, seed= seed,
+                                      average = T)
+  if(!is.null(Progeny)){
+    progenies= names(VPalm_list)
+    Progeny= match.arg(Progeny, progenies, several.ok = TRUE)
+    VPalm_list= VPalm_list[match(Progeny,names(VPalm_list))]
+  }
+
+  VPalm_in= format_progeny(data = VPalm_list)
+
+  # Write the plants architectural parameters
+  write_progeny(data = VPalm_in, path = file.path(path, "1-VPalm_inputs"), verbose = F)
+
+  # Make the OPFs (carefull, OPFs must be in a subfolder of OPS for AMAPStudio) :
+  make_opf_all(parameter = file.path(path, "1-VPalm_inputs"),
+               opf = file.path(path, "scenes/opf"),
+               AMAPStudio = AMAPStudio)
+
+  # Design the planting pattern:
+  if(is.null(plot_design)){
+    plot_design=
+      design_plot(ntrees = 2, x0 = 0, y_dist = plant_dist)$design
+  }
+
+  # plot:
+  design_ggplot=
+    plot_design%>%
+    ggplot2::ggplot(ggplot2::aes(x= x, y= y, color= Border))+
+    ggplot2::geom_point(pch= 10)+
+    ggplot2::ylim(low= unique(design_plot$ymin),
+                  high= unique(design_plot$ymax))+
+    ggplot2::xlim(low= unique(design_plot$xmin),
+                  high= unique(design_plot$xmax))
+
+  # Make the OPS:
+  make_ops_all(Progeny = as.list(names(VPalm_in[-grep("Average",names(VPalm_in))])),
+               design = list(plot_design),
+               map = list(map), path = file.path(path,"scenes"))
+
+  invisible(design_ggplot)
+}
