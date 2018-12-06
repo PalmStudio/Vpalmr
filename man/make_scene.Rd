@@ -4,14 +4,12 @@
 \alias{make_scene}
 \title{Make a full 3D scene}
 \usage{
-make_scene(data, ntrees = 0, nleaves = 45, Progeny = NULL, path,
-  AMAPStudio, plant_dist = 9.2, plot_design = NULL, seed = NULL)
+make_scene(data, nleaves = 45, Progeny = NULL, path, AMAPStudio,
+  plant_dist = 9.2, plot_design = NULL, seed = NULL, overwrite = T,
+  ntrees = NULL)
 }
 \arguments{
 \item{data}{The output from \code{\link[=compute_archi]{compute_archi()}}}
-
-\item{ntrees}{The number of trees to be sampled for each progeny if genetic variability
-is required}
 
 \item{nleaves}{The numbers of leaves desired for the 3D palms}
 
@@ -27,6 +25,11 @@ is required}
 with a quincunx disposition}
 
 \item{seed}{The seed for random parameter generation (must be length ntrees)}
+
+\item{overwrite}{Boolean. Should pre-existing scene files overwriten ?}
+
+\item{ntrees}{The number of trees to be sampled for each progeny if genetic variability
+is required. If \code{NULL} or \code{0}, uses only average palm trees.}
 }
 \value{
 Writes a full 3D scene with a list of OPS for each progeny and a list of OPF for each plant

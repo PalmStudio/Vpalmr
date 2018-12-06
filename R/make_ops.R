@@ -99,7 +99,6 @@ design_plot= function(ntrees= 2, x_dist= NULL, y_dist= NULL, x0= 0){
     dplyr::ungroup()%>%
     dplyr::mutate(Border= ifelse(Border_x=="out"|Border_y=="out","out","in"))
 
-
   # plot:
   plot_bounds=
     result%>%
@@ -127,11 +126,13 @@ design_plot= function(ntrees= 2, x_dist= NULL, y_dist= NULL, x0= 0){
 #' compatibility
 #' @param pavement Pavement file path. Only used if the pavement file (`.gwa`) has to
 #'  be linked in the OPS. Used for backward compatibility.
+#' @param average  Boolean. Use average tree instead of the sampled ones.
 #'
 #' @return A pre-formatted OPS
 #' @export
 #'
-format_ops=function(design, Progeny, map, id= 1, bounds= FALSE, pavement= NULL){
+format_ops=function(design, Progeny, map, id= 1, bounds= FALSE,
+                    pavement= NULL, average= FALSE){
 
   nbTree= nrow(design)
 
@@ -141,7 +142,10 @@ format_ops=function(design, Progeny, map, id= 1, bounds= FALSE, pavement= NULL){
     dplyr::transmute(
       plantId= 1:dplyr::n(),
       out=
-        paste(id,plantId,paste0('opf/',Progeny,'_Tree_',plantId,'_MAP_',map,'.opf'),
+        paste(id,plantId,
+              ifelse(average,
+                     paste0('opf/',Progeny,'_Average_MAP_',map,'.opf'),
+                     paste0('opf/',Progeny,'_Tree_',.data$plantId,'_MAP_',map,'.opf')),
               .data$x,.data$y,.data$z,.data$scale,.data$inclinationAzimut ,
               .data$inclinationAngle, .data$stemTwist,sep='\t')
     )%>%dplyr::select(-.data$plantId)%>%as.matrix
@@ -174,7 +178,7 @@ format_ops=function(design, Progeny, map, id= 1, bounds= FALSE, pavement= NULL){
     pav,
     paste('# [Optional] Part 2, chaining: only if scenario or project, one line per sceneId in part1'),
     paste('#motherId sceneId date'),
-    paste(-1,id,1)
+    paste(-1,id,1, sep='\t')
   )
 }
 
@@ -185,21 +189,43 @@ format_ops=function(design, Progeny, map, id= 1, bounds= FALSE, pavement= NULL){
 #' @param path File path and name
 #' @param overwrite Boolean. Should pre-existing OPS files overwriten ?
 #'
-#' @return Writes an OPS to disk
+#' @return Writes an OPS to disk, and returns `TRUE` if successfull or `FALSE` otherwise.
 #' @export
 #'
 write_ops= function(data, path, overwrite= T){
+
+  file_time= NULL
+  path= normalizePath(path, winslash= "/", mustWork = F)
+
+
   if(!dir.exists(file.path(dirname(path)))){
     dir.create(file.path(dirname(path)))
   }else{
-    if(file.exists(path) & !overwrite){
-      warning("OPS file ", basename(path), " already exists",
-              " and overwrite is set to FALSE. Please set overwrite= TRUE or change the",
-              " file name or directory")
-      return(basename(file_name))
+    if(file.exists(path)){
+      if(!overwrite){
+        warning("OPS file ", basename(path), " already exists",
+                " and overwrite is set to FALSE. Please set overwrite= TRUE or change the",
+                " file name or directory")
+        return(basename(file_name))
+      }else{
+        file_time= file.mtime(path)
+      }
     }
   }
+
   write(data, file= path)
+
+  # Return TRUE if written and FALSE if not, or not replaced:
+  is_written= file.exists(path)
+  if(is.null(file_time)){
+    return(is_written)
+  }else{
+    if(file_time<file.mtime(path)){
+      return(is_written)
+    }else{
+      return(FALSE)
+    }
+  }
 }
 
 
@@ -212,6 +238,9 @@ write_ops= function(data, path, overwrite= T){
 #' @param design  The design of experiment, generally computed using [design_plot()]
 #' @param map     The age of the plantation in month after planting
 #' @param path    The path of the target folder
+#' @param overwrite Boolean. Should pre-existing OPS files overwriten ?
+#' @param average Boolean. Use average tree instead of the sampled ones.
+#' @param ...     Further arguments to pass to [format_ops()]
 #'
 #' @details The function uses [base::mapply()] to apply both [format_ops()] and
 #'  [write_ops()] to any number of progeny, design, or map. So if these arguments
@@ -222,12 +251,23 @@ write_ops= function(data, path, overwrite= T){
 #' @return An OPS for each progeny, each design and each map.
 #' @export
 #'
-make_ops_all= function(Progeny, design, map, path){
-  mapply(function(x,y,z){
-    format_ops(z,x,y)%>%
-      write_ops(file.path(path,paste0(x,'_',y,'MAP.ops')))
-  },
-  Progeny, map, design)
+make_ops_all= function(Progeny, design, map, path, overwrite,
+                       average= FALSE,...){
+  out=
+    mapply(function(x,y,z){
+      format_ops(design = z, Progeny = x, map = y,
+                 average = average,...)%>%
+        write_ops(file.path(path,paste0(x,'_',y,'MAP.ops')),
+                  overwrite = overwrite)
+    },
+    Progeny, map, design)
+
+  if(all(unlist(out))){
+    message("All OPS files were successfully written to disk")
+    return(TRUE)
+  }else{
+    stop("Error during OPS file writting for file\n", out[out==FALSE])
+  }
 }
 
 

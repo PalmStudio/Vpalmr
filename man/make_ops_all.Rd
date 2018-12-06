@@ -4,7 +4,7 @@
 \alias{make_ops_all}
 \title{Format and write all OPS}
 \usage{
-make_ops_all(Progeny, design, map, path)
+make_ops_all(Progeny, design, map, path, overwrite, average = FALSE, ...)
 }
 \arguments{
 \item{Progeny}{The progenies}
@@ -14,6 +14,12 @@ make_ops_all(Progeny, design, map, path)
 \item{map}{The age of the plantation in month after planting}
 
 \item{path}{The path of the target folder}
+
+\item{overwrite}{Boolean. Should pre-existing OPS files overwriten ?}
+
+\item{average}{Boolean. Use average tree instead of the sampled ones.}
+
+\item{...}{Further arguments to pass to \code{\link[=format_ops]{format_ops()}}}
 }
 \value{
 An OPS for each progeny, each design and each map.

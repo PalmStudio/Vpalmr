@@ -14,7 +14,7 @@ write_ops(data, path, overwrite = T)
 \item{overwrite}{Boolean. Should pre-existing OPS files overwriten ?}
 }
 \value{
-Writes an OPS to disk
+Writes an OPS to disk, and returns \code{TRUE} if successfull or \code{FALSE} otherwise.
 }
 \description{
 Write OPS

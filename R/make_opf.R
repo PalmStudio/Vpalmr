@@ -96,7 +96,8 @@ make_opf= function(parameter,opf,AMAPStudio,overwrite=T,verbose=F){
 #' cores are available on the machine. This function has known issues, see help for more
 #' details.
 #'
-#' @return Creates one OPF file from each VPalm parameter file
+#' @return Creates one OPF file from each VPalm parameter file, and returns `TRUE` if all OPFs
+#' were successfully written.
 #' @export
 #'
 make_opf_all= function(parameter,opf,AMAPStudio,overwrite=T,parallel=T,NbCores=NULL){
@@ -138,22 +139,29 @@ make_opf_all= function(parameter,opf,AMAPStudio,overwrite=T,parallel=T,NbCores=N
     parallel::clusterExport(cl=cl,
                             varlist=c("AMAPStudio","make_opf","overwrite"),
                             envir=environment())
-
-    parallel::clusterMap(
-      cl = cl,
-      fun = function(x,y){
-        make_opf(parameter = x, opf = y, AMAPStudio = AMAPStudio,
-                 overwrite = overwrite)
-      }, x= param_files, y= opf_path)
+    out=
+      parallel::clusterMap(
+        cl = cl,
+        fun = function(x,y){
+          out_tmp= make_opf(parameter = x, opf = y, AMAPStudio = AMAPStudio,
+                            overwrite = overwrite)
+          out_tmp
+        }, x= param_files, y= opf_path)
 
     parallel::stopCluster(cl)
 
   }else{
-    mapply(function(x,y){
-      make_opf(parameter = x, opf = y, AMAPStudio = AMAPStudio,
-               overwrite = overwrite)
-    },x= param_files, y= opf_path)
+    out=
+      mapply(function(x,y){
+        make_opf(parameter = x, opf = y, AMAPStudio = AMAPStudio,
+                 overwrite = overwrite)
+      },x= param_files, y= opf_path)
   }
-
+  if(all(unlist(out))){
+    message("All OPF files were successfully written to disk")
+    return(TRUE)
+  }else{
+    stop("Error during OPF file writting for file\n", out[out==FALSE])
+  }
 
 }

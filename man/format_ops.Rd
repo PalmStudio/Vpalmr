@@ -5,7 +5,7 @@
 \title{Format ops information}
 \usage{
 format_ops(design, Progeny, map, id = 1, bounds = FALSE,
-  pavement = NULL)
+  pavement = NULL, average = FALSE)
 }
 \arguments{
 \item{design}{The planting design, generally computed using \code{\link[=design_plot]{design_plot()}}}
@@ -21,6 +21,8 @@ compatibility}
 
 \item{pavement}{Pavement file path. Only used if the pavement file (\code{.gwa}) has to
 be linked in the OPS. Used for backward compatibility.}
+
+\item{average}{Boolean. Use average tree instead of the sampled ones.}
 }
 \value{
 A pre-formatted OPS

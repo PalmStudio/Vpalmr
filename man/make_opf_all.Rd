@@ -22,7 +22,8 @@ make_opf_all(parameter, opf, AMAPStudio, overwrite = T, parallel = T,
 uses all cores minus one.}
 }
 \value{
-Creates one OPF file from each VPalm parameter file
+Creates one OPF file from each VPalm parameter file, and returns \code{TRUE} if all OPFs
+were successfully written.
 }
 \description{
 Make a call to \code{\link[=make_opf]{make_opf()}} successively on all VPalm parameter
