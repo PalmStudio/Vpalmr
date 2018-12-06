@@ -17,14 +17,28 @@
 #'
 #' @note To extract only average trees from progenies, simply set `ntrees= 0`.
 #'
-#' @return
+#' @return Writes a full 3D scene with a list of OPS for each progeny and a list of OPF for each plant
+#' of each progeny. Returns a list of two:
+#' * A ggplot of the design
+#' * The OPF values for each progeny and for an average plant, as [extract_progeny()] do.
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' # Initializing:
+#' ntrees= 0 ; nleaves= 45 ; map= 47
+#'
+#' # Importing the inputs, and fitting the models:
+#' Palm_Param= compute_archi(map = map, data_path = "1-Data/Archi", write_path = "3-Outputs")
+#'
+#' # Writing the scene:
+#' scene= make_scene(data = Palm_Param, ntrees = ntrees, nleaves = nleaves, path = "3-Outputs",
+#'                   AMAPStudio = "../../AMAPSTUDIO/VPalm", plant_dist = 9.2)
+#' }
 make_scene= function(data, ntrees= 0, nleaves= 45, Progeny= NULL,
                      path, AMAPStudio,
                      plant_dist= 9.2, plot_design= NULL,
-                     seed= sample.int(1000,ntrees)){
+                     seed= NULL){
 
   # Formating the VPalm outputs
   VPalm_list= Vpalmr::extract_progeny(data= data$input, model= data$model,
@@ -67,5 +81,5 @@ make_scene= function(data, ntrees= 0, nleaves= 45, Progeny= NULL,
                design = list(plot_design),
                map = list(map), path = file.path(path,"scenes"))
 
-  invisible(design_ggplot)
+  invisible(design_ggplot,VPalm_list)
 }

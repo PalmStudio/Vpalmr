@@ -276,7 +276,8 @@ mod_C_declination= function(data, control= nlme::lmeControl(maxIter=500000,
 mod_leaf_curvature= function(data){
   data%>%
     group_by(.data$Progeny, .data$TreeNumber)%>%
-    dplyr::do(optim_Leaf_Curv_Infl(data= .))
+    dplyr::do(optim_Leaf_Curv_Infl(data= .))%>%
+    dplyr::ungroup()
 }
 
 #' @rdname mod_stem_diameter

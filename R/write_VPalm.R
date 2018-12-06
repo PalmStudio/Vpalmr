@@ -98,7 +98,7 @@ write_tree= function(data, path= getwd(), name= "vpalm_input", age=NULL,
 
 
   if(!dir.exists(file.path(path))){
-    dir.create(file.path(path))
+    dir.create(file.path(path), recursive = T)
   }else{
     if(file.exists(file_name) & !overwrite){
       warning("VPalm parameter file ", basename(file_name), " already exists",

@@ -8,14 +8,15 @@
 #' @param opf The target OPF file path and name
 #' @param AMAPStudio The root path to AMAPStudio
 #' @param overwrite Boolean. Should pre-existing OPF files overwriten ?
+#' @param verbose Should the VPalm writting informations printed to the console ?
 #'
-#' @return Writes an OPF file
+#' @return Writes an OPF file, and return `TRUE` if the file was successfully written.
 #' @export
 #'
-make_opf= function(parameter,opf,AMAPStudio,overwrite=T){
+make_opf= function(parameter,opf,AMAPStudio,overwrite=T,verbose=F){
 
   if(!dir.exists(file.path(dirname(opf)))){
-    dir.create(file.path(dirname(opf)))
+    dir.create(file.path(dirname(opf)), recursive = T)
   }
 
   this_wd= getwd()
@@ -32,19 +33,44 @@ make_opf= function(parameter,opf,AMAPStudio,overwrite=T){
 
   opf= normalizePath(opf, winslash= "/", mustWork = F)
 
-  if(file.exists(opf)&!overwrite){
-    stop("OPF file ", basename(opf)," already exist in ", dirname(opf),
-         "\nPlease set overwrite= TRUE, or change the destination or file name.")
+  if(file.exists(opf)){
+    if(!overwrite){
+      stop("OPF file ", basename(opf)," already exist in ", dirname(opf),
+           "\nPlease set overwrite= TRUE, or change the destination or file name.")
+    }else{
+      file_time= file.mtime(opf)
+    }
+  }else{
+    file_time= NULL
   }
+
 
   setwd(AMAPStudio)
   exportFile=
     paste('java -cp bin;ext/* jeeb.workspace.palms.elaeisRaphael.ElaeisArchiTree',
           parameter,opf,sep=' ')
-  # add trycatch here
-  out= system(exportFile, intern= TRUE)
-  setwd(this_wd)
-  out
+  out=
+    tryCatch(system(exportFile, intern= TRUE),
+             error=function(cond) {
+               message("VPalm encountered an issue")
+               return(FALSE)
+             },
+             finally= setwd(this_wd))
+  if(verbose){
+    message(out)
+  }
+
+  # Return TRUE if written and FALSE if not, or not replaced:
+  is_written= file.exists(opf)
+  if(is.null(file_time)){
+    return(is_written)
+  }else{
+    if(file_time<file.mtime(opf)){
+      return(is_written)
+    }else{
+      return(FALSE)
+    }
+  }
 }
 
 

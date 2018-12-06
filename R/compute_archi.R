@@ -30,6 +30,7 @@ compute_archi= function(map, data_path, write_path= NULL){
   mods= mod_all(x= Inputs)
   if(!is.null(write_path)){
     write_models(data = list(input= Inputs, model= mods), path = write_path)
+    message("Data and models were successfully written in: ", write_path)
   }
   invisible(list(input= Inputs, model= mods))
 }

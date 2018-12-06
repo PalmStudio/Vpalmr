@@ -4,7 +4,7 @@
 \alias{make_opf}
 \title{Make OPF}
 \usage{
-make_opf(parameter, opf, AMAPStudio, overwrite = T)
+make_opf(parameter, opf, AMAPStudio, overwrite = T, verbose = F)
 }
 \arguments{
 \item{parameter}{The VPalm parameter file path and name (see \code{\link[=write_progeny]{write_progeny()}}
@@ -15,9 +15,11 @@ or \code{\link[=write_tree]{write_tree()}})}
 \item{AMAPStudio}{The root path to AMAPStudio}
 
 \item{overwrite}{Boolean. Should pre-existing OPF files overwriten ?}
+
+\item{verbose}{Should the VPalm writting informations printed to the console ?}
 }
 \value{
-Writes an OPF file
+Writes an OPF file, and return \code{TRUE} if the file was successfully written.
 }
 \description{
 Use VPalm from AMAPStudio to make an Open Plant Format file using

@@ -5,8 +5,7 @@
 \title{Make a full 3D scene}
 \usage{
 make_scene(data, ntrees = 0, nleaves = 45, Progeny = NULL, path,
-  AMAPStudio, plant_dist = 9.2, plot_design = NULL,
-  seed = sample.int(1000, ntrees))
+  AMAPStudio, plant_dist = 9.2, plot_design = NULL, seed = NULL)
 }
 \arguments{
 \item{data}{The output from \code{\link[=compute_archi]{compute_archi()}}}
@@ -29,10 +28,31 @@ with a quincunx disposition}
 
 \item{seed}{The seed for random parameter generation (must be length ntrees)}
 }
+\value{
+Writes a full 3D scene with a list of OPS for each progeny and a list of OPF for each plant
+of each progeny. Returns a list of two:
+\itemize{
+\item A ggplot of the design
+\item The OPF values for each progeny and for an average plant, as \code{\link[=extract_progeny]{extract_progeny()}} do.
+}
+}
 \description{
 Sample trees for each progenies from the models provided, write parameters, call
 VPalm to create OPF files, and write the OPS files to disk for each progeny.
 }
 \note{
 To extract only average trees from progenies, simply set \code{ntrees= 0}.
+}
+\examples{
+\dontrun{
+# Initializing:
+ntrees= 0 ; nleaves= 45 ; map= 47
+
+# Importing the inputs, and fitting the models:
+Palm_Param= compute_archi(map = map, data_path = "1-Data/Archi", write_path = "3-Outputs")
+
+# Writing the scene:
+scene= make_scene(data = Palm_Param, ntrees = ntrees, nleaves = nleaves, path = "3-Outputs",
+                  AMAPStudio = "../../AMAPSTUDIO/VPalm", plant_dist = 9.2)
+}
 }
