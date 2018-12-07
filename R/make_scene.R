@@ -76,7 +76,7 @@ make_scene= function(data, nleaves= 45, Progeny= NULL,
         design_plot(ntrees = ntrees, x0 = 0, y_dist = plant_dist)$design
     }else{
       plot_design=
-        design_plot(ntrees = 2, x0 = 0, y_dist = plant_dist)$design
+        design_plot(ntrees = ntrees, x0 = 0, y_dist = plant_dist)$design
     }
   }
 

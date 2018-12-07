@@ -47,8 +47,9 @@ make_opf= function(parameter,opf,AMAPStudio,overwrite=T,verbose=F){
 
   setwd(AMAPStudio)
   exportFile=
-    paste('java -cp bin;ext/* jeeb.workspace.palms.elaeisRaphael.ElaeisArchiTree',
-          parameter,opf,sep=' ')
+    paste('java -jar', "vpalm.jar",parameter,opf,sep=' ')
+    # paste('java -cp bin;ext/* jeeb.workspace.palms.elaeisRaphael.ElaeisArchiTree',
+    #       parameter,opf,sep=' ')
   out=
     tryCatch(system(exportFile, intern= TRUE),
              error=function(cond) {
