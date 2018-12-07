@@ -29,6 +29,9 @@ compute_archi= function(map, data_path, write_path= NULL){
   # Fit the models on data:
   mods= mod_all(x= Inputs)
   if(!is.null(write_path)){
+    if(!dir.exists(write_path)){
+      dir.create(write_path, recursive = TRUE)
+    }
     write_models(data = list(input= Inputs, model= mods), path = write_path)
     message("Data and models were successfully written in: ", write_path)
   }
