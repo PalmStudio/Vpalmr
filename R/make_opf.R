@@ -162,7 +162,7 @@ make_opf_all= function(parameter,opf,AMAPStudio,overwrite=T,parallel=T,NbCores=N
     message("All OPF files were successfully written to disk")
     return(TRUE)
   }else{
-    stop("Error during OPF file writting for file\n", out[out==FALSE])
+    stop("Error during OPF file writting for file\n", opf_path[opf_path==FALSE])
   }
 
 }

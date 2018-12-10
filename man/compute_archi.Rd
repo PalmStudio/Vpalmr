@@ -4,12 +4,18 @@
 \alias{compute_archi}
 \title{Compute Architectural parameters}
 \usage{
-compute_archi(map, data_path, write_path = NULL)
+compute_archi(map, data_path = list(parameter = "ParameterSimu.csv",
+  development = "Development_Rep4_SMSE.csv", phylotaxy = "Stem_SMSE14.csv",
+  declination = "AnglesC&A_SMSE_Nov14.csv", curvature =
+  "LeafCurvature_SMSE14.csv", torsion = "AnglesC&A_SMSE_Nov14.csv",
+  leaf_area = "LeafArea_monitoring_SMSE.csv", axial_angle =
+  "LeafDispositionComp_SMSE14.csv", petiole_width = "Petiole_SMSE14.csv",
+  twist = "Torsion_SMSE14.csv"), write_path = NULL)
 }
 \arguments{
 \item{map}{Palm trees age desired in months after planting}
 
-\item{data_path}{Path to the folder were all data files resides}
+\item{data_path}{The folder path, or the files path (see details)}
 
 \item{write_path}{Path were to write the function outputs. If \code{NULL} (the default),
 the data is not written.}
@@ -21,6 +27,31 @@ Returns invisibly the input data and the models fit as a list for each progeny.
 Imports the data and fit the models to compute the architectural
 parameters for VPalm.
 }
+\details{
+If \code{data_path} is a character vector of length one, it is used as the path to the folder where all data files are,
+and all files are read from this folder using the default file names. If it is a named list (the defaukt), it is used as
+the path for each file.
+}
 \note{
 Uses \code{\link[=import_data]{import_data()}} and \code{\link[=mod_all]{mod_all()}} under the hood
+}
+\examples{
+\dontrun{
+# Using the data_path as a folder path with default file names
+Palm_Param= compute_archi(map = 47, data_path = "1-Data/Archi", write_path = "2-Outputs")
+
+# Or using it with custom file names:
+Palm_Param= compute_archi(map = 47, data_path = list(parameter= '1-Data/Parameter.csv',
+                                                     development= '1-Data/Development.csv',
+                                                     phylotaxy= '1-Data/Stem.csv',
+                                                     declination= '1-Data/AnglesC&A.csv',
+                                                     curvature= '1-Data/LeafCurvature.csv',
+                                                     torsion= '1-Data/AnglesC&A.csv',
+                                                     leaf_area= '1-Data/LeafArea.csv',
+                                                     axial_angle= '1-Data/LeafDisposition.csv',
+                                                     petiole_width= '1-Data/Petiole.csv',
+                                                     twist= '1-Data/Torsion.csv'),
+                          write_path = "2-Outputs")
+}
+
 }

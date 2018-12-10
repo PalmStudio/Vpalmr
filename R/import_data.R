@@ -7,7 +7,7 @@
 #' @param phylotaxy     File path to the phylotaxy file (Stem_SMSE14.csv)
 #' @param declination   File path to the declination file (A_SMSE_Nov14.csv)
 #' @param curvature     File path to the leaf curvature file (LeafCurvature_SMSE14.csv)
-#' @param toricity      File path to the leaf toricity file (AnglesC&A_SMSE_Nov14.csv)
+#' @param torsion       File path to the leaf torsion file (AnglesC&A_SMSE_Nov14.csv)
 #' @param leaf_area     File path to the leaf area file (LeafArea_monitoring_SMSE.csv)
 #' @param axial_angle   File path to the leaf axial angle file (LeafDispositionComp_SMSE14.csv)
 #' @param petiole_width File path to the leaf petiole width file (Petiole_SMSE14.csv)
@@ -28,7 +28,7 @@
 #'                     phylotaxy= "Archi/Stem_SMSE14.csv",
 #'                     declination= "Archi/AnglesC&A_SMSE_Nov14.csv",
 #'                     curvature= "Archi/LeafCurvature_SMSE14.csv",
-#'                     toricity= 'Archi/AnglesC&A_SMSE_Nov14.csv',
+#'                     torsion= 'Archi/AnglesC&A_SMSE_Nov14.csv',
 #'                     leaf_area= 'Archi/LeafArea_monitoring_SMSE.csv',
 #'                     axial_angle= "Archi/LeafDispositionComp_SMSE14.csv",
 #'                     petiole_width= "Archi/Petiole_SMSE14.csv",
@@ -37,7 +37,7 @@
 #'
 #' @export
 #'
-import_data= function(parameter,development,phylotaxy,declination,curvature,toricity,
+import_data= function(parameter,development,phylotaxy,declination,curvature,torsion,
                       leaf_area,axial_angle,petiole_width,twist,map){
 
   # Parameter ---------------------------------------------------------------
@@ -179,10 +179,10 @@ import_data= function(parameter,development,phylotaxy,declination,curvature,tori
     merge(Curve,.,by = c('Progeny','TreeNumber','Rank'),all.x = T, sort = F)
 
 
-  # Leaf toricity -----------------------------------------------------------
+  # Leaf torsion -----------------------------------------------------------
 
   #####     Rachis twist  #####
-  Tor= data.table::fread(toricity, dec= ',', data.table= F)
+  Tor= data.table::fread(torsion, dec= ',', data.table= F)
   Tor$Observation_Date= as.Date(Tor$Observation_Date,format='%d/%m/%Y')
 
   ###absolute value of the twist
