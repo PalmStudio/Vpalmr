@@ -5,7 +5,7 @@
 \title{Import all data}
 \usage{
 import_data(parameter, development, phylotaxy, declination, curvature,
-  torsion, leaf_area, axial_angle, petiole_width, twist, map)
+  leaf_area, axial_angle, petiole_width, twist, map)
 }
 \arguments{
 \item{parameter}{File path to the parameter file (ParameterSimu.csv)}
@@ -14,11 +14,9 @@ import_data(parameter, development, phylotaxy, declination, curvature,
 
 \item{phylotaxy}{File path to the phylotaxy file (Stem_SMSE14.csv)}
 
-\item{declination}{File path to the declination file (A_SMSE_Nov14.csv)}
+\item{declination}{File path to the declination and leaf torsion file (A_SMSE_Nov14.csv)}
 
 \item{curvature}{File path to the leaf curvature file (LeafCurvature_SMSE14.csv)}
-
-\item{torsion}{File path to the leaf torsion file (AnglesC&A_SMSE_Nov14.csv)}
 
 \item{leaf_area}{File path to the leaf area file (LeafArea_monitoring_SMSE.csv)}
 
@@ -44,7 +42,6 @@ Vpalmr::import_data(parameter= 'Archi/ParameterSimu.csv',
                     phylotaxy= "Archi/Stem_SMSE14.csv",
                     declination= "Archi/AnglesC&A_SMSE_Nov14.csv",
                     curvature= "Archi/LeafCurvature_SMSE14.csv",
-                    torsion= 'Archi/AnglesC&A_SMSE_Nov14.csv',
                     leaf_area= 'Archi/LeafArea_monitoring_SMSE.csv',
                     axial_angle= "Archi/LeafDispositionComp_SMSE14.csv",
                     petiole_width= "Archi/Petiole_SMSE14.csv",

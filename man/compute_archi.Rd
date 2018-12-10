@@ -7,10 +7,9 @@
 compute_archi(map, data_path = list(parameter = "ParameterSimu.csv",
   development = "Development_Rep4_SMSE.csv", phylotaxy = "Stem_SMSE14.csv",
   declination = "AnglesC&A_SMSE_Nov14.csv", curvature =
-  "LeafCurvature_SMSE14.csv", torsion = "AnglesC&A_SMSE_Nov14.csv",
-  leaf_area = "LeafArea_monitoring_SMSE.csv", axial_angle =
-  "LeafDispositionComp_SMSE14.csv", petiole_width = "Petiole_SMSE14.csv",
-  twist = "Torsion_SMSE14.csv"), write_path = NULL)
+  "LeafCurvature_SMSE14.csv", leaf_area = "LeafArea_monitoring_SMSE.csv",
+  axial_angle = "LeafDispositionComp_SMSE14.csv", petiole_width =
+  "Petiole_SMSE14.csv", twist = "Torsion_SMSE14.csv"), write_path = NULL)
 }
 \arguments{
 \item{map}{Palm trees age desired in months after planting}
@@ -46,7 +45,6 @@ Palm_Param= compute_archi(map = 47, data_path = list(parameter= '1-Data/Paramete
                                                      phylotaxy= '1-Data/Stem.csv',
                                                      declination= '1-Data/AnglesC&A.csv',
                                                      curvature= '1-Data/LeafCurvature.csv',
-                                                     torsion= '1-Data/AnglesC&A.csv',
                                                      leaf_area= '1-Data/LeafArea.csv',
                                                      axial_angle= '1-Data/LeafDisposition.csv',
                                                      petiole_width= '1-Data/Petiole.csv',

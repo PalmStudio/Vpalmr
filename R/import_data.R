@@ -5,11 +5,10 @@
 #' @param parameter     File path to the parameter file (ParameterSimu.csv)
 #' @param development   File path to the development file (Development_Rep4_SMSE.csv)
 #' @param phylotaxy     File path to the phylotaxy file (Stem_SMSE14.csv)
-#' @param declination   File path to the declination file (A_SMSE_Nov14.csv)
+#' @param declination   File path to the leaf declination and torsion file (A_SMSE_Nov14.csv)
 #' @param curvature     File path to the leaf curvature file (LeafCurvature_SMSE14.csv)
-#' @param torsion       File path to the leaf torsion file (AnglesC&A_SMSE_Nov14.csv)
 #' @param leaf_area     File path to the leaf area file (LeafArea_monitoring_SMSE.csv)
-#' @param axial_angle   File path to the leaf axial angle file (LeafDispositionComp_SMSE14.csv)
+#' @param axial_angle   File path to the leaflet axial angle file (LeafDispositionComp_SMSE14.csv)
 #' @param petiole_width File path to the leaf petiole width file (Petiole_SMSE14.csv)
 #' @param twist         File path to the leaf twist file (Torsion_SMSE14.csv), used to compute
 #'                      leaf nerve height.
@@ -28,7 +27,6 @@
 #'                     phylotaxy= "Archi/Stem_SMSE14.csv",
 #'                     declination= "Archi/AnglesC&A_SMSE_Nov14.csv",
 #'                     curvature= "Archi/LeafCurvature_SMSE14.csv",
-#'                     torsion= 'Archi/AnglesC&A_SMSE_Nov14.csv',
 #'                     leaf_area= 'Archi/LeafArea_monitoring_SMSE.csv',
 #'                     axial_angle= "Archi/LeafDispositionComp_SMSE14.csv",
 #'                     petiole_width= "Archi/Petiole_SMSE14.csv",
@@ -37,7 +35,7 @@
 #'
 #' @export
 #'
-import_data= function(parameter,development,phylotaxy,declination,curvature,torsion,
+import_data= function(parameter,development,phylotaxy,declination,curvature,
                       leaf_area,axial_angle,petiole_width,twist,map){
 
   # Parameter ---------------------------------------------------------------
@@ -137,11 +135,16 @@ import_data= function(parameter,development,phylotaxy,declination,curvature,tors
 
   # Declination at C point --------------------------------------------------
 
-  Dec=
+  declination=
     data.table::fread(declination, dec= ',', data.table= F)%>%
     mutate(Decli_C= .data$BendingC+90)
+  declination$Observation_Date= as.Date(declination$Observation_Date,format='%d/%m/%Y')
 
 
+  # Leaf torsion -----------------------------------------------------------
+
+  # absolute value of the twist:
+  declination$TwistA= abs(declination$TwistA)
 
   # Leaf curvature ----------------------------------------------------------
 
@@ -177,16 +180,6 @@ import_data= function(parameter,development,phylotaxy,declination,curvature,tors
               rachisLength= mean(.data$rachisLength))%>%
     select(-.data$rachisLength)%>%
     merge(Curve,.,by = c('Progeny','TreeNumber','Rank'),all.x = T, sort = F)
-
-
-  # Leaf torsion -----------------------------------------------------------
-
-  #####     Rachis twist  #####
-  Tor= data.table::fread(torsion, dec= ',', data.table= F)
-  Tor$Observation_Date= as.Date(Tor$Observation_Date,format='%d/%m/%Y')
-
-  ###absolute value of the twist
-  Tor$TwistA=abs(Tor$TwistA)
 
 
   # Leaf Area ---------------------------------------------------------------
@@ -260,7 +253,7 @@ import_data= function(parameter,development,phylotaxy,declination,curvature,tors
   if(!is.null(test_area)){
     warning(paste("Potential error in Area file:\n",test_area))
   }
-  # Leaf axial angle --------------------------------------------------------
+  # Leaflet axial angle -----------------------------------------------------
 
   LftAngle=
     data.table::fread(axial_angle, dec=',', data.table= F)%>%
@@ -303,10 +296,10 @@ import_data= function(parameter,development,phylotaxy,declination,curvature,tors
     mutate(Petiole_relative_width= .data$Petiole_width/.data$Petiole_max_width,
            Petiole_relative_height= .data$Petiole_height/.data$Petiole_max_height)
 
-  out= list(Parameter,DataAll,Phylo,Dec,Curve,Tor,Area,LftAngle,PetioleSectionC,
+  out= list(Parameter,DataAll,Phylo,declination,Curve,Area,LftAngle,PetioleSectionC,
             RachisHeight,map)
   names(out)=
-    c("Parameter","DataAll","Phylo","Dec","Curve","Tor","Area","LftAngle",
+    c("Parameter","DataAll","Phylo","declination","Curve","Area","LftAngle",
       "PetioleSectionC","RachisHeight","MAP_requested")
 
   return(out)
