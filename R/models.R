@@ -611,39 +611,54 @@ mod_petiole_height= function(data,control= nlme::nlmeControl(maxIter=500000,nite
 #' Fit all models
 #'
 #' @param x  A list of all data (generally from [import_data()])
+#' @param progress A progress function (see details) Shiny progress bar if ran using Shiny application
+#'
+#' @details As this function can take some time to run, it is possible to pass a
+#' progress function to the `progress` argument as for Shiny progress bar using
+#'  [progress](https://shiny.rstudio.com/articles/progress.html). This function calls
+#'  [up_progress()] under the hood.
+#'
+#' @note There are 21 calls to the progress function in total.
 #'
 #' @return A list of all model fits
 #' @export
 #'
-mod_all= function(x){
+mod_all= function(x, progress = NULL){
+
 
   # STEM SCALE --------------------------------------------------------------
 
   # Stem diameter at the level of the considered leaf
   StemDiam.nls= mod_stem_diameter(x$DataAll)
-
+  up_progress(progress,'mod_stem_diameter')
   # Stem height
   model.stemHeight= mod_stem_height(x$DataAll)
-
+  up_progress(progress,'mod_stem_height')
   # LEAF SCALE --------------------------------------------------------------
 
   # Rachis length
   rachisLength.lme= mod_rachis_length(x$DataAll)
+  up_progress(progress,'mod_rachis_length')
 
   # Ratio petiol/rachis
   Pet= mod_petiole_ratio(x$DataAll)
+  up_progress(progress,'mod_petiole_ratio')
 
   # B point position
   Bpos= mod_B_position(x$DataAll)
+  up_progress(progress,'mod_B_position')
 
   # Number of leaflets
   nbLeaflets.nls= mod_nb_leaflet(x$DataAll)
+  up_progress(progress,'mod_nb_leaflet')
 
   # Declination at C point
   decliC.lme= mod_C_declination(x$declination)
+  up_progress(progress,'mod_stem_height')
 
   # Leaf curvature
   df_optim= mod_leaf_curvature(x$Curve)
+  up_progress(progress,'mod_leaf_curvature')
 
   x$Curve=
     merge(x$Curve,df_optim%>%select(-.data$value,-.data$conv),
@@ -653,46 +668,59 @@ mod_all= function(x){
 
   # Declination at A point
   decliA_nls= mod_A_declination(x$Curve)
+  up_progress(progress,'mod_A_declination')
 
   # Rachis deviation
   Dev= mod_A_deviation(x$Curve)
+  up_progress(progress,'mod_A_deviation')
 
   # LEAFLET SCALE -----------------------------------------------------------
 
   # Model the leaflet position along the leaf rachis
   dispo_nls= mod_leaflet_position(x$DataAll,x$Area)
+  up_progress(progress,'mod_leaflet_position')
 
   # Leaflet length at Bpoint
   leaflet_length_B.lme= mod_leaflet_length_B(x$DataAll)
+  up_progress(progress,'mod_leaflet_length_B')
 
   # Leaflet width at Bpoint
   leaflet_width_B.lme= mod_leaflet_width_B(x$DataAll)
+  up_progress(progress,'mod_leaflet_width_B')
 
   # Leaflet relative length from relative position on rachis
   leafleftLength.nlme= mod_leaflet_length(x$Area)
+  up_progress(progress,'mod_leaflet_length')
 
   # Leaflet relative widths
   leafletWidth.nlme= mod_leaflet_width(x$Area)
+  up_progress(progress,'mod_leaflet_width')
 
   # Leaflet axial angle
   axialAngle.nlme= mod_leaflet_axial_angle(x$LftAngle)
+  up_progress(progress,'mod_leaflet_axial_angle')
 
   # Leaflet radial angle (mean radial angle vs relative position on rachis)
   radial.nls= mod_leaflet_radial_angle(x$LftAngle)
+  up_progress(progress,'mod_leaflet_radial_angle')
 
   # Frequency of leaflets type depending on their radial angle
   Rep= mod_leaflet_type_freq(x$LftAngle)
+  up_progress(progress,'mod_leaflet_type_freq')
 
   # Leaflet shape
   Shape= mod_leaflet_shape(x$Area)
+  up_progress(progress,'mod_leaflet_shape')
 
   # NERVE SHAPE -------------------------------------------------------------
 
   # Nerve width at C point
   petioleWidthC.lme= mod_petiole_width_C(x$PetioleSectionC)
+  up_progress(progress,'mod_petiole_width_C')
 
   # Nerve height
   rachisRelativeHeight.nlme= mod_petiole_height(x$RachisHeight)
+  up_progress(progress,'mod_petiole_height')
 
   out=
     list(StemDiam.nls,model.stemHeight,rachisLength.lme,Pet,Bpos,nbLeaflets.nls,

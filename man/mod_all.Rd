@@ -4,14 +4,25 @@
 \alias{mod_all}
 \title{Fit all models}
 \usage{
-mod_all(x)
+mod_all(x, progress = NULL)
 }
 \arguments{
 \item{x}{A list of all data (generally from \code{\link[=import_data]{import_data()}})}
+
+\item{progress}{A progress function (see details) Shiny progress bar if ran using Shiny application}
 }
 \value{
 A list of all model fits
 }
 \description{
 Fit all models
+}
+\details{
+As this function can take some time to run, it is possible to pass a
+progress function to the \code{progress} argument as for Shiny progress bar using
+\href{https://shiny.rstudio.com/articles/progress.html}{progress}. This function calls
+\code{\link[=up_progress]{up_progress()}} under the hood.
+}
+\note{
+There are 21 calls to the progress function in total.
 }

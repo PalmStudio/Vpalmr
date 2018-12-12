@@ -164,8 +164,8 @@ extract_params= function(data, model, leaves= 45, seed= sample.int(1000,1),
       nbFronds_SD= 0,
 
       # frond twist
-      rachisTwistFinalAngle_M= mean(data$Tor$TwistA,na.rm=T),
-      rachisTwistFinalAngle_SD= stats::sd(data$Tor$TwistA,na.rm=T),
+      rachisTwistFinalAngle_M= mean(data$declination$TwistA,na.rm=T),
+      rachisTwistFinalAngle_SD= stats::sd(data$declination$TwistA,na.rm=T),
 
       # frond deviation
       rachisDevFinalAngle_M= model$Dev$DevA_deg,

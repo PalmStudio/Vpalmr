@@ -385,3 +385,23 @@ pmean= function(..., na.rm = T){
   }
   x
 }
+
+
+
+#' Update progress bar
+#'
+#' @param prog A progress function
+#' @param name The progress info (e.g. name of the function executed)
+#'
+#' @details This function is a helper that is called to increment a progress function
+#' passed as an argument. It is used for example for a Shiny progress bar using
+#'  [progress](https://shiny.rstudio.com/articles/progress.html).
+#'
+#' @return Nothing. Just update the prog function.
+#' @export
+#'
+up_progress= function(prog,name){
+  if(is.function(prog)){
+    prog(name)
+  }
+}
