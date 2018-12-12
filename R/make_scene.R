@@ -55,7 +55,7 @@ make_scene= function(data, nleaves= 45, Progeny= NULL,
   VPalm_in= format_progeny(data = VPalm_list)
 
   # Write the plants architectural parameters
-  params= write_progeny(data = VPalm_in, path = file.path(path, "1-VPalm_inputs"),
+  params= write_progeny(data = VPalm_in, path = file.path(path, "VPalm_inputs"),
                         verbose = F, overwrite = overwrite)
   if(all(params)){
     message("All VPalm parameters files successfully written in: ", file.path(path, "1-VPalm_inputs"))
@@ -65,7 +65,7 @@ make_scene= function(data, nleaves= 45, Progeny= NULL,
 
 
   # Make the OPFs (carefull, OPFs must be in a subfolder of OPS for AMAPStudio) :
-  OPFs= make_opf_all(parameter = file.path(path, "1-VPalm_inputs"),
+  OPFs= make_opf_all(parameter = file.path(path, "VPalm_inputs"),
                      opf = file.path(path, "scenes/opf"),
                      AMAPStudio = AMAPStudio, overwrite = overwrite)
 
