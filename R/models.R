@@ -640,7 +640,7 @@ mod_all= function(x){
   nbLeaflets.nls= mod_nb_leaflet(x$DataAll)
 
   # Declination at C point
-  decliC.lme= mod_C_declination(x$Dec)
+  decliC.lme= mod_C_declination(x$declination)
 
   # Leaf curvature
   df_optim= mod_leaf_curvature(x$Curve)

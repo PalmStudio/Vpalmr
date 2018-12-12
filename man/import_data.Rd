@@ -14,13 +14,13 @@ import_data(parameter, development, phylotaxy, declination, curvature,
 
 \item{phylotaxy}{File path to the phylotaxy file (Stem_SMSE14.csv)}
 
-\item{declination}{File path to the declination and leaf torsion file (A_SMSE_Nov14.csv)}
+\item{declination}{File path to the leaf declination and torsion file (A_SMSE_Nov14.csv)}
 
 \item{curvature}{File path to the leaf curvature file (LeafCurvature_SMSE14.csv)}
 
 \item{leaf_area}{File path to the leaf area file (LeafArea_monitoring_SMSE.csv)}
 
-\item{axial_angle}{File path to the leaf axial angle file (LeafDispositionComp_SMSE14.csv)}
+\item{axial_angle}{File path to the leaflet axial angle file (LeafDispositionComp_SMSE14.csv)}
 
 \item{petiole_width}{File path to the leaf petiole width file (Petiole_SMSE14.csv)}
 

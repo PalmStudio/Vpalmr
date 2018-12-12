@@ -666,7 +666,7 @@ plot_all= function(data,model,nb_leaves= 45){
     petiole_ratio= plot_petiole_ratio(data$DataAll,model$Pet),
     B_position= plot_B_position(data$DataAll,model$Bpos),
     nb_leaflet= plot_nb_leaflet(data$DataAll,model$nbLeaflets.nls),
-    C_declination= plot_C_declination(data$Dec, model$decliC.lme),
+    C_declination= plot_C_declination(data$declination, model$decliC.lme),
     leaf_curvature= plot_leaf_curvature(data= data$Curve, model = df_optim),
     A_declination= plot_A_declination(data$Curve,model$decliA_nls),
     A_deviation= plot_A_deviation(data$Curve,model$Dev),
