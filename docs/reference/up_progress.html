@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Write OPS — write_ops • Vpalmr</title>
+<title>Update progress bar — up_progress • Vpalmr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Write OPS — write_ops" />
+<meta property="og:title" content="Update progress bar — up_progress" />
 
-<meta property="og:description" content="Write OPS" />
+<meta property="og:description" content="Update progress bar" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -97,39 +97,41 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Write OPS</h1>
+    <h1>Update progress bar</h1>
     
-    <div class="hidden name"><code>write_ops.Rd</code></div>
+    <div class="hidden name"><code>up_progress.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Write OPS</p>
+    <p>Update progress bar</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>write_ops</span>(<span class='no'>data</span>, <span class='no'>path</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='no'>T</span>)</pre>
+    <pre class="usage"><span class='fu'>up_progress</span>(<span class='no'>prog</span>, <span class='no'>name</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>data</th>
-      <td><p>A pre-formated OPS file, generally the output from <code><a href='format_ops.html'>format_ops()</a></code></p></td>
+      <th>prog</th>
+      <td><p>A progress function</p></td>
     </tr>
     <tr>
-      <th>path</th>
-      <td><p>File path and name</p></td>
-    </tr>
-    <tr>
-      <th>overwrite</th>
-      <td><p>Boolean. Should pre-existing OPS files overwriten ?</p></td>
+      <th>name</th>
+      <td><p>The progress info (e.g. name of the function executed)</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Writes an OPS to disk, and returns <code>TRUE</code> if successfull or <code>FALSE</code> otherwise.</p>
+    <p>Nothing. Just update the prog function.</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>This function is a helper that is called to increment a progress function
+passed as an argument. It is used for example for a Shiny progress bar using
+<a href='https://shiny.rstudio.com/articles/progress.html'>progress</a>.</p>
     
 
   </div>
@@ -139,6 +141,8 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
           </ul>
 
   </div>

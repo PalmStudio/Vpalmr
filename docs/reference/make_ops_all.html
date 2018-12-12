@@ -110,7 +110,7 @@ map and progenies, by applying <code><a href='format_ops.html'>format_ops()</a><
     
     </div>
 
-    <pre class="usage"><span class='fu'>make_ops_all</span>(<span class='no'>Progeny</span>, <span class='no'>design</span>, <span class='no'>map</span>, <span class='no'>path</span>)</pre>
+    <pre class="usage"><span class='fu'>make_ops_all</span>(<span class='no'>Progeny</span>, <span class='no'>design</span>, <span class='no'>map</span>, <span class='no'>path</span>, <span class='no'>overwrite</span>, <span class='kw'>average</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -130,6 +130,18 @@ map and progenies, by applying <code><a href='format_ops.html'>format_ops()</a><
     <tr>
       <th>path</th>
       <td><p>The path of the target folder</p></td>
+    </tr>
+    <tr>
+      <th>overwrite</th>
+      <td><p>Boolean. Should pre-existing OPS files overwriten ?</p></td>
+    </tr>
+    <tr>
+      <th>average</th>
+      <td><p>Boolean. Use average tree instead of the sampled ones.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Further arguments to pass to <code><a href='format_ops.html'>format_ops()</a></code></p></td>
     </tr>
     </table>
     

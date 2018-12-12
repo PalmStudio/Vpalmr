@@ -110,7 +110,7 @@ a parameter file generally created by <code><a href='write_progeny.html'>write_p
     
     </div>
 
-    <pre class="usage"><span class='fu'>make_opf</span>(<span class='no'>parameter</span>, <span class='no'>opf</span>, <span class='no'>AMAPStudio</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='no'>T</span>)</pre>
+    <pre class="usage"><span class='fu'>make_opf</span>(<span class='no'>parameter</span>, <span class='no'>opf</span>, <span class='no'>AMAPStudio</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='no'>T</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>F</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -132,11 +132,15 @@ or <code><a href='write_tree.html'>write_tree()</a></code>)</p></td>
       <th>overwrite</th>
       <td><p>Boolean. Should pre-existing OPF files overwriten ?</p></td>
     </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>Should the VPalm writting informations printed to the console ?</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Writes an OPF file</p>
+    <p>Writes an OPF file, and return <code>TRUE</code> if the file was successfully written.</p>
     
 
   </div>

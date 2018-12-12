@@ -110,7 +110,12 @@ parameters for VPalm.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>compute_archi</span>(<span class='no'>map</span>, <span class='no'>data_path</span>, <span class='kw'>write_path</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>compute_archi</span>(<span class='no'>map</span>, <span class='kw'>data_path</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>parameter</span> <span class='kw'>=</span> <span class='st'>"ParameterSimu.csv"</span>,
+  <span class='kw'>development</span> <span class='kw'>=</span> <span class='st'>"Development_Rep4_SMSE.csv"</span>, <span class='kw'>phylotaxy</span> <span class='kw'>=</span> <span class='st'>"Stem_SMSE14.csv"</span>,
+  <span class='kw'>declination</span> <span class='kw'>=</span> <span class='st'>"AnglesC&amp;A_SMSE_Nov14.csv"</span>, <span class='kw'>curvature</span> <span class='kw'>=</span>
+  <span class='st'>"LeafCurvature_SMSE14.csv"</span>, <span class='kw'>leaf_area</span> <span class='kw'>=</span> <span class='st'>"LeafArea_monitoring_SMSE.csv"</span>,
+  <span class='kw'>axial_angle</span> <span class='kw'>=</span> <span class='st'>"LeafDispositionComp_SMSE14.csv"</span>, <span class='kw'>petiole_width</span> <span class='kw'>=</span>
+  <span class='st'>"Petiole_SMSE14.csv"</span>, <span class='kw'>twist</span> <span class='kw'>=</span> <span class='st'>"Torsion_SMSE14.csv"</span>), <span class='kw'>write_path</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -121,11 +126,11 @@ parameters for VPalm.</p>
     </tr>
     <tr>
       <th>data_path</th>
-      <td><p>Path to the folder were all data files resides</p></td>
+      <td><p>The folder path, or the files path (see details)</p></td>
     </tr>
     <tr>
       <th>write_path</th>
-      <td><p>Path were to write the models output. If <code>NULL</code>, the default,
+      <td><p>Path were to write the function outputs. If <code>NULL</code> (the default),
 the data is not written.</p></td>
     </tr>
     </table>
@@ -134,11 +139,35 @@ the data is not written.</p></td>
 
     <p>Returns invisibly the input data and the models fit as a list for each progeny.</p>
     
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>If <code>data_path</code> is a character vector of length one, it is used as the path to the folder where all data files are,
+and all files are read from this folder using the default file names. If it is a named list (the defaukt), it is used as
+the path for each file.</p>
+    
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>Uses <code><a href='import_data.html'>import_data()</a></code> and <code><a href='mod_all.html'>mod_all()</a></code> under the hood</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='co'># Using the data_path as a folder path with default file names</span>
+<span class='no'>Palm_Param</span><span class='kw'>=</span> <span class='fu'>compute_archi</span>(<span class='kw'>map</span> <span class='kw'>=</span> <span class='fl'>47</span>, <span class='kw'>data_path</span> <span class='kw'>=</span> <span class='st'>"1-Data/Archi"</span>, <span class='kw'>write_path</span> <span class='kw'>=</span> <span class='st'>"2-Outputs"</span>)
+
+<span class='co'># Or using it with custom file names:</span>
+<span class='no'>Palm_Param</span><span class='kw'>=</span> <span class='fu'>compute_archi</span>(<span class='kw'>map</span> <span class='kw'>=</span> <span class='fl'>47</span>, <span class='kw'>data_path</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>parameter</span><span class='kw'>=</span> <span class='st'>'1-Data/Parameter.csv'</span>,
+                                                     <span class='kw'>development</span><span class='kw'>=</span> <span class='st'>'1-Data/Development.csv'</span>,
+                                                     <span class='kw'>phylotaxy</span><span class='kw'>=</span> <span class='st'>'1-Data/Stem.csv'</span>,
+                                                     <span class='kw'>declination</span><span class='kw'>=</span> <span class='st'>'1-Data/AnglesC&amp;A.csv'</span>,
+                                                     <span class='kw'>curvature</span><span class='kw'>=</span> <span class='st'>'1-Data/LeafCurvature.csv'</span>,
+                                                     <span class='kw'>leaf_area</span><span class='kw'>=</span> <span class='st'>'1-Data/LeafArea.csv'</span>,
+                                                     <span class='kw'>axial_angle</span><span class='kw'>=</span> <span class='st'>'1-Data/LeafDisposition.csv'</span>,
+                                                     <span class='kw'>petiole_width</span><span class='kw'>=</span> <span class='st'>'1-Data/Petiole.csv'</span>,
+                                                     <span class='kw'>twist</span><span class='kw'>=</span> <span class='st'>'1-Data/Torsion.csv'</span>),
+                          <span class='kw'>write_path</span> <span class='kw'>=</span> <span class='st'>"2-Outputs"</span>)
+<span class='co'># }</span><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -147,8 +176,12 @@ the data is not written.</p></td>
       
       <li><a href="#value">Value</a></li>
 
+      <li><a href="#details">Details</a></li>
+
       <li><a href="#note">Note</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>
