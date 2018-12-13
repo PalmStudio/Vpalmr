@@ -257,7 +257,7 @@ make_ops_all= function(Progeny, design, map, path, overwrite,
     mapply(function(x,y,z){
       format_ops(design = z, Progeny = x, map = y,
                  average = average,...)%>%
-        write_ops(file.path(path,paste0(x,'_',y,'MAP.ops')),
+        write_ops(file.path(path,paste0(x,'_MAP_',y,'.ops')),
                   overwrite = overwrite)
     },
     Progeny, map, design)

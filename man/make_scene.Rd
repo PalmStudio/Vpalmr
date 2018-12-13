@@ -6,7 +6,7 @@
 \usage{
 make_scene(data, nleaves = 45, Progeny = NULL, path, AMAPStudio,
   plant_dist = 9.2, plot_design = NULL, seed = NULL, overwrite = T,
-  ntrees = NULL)
+  ntrees = NULL, progress = NULL)
 }
 \arguments{
 \item{data}{The output from \code{\link[=compute_archi]{compute_archi()}}}
@@ -30,18 +30,27 @@ with a quincunx disposition}
 
 \item{ntrees}{The number of trees to be sampled for each progeny if genetic variability
 is required. If \code{NULL} or \code{0}, uses only average palm trees.}
+
+\item{progress}{A progress function (see details) Shiny progress bar if ran using Shiny application.}
 }
 \value{
 Writes a full 3D scene with a list of OPS for each progeny and a list of OPF for each plant
-of each progeny. Returns a list of two:
+of each progeny. Returns a list of three:
 \itemize{
-\item A ggplot of the design
-\item The OPF values for each progeny and for an average plant, as \code{\link[=extract_progeny]{extract_progeny()}} do.
+\item The OPF values for each progeny and for an average plant, as \code{\link[=extract_progeny]{extract_progeny()}} do (VPalm_parameters).
+\item The data.frame of the plot design (plot_design)
+\item A ggplot of the design (ggplot_design)
 }
 }
 \description{
 Sample trees for each progenies from the models provided, write parameters, call
 VPalm to create OPF files, and write the OPS files to disk for each progeny.
+}
+\details{
+As this function can take some time to run, it is possible to pass a
+progress function to the \code{progress} argument as for Shiny progress bar using
+\href{https://shiny.rstudio.com/articles/progress.html}{progress}. This function calls
+\code{\link[=up_progress]{up_progress()}} under the hood. There are 7 calls to the progress function in total.
 }
 \note{
 To extract only average trees from progenies, simply set \code{ntrees= 0}.

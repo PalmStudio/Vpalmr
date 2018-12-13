@@ -15,13 +15,21 @@
 #' @param overwrite Boolean. Should pre-existing scene files overwriten ?
 #' @param ntrees  The number of trees to be sampled for each progeny if genetic variability
 #' is required. If `NULL` or `0`, uses only average palm trees.
+#' @param progress A progress function (see details) Shiny progress bar if ran using Shiny application.
 #'
 #' @note To extract only average trees from progenies, simply set `ntrees= 0`.
 #'
+#' @details As this function can take some time to run, it is possible to pass a
+#' progress function to the `progress` argument as for Shiny progress bar using
+#'  [progress](https://shiny.rstudio.com/articles/progress.html). This function calls
+#'  [up_progress()] under the hood. There are 7 calls to the progress function in total.
+#'
 #' @return Writes a full 3D scene with a list of OPS for each progeny and a list of OPF for each plant
-#' of each progeny. Returns a list of two:
-#' * A ggplot of the design
-#' * The OPF values for each progeny and for an average plant, as [extract_progeny()] do.
+#' of each progeny. Returns a list of three:
+#' * The OPF values for each progeny and for an average plant, as [extract_progeny()] do (VPalm_parameters).
+#' * The data.frame of the plot design (plot_design)
+#' * A ggplot of the design (ggplot_design)
+#'
 #' @export
 #'
 #' @examples
@@ -39,13 +47,16 @@
 make_scene= function(data, nleaves= 45, Progeny= NULL,
                      path, AMAPStudio,
                      plant_dist= 9.2, plot_design= NULL,
-                     seed= NULL,overwrite= T, ntrees= NULL){
+                     seed= NULL,overwrite= T, ntrees= NULL,
+                     progress= NULL){
 
   if(is.null(ntrees)){ntrees= 0}
   # Formating the VPalm outputs
   VPalm_list= Vpalmr::extract_progeny(data= data$input, model= data$model,
                                       n= ntrees, leaves= nleaves, seed= seed,
                                       average = T)
+  up_progress(progress,'extract_progeny')
+
   if(!is.null(Progeny)){
     progenies= names(VPalm_list)
     Progeny= match.arg(Progeny, progenies, several.ok = TRUE)
@@ -53,10 +64,13 @@ make_scene= function(data, nleaves= 45, Progeny= NULL,
   }
 
   VPalm_in= format_progeny(data = VPalm_list)
+  up_progress(progress,'format_progeny')
 
   # Write the plants architectural parameters
   params= write_progeny(data = VPalm_in, path = file.path(path, "VPalm_inputs"),
                         verbose = F, overwrite = overwrite)
+  up_progress(progress,'write_progeny')
+
   if(all(params)){
     message("All VPalm parameters files successfully written in: ", file.path(path, "1-VPalm_inputs"))
   }else{
@@ -68,6 +82,7 @@ make_scene= function(data, nleaves= 45, Progeny= NULL,
   OPFs= make_opf_all(parameter = file.path(path, "VPalm_inputs"),
                      opf = file.path(path, "scenes/opf"),
                      AMAPStudio = AMAPStudio, overwrite = overwrite)
+  up_progress(progress,'make_opf_all')
 
   # Design the planting pattern:
   if(is.null(plot_design)){
@@ -78,6 +93,7 @@ make_scene= function(data, nleaves= 45, Progeny= NULL,
       plot_design=
         design_plot(ntrees = 2, x0 = 0, y_dist = plant_dist)$design
     }
+    up_progress(progress,'design_plot')
   }
 
   # plot:
@@ -89,14 +105,17 @@ make_scene= function(data, nleaves= 45, Progeny= NULL,
                   high= unique(plot_design$ymax))+
     ggplot2::xlim(low= unique(plot_design$xmin),
                   high= unique(plot_design$xmax))
+  up_progress(progress,'ggplot of the design')
 
   # Make the OPS:
-  OPSs= make_ops_all(Progeny = as.list(names(VPalm_in[-grep("Average",names(VPalm_in))])),
+  OPSs= make_ops_all(Progeny = as.list(names(VPalm_in)[names(VPalm_in)!="Average"]),
                      design = list(plot_design), map = list(map),
                      path = file.path(path,"scenes"), overwrite = overwrite,
                      average = ifelse(ntrees>0,FALSE,TRUE))
+  up_progress(progress,'make_ops_all')
 
   message("Scene successfully created")
 
-  invisible(list(ggplot_design= design_ggplot, VPalm_parameters= VPalm_list))
+  invisible(list(VPalm_parameters = VPalm_list, plot_design = plot_design,
+                 ggplot_design = design_ggplot))
 }

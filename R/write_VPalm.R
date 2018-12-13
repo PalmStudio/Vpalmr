@@ -34,6 +34,8 @@ write_progeny= function(data, path= getwd(), wforce= FALSE,
     }
     data= data[-grep('Average',names(data))]
     name= name[-grep("Average",names(name))]
+  }else{
+    success= NULL
   }
 
   successes=
