@@ -32,6 +32,6 @@ map and progenies, by applying \code{\link[=format_ops]{format_ops()}} and \code
 The function uses \code{\link[base:mapply]{base::mapply()}} to apply both \code{\link[=format_ops]{format_ops()}} and
 \code{\link[=write_ops]{write_ops()}} to any number of progeny, design, or map. So if these arguments
 are provided with equal length, they will be applied in parallel (\emph{i.e.} in a
-multivariate mode) as \code{\link[base:mapply]{base::mapply()}} do. Each can also have length one, so it
-will be re-cycled for each combination.
+multivariate mode) as \code{\link[base:mapply]{base::mapply()}} do. Each can also have length one. in this
+case it will be re-cycled for each combination.
 }

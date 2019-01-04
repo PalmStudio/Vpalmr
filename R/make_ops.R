@@ -245,8 +245,8 @@ write_ops= function(data, path, overwrite= T){
 #' @details The function uses [base::mapply()] to apply both [format_ops()] and
 #'  [write_ops()] to any number of progeny, design, or map. So if these arguments
 #'  are provided with equal length, they will be applied in parallel (*i.e.* in a
-#'  multivariate mode) as [base::mapply()] do. Each can also have length one, so it
-#'  will be re-cycled for each combination.
+#'  multivariate mode) as [base::mapply()] do. Each can also have length one. in this
+#'  case it will be re-cycled for each combination.
 #'
 #' @return An OPS for each progeny, each design and each map.
 #' @export

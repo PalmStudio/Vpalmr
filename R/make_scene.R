@@ -57,10 +57,13 @@ make_scene= function(data, nleaves= 45, Progeny= NULL,
                                       average = T)
   up_progress(progress,'extract_progeny')
 
+  map= unlist(VPalm_list)%>%.[grep("MAP_requested",names(.))]
+
   if(!is.null(Progeny)){
     progenies= names(VPalm_list)
     Progeny= match.arg(Progeny, progenies, several.ok = TRUE)
     VPalm_list= VPalm_list[match(Progeny,names(VPalm_list))]
+    map= map[match(Progeny,names(VPalm_list))]
   }
 
   VPalm_in= format_progeny(data = VPalm_list)

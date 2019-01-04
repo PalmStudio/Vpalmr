@@ -112,7 +112,7 @@ VPalm to create OPF files, and write the OPS files to disk for each progeny.</p>
 
     <pre class="usage"><span class='fu'>make_scene</span>(<span class='no'>data</span>, <span class='kw'>nleaves</span> <span class='kw'>=</span> <span class='fl'>45</span>, <span class='kw'>Progeny</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>path</span>, <span class='no'>AMAPStudio</span>,
   <span class='kw'>plant_dist</span> <span class='kw'>=</span> <span class='fl'>9.2</span>, <span class='kw'>plot_design</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>ntrees</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+  <span class='kw'>ntrees</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>progress</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -159,16 +159,28 @@ with a quincunx disposition</p></td>
       <td><p>The number of trees to be sampled for each progeny if genetic variability
 is required. If <code>NULL</code> or <code>0</code>, uses only average palm trees.</p></td>
     </tr>
+    <tr>
+      <th>progress</th>
+      <td><p>A progress function (see details) Shiny progress bar if ran using Shiny application.</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Writes a full 3D scene with a list of OPS for each progeny and a list of OPF for each plant
-of each progeny. Returns a list of two:</p><ul>
-<li><p>A ggplot of the design</p></li>
-<li><p>The OPF values for each progeny and for an average plant, as <code><a href='extract_progeny.html'>extract_progeny()</a></code> do.</p></li>
+of each progeny. Returns a list of three:</p><ul>
+<li><p>The OPF values for each progeny and for an average plant, as <code><a href='extract_progeny.html'>extract_progeny()</a></code> do (VPalm_parameters).</p></li>
+<li><p>The data.frame of the plot design (plot_design)</p></li>
+<li><p>A ggplot of the design (ggplot_design)</p></li>
 </ul>
 
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>As this function can take some time to run, it is possible to pass a
+progress function to the <code>progress</code> argument as for Shiny progress bar using
+<a href='https://shiny.rstudio.com/articles/progress.html'>progress</a>. This function calls
+<code><a href='up_progress.html'>up_progress()</a></code> under the hood. There are 7 calls to the progress function in total.</p>
     
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
@@ -194,6 +206,8 @@ of each progeny. Returns a list of two:</p><ul>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
 
       <li><a href="#note">Note</a></li>
       
