@@ -9,7 +9,7 @@
 #'
 #' @details If only one of \eqn{x_{dist}}{x_dist} or \eqn{y_{dist}}{y_dist} is given, the function
 #'  will compute the other distance using the following equation:
-#'  \deqn{\sqrt{z_{dist}^2-\left(\frac{z_{dist}}{2}\right)^2}}{sqrt(x_dist*x_dist-((x_dist/2)**2))}
+#'  \deqn{\sqrt{z_{dist}^2-\left(\frac{z_{dist}}{2}\right)^2}}{sqrt(z_dist*z_dist-((z_dist/2)**2))}
 #' with \eqn{z_{dist}}{z_dist} being \eqn{y_{dist}}{y_dist} if only \eqn{x_{dist}}{x_dist} is provided,
 #' and reciprocally.
 #'
