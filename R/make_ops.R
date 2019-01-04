@@ -2,7 +2,8 @@
 #'
 #' @description Help designing a quincunx planting pattern of palm stand.
 #'
-#' @param ntrees The numbers of trees required in the scene
+#' @param cols   How many times the voronoi sub-plot is repeated in columns?
+#' @param rows   How many times the voronoi sub-plot is repeated in rows?
 #' @param x_dist The inter-row distance (m). See details.
 #' @param y_dist The intra-row distance (m). See details.
 #' @param x0     The minimum X coordinates
@@ -12,6 +13,11 @@
 #'  \deqn{\sqrt{z_{dist}^2-\left(\frac{z_{dist}}{2}\right)^2}}{sqrt(z_dist*z_dist-((z_dist/2)**2))}
 #' with \eqn{z_{dist}}{z_dist} being \eqn{y_{dist}}{y_dist} if only \eqn{x_{dist}}{x_dist} is provided,
 #' and reciprocally.
+#'
+#' @section Voronoi:
+#' The design of the plot is based on a quincunx planting pattern. The whole stand can be thought
+#' as a matrix with each cell being a Voronoi sub-plot of two trees. The `cols` argument represent
+#' the number of cells repeated in x, and the `rows` argument in y.
 #'
 #' @section Torricity in ARCHIMED:
 #' If the user wants to use the ARCHIMED model for further computations, and if the torricty option
@@ -31,9 +37,9 @@
 #'
 #' @examples
 #' # design a plot with a distance of 9.2 m between each palm trees:
-#'   design_plot(ntrees = 5, y_dist = 9.2)
+#'   design_plot(rows=2, cols= 2, y_dist = 9.2)
 #'
-design_plot= function(ntrees= 2, x_dist= NULL, y_dist= NULL, x0= 0){
+design_plot= function(rows=1, cols= 1, x_dist= NULL, y_dist= NULL, x0= 0){
 
   if(is.null(y_dist)){
     if(is.null(x_dist)){stop('At least x_dist or y_dist are required')}
@@ -42,54 +48,32 @@ design_plot= function(ntrees= 2, x_dist= NULL, y_dist= NULL, x0= 0){
     x_dist= sqrt(y_dist*y_dist-((y_dist/2)**2))
   }
 
-  if(ntrees<9){
-    ntrees_tot= 9
-  }else{
-    ntrees_tot= ntrees
-  }
+  # Voronoi of the quincunx design:
+  voronoi_plot= data.frame(x= c(x_dist/2,x_dist/2+x_dist),
+                           y= c(y_dist/2,y_dist/2+y_dist),
+                           xmin= c(0,0), xmax= c(x_dist*2),
+                           ymin= c(0,0), ymax= c(y_dist*2))
 
-  plan=
-    data.frame(x= rep(NA,ntrees_tot), y= rep(NA,ntrees_tot),
-               Row= rep(seq_len(floor(sqrt(ntrees_tot))),length.out= ntrees_tot))%>%
-    dplyr::mutate(Col= rep(seq_len(ceiling(sqrt(ntrees_tot))),
-                           each= length(unique(.data$Row)))[1:ntrees_tot])%>%
-    dplyr::mutate(odd= .data$Row%%2,
-                  x= (.data$Row-1/2)*x_dist+x0,
-                  y= ifelse(.data$odd==1,(.data$Col-1/2)*y_dist, .data$Col*y_dist))
+  # Matrix of the design (each cell is a Voronoi):
+  mat_plot= expand.grid(Row= 1:rows, Col= 1:cols)
 
-  # Particular cases:
-  if(ntrees!=2){
-    plan=
-      plan%>%
-      dplyr::arrange(.data$y,.data$x)
-  }
-  if(ntrees==4){
-    plan=
-      plan%>%
-      dplyr::filter(.data$x!=max(.data$x))
-  }
-
-  if(ntrees<9){
-    plan= plan[1:ntrees,]
-  }
-
-  # # Test for eventual issues:
-  # if (round(plan[1,]$y-plan[nCol,]$y,4)!= round(y_dist,4)){
-  #   warning('Toricity issue for intra-row spacing')
-  # }
-  # if (round(plan[1,]$x-plan[nRow*nCol,]$x,4)!=round(x_dist,4)){
-  #   warning('Toricity issue for inter-row spacing')
-  # }
+  # Full design:
+  design=
+    mapply(function(Row,Col){
+      voronoi_plot%>%
+        select(x,y,xmax,ymax,xmin,ymin)%>%
+        mutate(xmin= xmax*(Col-1), ymin= ymax*(Row-1),
+               x= x+xmin, y= y+ymin,
+               xmax= xmax*Col, ymax= ymax*Row,
+               Col= Col, Row= Row)
+    }, Row= mat_plot$Row, Col= mat_plot$Col)%>%t()%>%as_tibble()%>%
+    tidyr::unnest()
 
   result=
-    plan%>%
+    design%>%
     dplyr::mutate(z= 0.0, scale= 1.0,
                   inclinationAzimut= 0.0, inclinationAngle= 0.0,
-                  stemTwist= 0.0,
-                  ymin= min(.data$y)-y_dist/2,
-                  ymax= max(.data$y)+y_dist/2,
-                  xmin= min(.data$x)-x_dist/2,
-                  xmax= max(.data$x)+x_dist/2)%>%
+                  stemTwist= 0.0)%>%
     dplyr::group_by(.data$Col)%>%
     dplyr::mutate(Border_x= ifelse(.data$x==min(.data$x)|
                                      .data$x==max(.data$x),"out","in"))%>%
@@ -104,7 +88,8 @@ design_plot= function(ntrees= 2, x_dist= NULL, y_dist= NULL, x0= 0){
     result%>%
     ggplot2::ggplot(ggplot2::aes(x= x, y= y, color= Border))+
     ggplot2::geom_point()+
-    ggplot2::ylim(low= min(result$y), high= max(result$y))
+    ggplot2::ylim(low= min(result$ymin), high= max(result$ymax))+
+    ggplot2::xlim(low= min(result$xmin), high= max(result$xmax))
 
   list(design= result, plot= plot_bounds)
 }

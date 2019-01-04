@@ -91,10 +91,12 @@ make_scene= function(data, nleaves= 45, Progeny= NULL,
   if(is.null(plot_design)){
     if(ntrees>0){
       plot_design=
-        design_plot(ntrees = ntrees, x0 = 0, y_dist = plant_dist)$design
+        design_plot(rows= floor(sqrt(ntrees/2)),
+                    cols= ceiling(sqrt(ntrees/2)), x0 = 0, y_dist = plant_dist)$design
+      plot_design= plot_design[1:ntrees,]
     }else{
       plot_design=
-        design_plot(ntrees = 2, x0 = 0, y_dist = plant_dist)$design
+        design_plot(rows=1, cols= 1, x0 = 0, y_dist = plant_dist)$design
     }
     up_progress(progress,'design_plot')
   }

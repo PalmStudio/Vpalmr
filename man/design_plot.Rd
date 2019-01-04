@@ -4,10 +4,13 @@
 \alias{design_plot}
 \title{Design the plot}
 \usage{
-design_plot(ntrees = 2, x_dist = NULL, y_dist = NULL, x0 = 0)
+design_plot(rows = 1, cols = 1, x_dist = NULL, y_dist = NULL,
+  x0 = 0)
 }
 \arguments{
-\item{ntrees}{The numbers of trees required in the scene}
+\item{rows}{How many times the voronoi sub-plot is repeated in rows?}
+
+\item{cols}{How many times the voronoi sub-plot is repeated in columns?}
 
 \item{x_dist}{The inter-row distance (m). See details.}
 
@@ -36,6 +39,13 @@ and reciprocally.
 If \eqn{y_{dist}}{y_dist} and \eqn{x_{dist}}{x_dist} are given for the distance
 between trees and not intra/inter-row distance, a transformation has to be done beforehand (see example)
 }
+\section{Voronoi}{
+
+The design of the plot is based on a quincunx planting pattern. The whole stand can be thought
+as a matrix with each cell being a Voronoi sub-plot of two trees. The \code{cols} argument represent
+the number of cells repeated in x, and the \code{rows} argument in y.
+}
+
 \section{Torricity in ARCHIMED}{
 
 If the user wants to use the ARCHIMED model for further computations, and if the torricty option
@@ -45,6 +55,6 @@ representation of the system) because the design will be virtually duplicated to
 
 \examples{
 # design a plot with a distance of 9.2 m between each palm trees:
-  design_plot(ntrees = 5, y_dist = 9.2)
+  design_plot(rows=2, cols= 2, y_dist = 9.2)
 
 }
