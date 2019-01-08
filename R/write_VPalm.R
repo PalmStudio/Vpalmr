@@ -12,8 +12,11 @@
 #' @param verbose Prints a messages during writing. Especially usefull for debugging.
 #'
 #' @return A matrix informing about the success of the writing of the files. All values
-#' should be `TRUE` if all file were successfully written. If any error was encountered, and if
-#' `wforce= TRUE` all file writing the file name if any error occured.
+#' should be `TRUE` if all file were successfully written. The text files written are named
+#' as follows: "{Progeny}_{Tree}_MAP_{X}.txt", where Progeny is the progeny name, Tree is the tree
+#' name ("Average" if not sampled), and X the number of months after planting.
+#' If average data is present in `data`, the function writes it along the others, and name the output
+#' "Average_Average_MAP_X", with X being the month after planting.
 #'
 #' @export
 #'
@@ -23,7 +26,7 @@ write_progeny= function(data, path= getwd(), wforce= FALSE,
   name= mapply(function(x,y)paste(y,names(x),sep='_'),x=data, y=prog)
 
   if(!is.null(data$Average)){
-    success= write_tree(data$Average, path = path, name = "All_Progenies_Average",
+    success= write_tree(data$Average, path = path, name = "Average_Average",
                         overwrite = overwrite, verbose= verbose)
     if(success!=TRUE){
       if(wforce){

@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-Vpalmr
-======
+Vpalmr <img src="man/figures/logo.png" alt="logo" width="300" align="right" />
+==============================================================================
 
 The goal of Vpalmr is to ease the process of making virtual palm plants from field data.
 

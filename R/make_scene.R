@@ -17,7 +17,8 @@
 #' is required. If `NULL` or `0`, uses only average palm trees.
 #' @param progress A progress function (see details) Shiny progress bar if ran using Shiny application.
 #'
-#' @note To extract only average trees from progenies, simply set `ntrees= 0`.
+#' @note To extract only average trees from progenies, simply set `ntrees= 0`. To make a scene with the average
+#' tree from all progenies, set `Progeny= "Average"`.
 #'
 #' @details As this function can take some time to run, it is possible to pass a
 #' progress function to the `progress` argument as for Shiny progress bar using
@@ -113,8 +114,10 @@ make_scene= function(data, nleaves= 45, Progeny= NULL,
   up_progress(progress,'ggplot of the design')
 
   # Make the OPS:
-  OPSs= make_ops_all(Progeny = as.list(names(VPalm_in)[names(VPalm_in)!="Average"]),
-                     design = list(plot_design), map = list(map),
+  OPSs= make_ops_all(Progeny = ifelse(Progeny=="Average","Average",
+                                      as.list(names(VPalm_in)[
+                                        names(VPalm_in)!="Average"])),
+                     design = list(plot_design), map = as.list(map),
                      path = file.path(path,"scenes"), overwrite = overwrite,
                      average = ifelse(ntrees>0,FALSE,TRUE))
   up_progress(progress,'make_ops_all')

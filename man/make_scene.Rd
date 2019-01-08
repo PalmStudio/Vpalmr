@@ -53,7 +53,8 @@ progress function to the \code{progress} argument as for Shiny progress bar usin
 \code{\link[=up_progress]{up_progress()}} under the hood. There are 7 calls to the progress function in total.
 }
 \note{
-To extract only average trees from progenies, simply set \code{ntrees= 0}.
+To extract only average trees from progenies, simply set \code{ntrees= 0}. To make a scene with the average
+tree from all progenies, set \code{Progeny= "Average"}.
 }
 \examples{
 \dontrun{

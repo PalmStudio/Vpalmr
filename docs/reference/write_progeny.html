@@ -34,6 +34,8 @@
 
 <meta property="og:description" content="Applies write_tree() successively to a format_progeny() output to
 write all trees from all progenies to a VPalm input file." />
+
+<meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -142,8 +144,11 @@ returned an error, and return warnings instead. If <code>FALSE</code>, stop at f
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A matrix informing about the success of the writing of the files. All values
-should be <code>TRUE</code> if all file were successfully written. If any error was encountered, and if
-<code>wforce= TRUE</code> all file writing the file name if any error occured.</p>
+should be <code>TRUE</code> if all file were successfully written. The text files written are named
+as follows: "Progeny_Tree<em>MAP</em>X.txt", where Progeny is the progeny name, Tree is the tree
+name ("Average" if not sampled), and X the number of months after planting.
+If average data is present in <code>data</code>, the function writes it along the others, and name the output
+"Average_Average_MAP_X", with X being the month after planting.</p>
     
 
   </div>

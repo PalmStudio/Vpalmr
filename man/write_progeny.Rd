@@ -21,8 +21,11 @@ returned an error, and return warnings instead. If \code{FALSE}, stop at first e
 }
 \value{
 A matrix informing about the success of the writing of the files. All values
-should be \code{TRUE} if all file were successfully written. If any error was encountered, and if
-\code{wforce= TRUE} all file writing the file name if any error occured.
+should be \code{TRUE} if all file were successfully written. The text files written are named
+as follows: "{Progeny}_{Tree}\emph{MAP}{X}.txt", where Progeny is the progeny name, Tree is the tree
+name ("Average" if not sampled), and X the number of months after planting.
+If average data is present in \code{data}, the function writes it along the others, and name the output
+"Average_Average_MAP_X", with X being the month after planting.
 }
 \description{
 Applies \code{\link[=write_tree]{write_tree()}} successively to a \code{\link[=format_progeny]{format_progeny()}} output to
