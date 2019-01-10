@@ -60,8 +60,10 @@ make_scene= function(data, nleaves= 45, Progeny= NULL,
 
   map= unlist(VPalm_list)%>%.[grep("MAP_requested",names(.))]
 
-  if(!is.null(Progeny)){
-    progenies= names(VPalm_list)
+  progenies= names(VPalm_list)
+  if(is.null(Progeny)){
+    Progeny= progenies
+  }else{
     Progeny= match.arg(Progeny, progenies, several.ok = TRUE)
     VPalm_list= VPalm_list[match(Progeny,names(VPalm_list))]
     map= map[match(Progeny,names(VPalm_list))]
