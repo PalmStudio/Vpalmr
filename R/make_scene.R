@@ -93,9 +93,14 @@ make_scene= function(data, nleaves= 45, Progeny= NULL,
   # Design the planting pattern:
   if(is.null(plot_design)){
     if(ntrees>0){
+      ro= floor(sqrt(ntrees/2))
+      co= ceiling(sqrt(ntrees/2))
+      if((ro*co*2)<ntrees){
+        co= co+1
+      }
       plot_design=
-        design_plot(rows= floor(sqrt(ntrees/2)),
-                    cols= ceiling(sqrt(ntrees/2)), x0 = 0, y_dist = plant_dist)$design
+        design_plot(rows= ro,
+                    cols= co, x0 = 0, y_dist = plant_dist)$design
       plot_design= plot_design[1:ntrees,]
     }else{
       plot_design=
@@ -109,10 +114,10 @@ make_scene= function(data, nleaves= 45, Progeny= NULL,
     plot_design%>%
     ggplot2::ggplot(ggplot2::aes(x= x, y= y, color= Border))+
     ggplot2::geom_point()+
-    ggplot2::ylim(low= unique(plot_design$ymin),
-                  high= unique(plot_design$ymax))+
-    ggplot2::xlim(low= unique(plot_design$xmin),
-                  high= unique(plot_design$xmax))
+    ggplot2::ylim(low= min(unique(plot_design$ymin)),
+                  high= max(unique(plot_design$ymax)))+
+    ggplot2::xlim(low= min(unique(plot_design$xmin)),
+                  high= max(unique(plot_design$xmax)))
   up_progress(progress,'ggplot of the design')
 
   # Make the OPS:
