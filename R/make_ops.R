@@ -67,7 +67,10 @@ design_plot= function(rows=1, cols= 1, x_dist= NULL, y_dist= NULL, x0= 0){
                xmax= xmax*Col, ymax= ymax*Row,
                Col= Col, Row= Row)
     }, Row= mat_plot$Row, Col= mat_plot$Col)%>%t()%>%as_tibble()%>%
-    tidyr::unnest()
+    tidyr::unnest()%>%
+    dplyr::mutate(xmax= max(xmax), ymax= max(ymax),
+                  xmin= min(xmin), ymin= min(ymin))
+
 
   result=
     design%>%
