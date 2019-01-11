@@ -127,13 +127,15 @@ format_ops=function(design, Progeny, map, id= 1, bounds= FALSE,
     dplyr::transmute(
       plantId= 1:dplyr::n(),
       out=
-        paste(id,plantId,
-              ifelse(average,
-                     paste0('opf/',Progeny,'_Average_MAP_',map,'.opf'),
-                     paste0('opf/',Progeny,'_Tree_',.data$plantId,'_MAP_',map,'.opf')),
+        paste(id,.data$plantId,
+              if(average){
+                paste0('opf/',Progeny,'_Average_MAP_',map,'.opf')
+              }else{
+                paste0('opf/',Progeny,'_Tree_',.data$plantId,'_MAP_',map,'.opf')
+              },
               .data$x,.data$y,.data$z,.data$scale,.data$inclinationAzimut ,
-              .data$inclinationAngle, .data$stemTwist,sep='\t')
-    )%>%dplyr::select(-.data$plantId)%>%as.matrix
+              .data$inclinationAngle, .data$stemTwist,sep='\t'))%>%
+    dplyr::select(-.data$plantId)%>%as.matrix
 
   if(bounds){
     plot_box=
