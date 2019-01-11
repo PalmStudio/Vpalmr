@@ -24,7 +24,7 @@ make_scene(data, nleaves = 45, Progeny = NULL, path, AMAPStudio,
 \item{plot_design}{The design of the plot if custom. If \code{NULL}, calls \code{\link[=design_plot]{design_plot()}}
 with a quincunx disposition}
 
-\item{seed}{The seed for random parameter generation (must be length ntrees)}
+\item{seed}{The seed for random parameter generation (see details)}
 
 \item{overwrite}{Boolean. Should pre-existing scene files overwriten ?}
 
@@ -47,15 +47,24 @@ Sample trees for each progenies from the models provided, write parameters, call
 VPalm to create OPF files, and write the OPS files to disk for each progeny.
 }
 \details{
-As this function can take some time to run, it is possible to pass a
-progress function to the \code{progress} argument as for Shiny progress bar using
-\href{https://shiny.rstudio.com/articles/progress.html}{progress}. This function calls
-\code{\link[=up_progress]{up_progress()}} under the hood. There are 7 calls to the progress function in total.
+\code{seed} should be a named list of length equal to the number of progenies, and each
+object with n seeds each. The names of the list objects should match the ones of the
+progenies. Alternatively, \code{seed} can be a vector of seeds of length n that will be recycled
+for each progeny. If \code{NULL}, a random seed is generated for each tree of each progeny
+using \code{\link[base:sample]{base::sample()}}.
 }
 \note{
 To extract only average trees from progenies, simply set \code{ntrees= 0}. To make a scene with the average
 tree from all progenies, set \code{Progeny= "Average"}.
 }
+\section{Progress bar}{
+
+As this function can take some time to run, it is possible to pass a
+progress function to the \code{progress} argument as for Shiny progress bar using
+\href{https://shiny.rstudio.com/articles/progress.html}{progress}. This function calls
+\code{\link[=up_progress]{up_progress()}} under the hood. There are 7 calls to the progress function in total.
+}
+
 \examples{
 \dontrun{
 # Initializing:

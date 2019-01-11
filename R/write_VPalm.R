@@ -23,7 +23,7 @@
 write_progeny= function(data, path= getwd(), wforce= FALSE,
                         overwrite = TRUE, verbose= TRUE){
   prog= names(data)
-  name= mapply(function(x,y)paste(y,names(x),sep='_'),x=data, y=prog)
+  name= mapply(function(x,y)paste(y,names(x),sep='_'),x=data, y=prog, SIMPLIFY = FALSE)
 
   if(!is.null(data$Average)){
     success= write_tree(data$Average, path = path, name = "Average_Average",

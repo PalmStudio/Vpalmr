@@ -11,7 +11,7 @@
 #' @param plot_design The design of the plot if custom. If `NULL`, calls [design_plot()]
 #' with a quincunx disposition
 #' @param plant_dist The distance between palm trees, used as y_dist in [design_plot()]
-#' @param seed  The seed for random parameter generation (must be length ntrees)
+#' @param seed  The seed for random parameter generation (see details)
 #' @param overwrite Boolean. Should pre-existing scene files overwriten ?
 #' @param ntrees  The number of trees to be sampled for each progeny if genetic variability
 #' is required. If `NULL` or `0`, uses only average palm trees.
@@ -20,10 +20,16 @@
 #' @note To extract only average trees from progenies, simply set `ntrees= 0`. To make a scene with the average
 #' tree from all progenies, set `Progeny= "Average"`.
 #'
-#' @details As this function can take some time to run, it is possible to pass a
+#' @details `seed` should be a named list of length equal to the number of progenies, and each
+#' object with n seeds each. The names of the list objects should match the ones of the
+#' progenies. Alternatively, `seed` can be a vector of seeds of length n that will be recycled
+#' for each progeny. If `NULL`, a random seed is generated for each tree of each progeny
+#' using [base::sample()].
+#' @section Progress bar:
+#' As this function can take some time to run, it is possible to pass a
 #' progress function to the `progress` argument as for Shiny progress bar using
-#'  [progress](https://shiny.rstudio.com/articles/progress.html). This function calls
-#'  [up_progress()] under the hood. There are 7 calls to the progress function in total.
+#' [progress](https://shiny.rstudio.com/articles/progress.html). This function calls
+#' [up_progress()] under the hood. There are 7 calls to the progress function in total.
 #'
 #' @return Writes a full 3D scene with a list of OPS for each progeny and a list of OPF for each plant
 #' of each progeny. Returns a list of three:
