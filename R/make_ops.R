@@ -61,12 +61,13 @@ design_plot= function(rows=1, cols= 1, x_dist= NULL, y_dist= NULL, x0= 0){
   design=
     mapply(function(Row,Col){
       voronoi_plot%>%
-        select(x,y,xmax,ymax,xmin,ymin)%>%
-        mutate(xmin= xmax*(Col-1), ymin= ymax*(Row-1),
-               x= x+xmin, y= y+ymin,
-               xmax= xmax*Col, ymax= ymax*Row,
-               Col= Col, Row= Row)
-    }, Row= mat_plot$Row, Col= mat_plot$Col)%>%t()%>%as_tibble()%>%
+        dplyr::select(x,y,xmax,ymax,xmin,ymin)%>%
+        dplyr::mutate(xmin= xmax*(Col-1), ymin= ymax*(Row-1),
+                      x= x+xmin, y= y+ymin,
+                      xmax= xmax*Col, ymax= ymax*Row,
+                      Col= Col, Row= Row)
+    }, Row= mat_plot$Row, Col= mat_plot$Col)%>%t()%>%
+    dplyr::as_tibble()%>%
     tidyr::unnest()%>%
     dplyr::mutate(xmax= max(xmax), ymax= max(ymax),
                   xmin= min(xmin), ymin= min(ymin))
