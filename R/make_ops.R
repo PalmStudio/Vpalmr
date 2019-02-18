@@ -49,10 +49,10 @@ design_plot= function(rows=1, cols= 1, x_dist= NULL, y_dist= NULL, x0= 0){
   }
 
   # Voronoi of the quincunx design:
-  voronoi_plot= data.frame(x= c(x_dist/2,x_dist/2+x_dist),
+  voronoi_plot= data.frame(x= c(x_dist/4,x_dist/4+x_dist/2),
                            y= c(y_dist/2,y_dist/2+y_dist),
-                           xmin= c(0,0), xmax= c(x_dist*2),
-                           ymin= c(0,0), ymax= c(y_dist*2))
+                           xmin= c(0,0), xmax= rep(x_dist,2),
+                           ymin= c(0,0), ymax= rep(y_dist*2,2))
 
   # Matrix of the design (each cell is a Voronoi):
   mat_plot= expand.grid(Row= 1:rows, Col= 1:cols)
