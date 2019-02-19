@@ -106,11 +106,11 @@ make_scene= function(data, nleaves= 45, Progeny= NULL,
       }
       plot_design=
         design_plot(rows= ro,
-                    cols= co, x0 = 0, y_dist = plant_dist)$design
+                    cols= co, x0 = 0, x_dist = plant_dist)$design
       plot_design= plot_design[1:ntrees,]
     }else{
       plot_design=
-        design_plot(rows=1, cols= 1, x0 = 0, y_dist = plant_dist)$design
+        design_plot(rows=1, cols= 1, x0 = 0, x_dist = plant_dist)$design
     }
     up_progress(progress,'design_plot')
   }
