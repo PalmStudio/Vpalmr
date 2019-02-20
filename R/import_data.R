@@ -191,10 +191,7 @@ import_data= function(parameter,development,phylotaxy,declination,curvature,
            Obs_Date =as.Date(.data$Obs_Date,format='%d/%m/%Y'))
 
   # Fixing typos on the dataset:
-  Area$LeafletRankOnSection[Area$TreeNumber=="90_20"&Area$LeafIndex==6&Area$Section==1]= 18
-  Area$NbLeaflets[Area$TreeNumber=="104_31"&Area$LeafIndex==-28&Area$Section==5]= 10
-  Area$NbLeaflets[Area$TreeNumber=="106_29"&Area$LeafIndex==-9&Area$Section==10]= 13
-  Area$NbLeaflets[Area$TreeNumber=="107_19"&Area$LeafIndex==-28&Area$Section==9]= 12
+  Area$LeafletRankOnSection[Area$TreeNumber=="90_20"&Area$LeafIndex==6&Area$Section==1]= 8
 
   #####     Leaflets position on rachis    #####
   #### calibration from the MAP corresponding to nbLeafEmitted

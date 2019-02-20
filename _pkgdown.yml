@@ -4,6 +4,13 @@ reference:
     contents:
       - compute_archi
       - make_scene
+  - title: "Extract field data"
+    desc: >
+      Helpers to extract the field data from the excel forms
+    contents:
+      - extract_sheets
+      - extract_form
+      - extract_section
   - title: "Model fitting functions (nls, lme, nlme)"
     desc: >
       Functions that fits particular models to the input data
