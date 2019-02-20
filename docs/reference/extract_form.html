@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Format a VPalm input list — format_tree • Vpalmr</title>
+<title>Extract form — extract_form • Vpalmr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,9 @@
 
 
 
-<meta property="og:title" content="Format a VPalm input list — format_tree" />
+<meta property="og:title" content="Extract form — extract_form" />
 
-<meta property="og:description" content="Format an extract_params() list or one of the extract_progeny() list
-to prepare for writting" />
+<meta property="og:description" content="Extract the data from a form of one leaf from one Tree" />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -100,43 +99,35 @@ to prepare for writting" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Format a VPalm input list</h1>
+    <h1>Extract form</h1>
     
-    <div class="hidden name"><code>format_tree.Rd</code></div>
+    <div class="hidden name"><code>extract_form.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Format an <code><a href='extract_params.html'>extract_params()</a></code> list or one of the <code><a href='extract_progeny.html'>extract_progeny()</a></code> list
-to prepare for writting</p>
+    <p>Extract the data from a form of one leaf from one Tree</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>format_tree</span>(<span class='no'>data</span>)</pre>
+    <pre class="usage"><span class='fu'>extract_form</span>(<span class='no'>form</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>data</th>
-      <td><p>An <code><a href='extract_params.html'>extract_params()</a></code> list, or one from the <code><a href='extract_progeny.html'>extract_progeny()</a></code> lists</p></td>
+      <th>form</th>
+      <td><p>The form (usually a sheet from an excel file)</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <code><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble::tibble()</a></code> with two columns:</p><ul>
-<li><p>name: the Java-formatted variable initialization for VPalm</p></li>
-<li><p>value: the variable value</p></li>
-</ul>
-
+    <p>A data.frame with the different measurements</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='no'>VPalm_out</span><span class='kw'>=</span> <span class='kw pkg'>Vpalmr</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/Vpalmr/topics/extract_progeny'>extract_progeny</a></span>(<span class='kw'>data</span><span class='kw'>=</span> <span class='no'>Inputs</span>, <span class='kw'>model</span><span class='kw'>=</span> <span class='no'>models</span>, <span class='kw'>nb_leaves</span><span class='kw'>=</span> <span class='fl'>45</span>, <span class='kw'>seed</span><span class='kw'>=</span> <span class='fl'>10</span>)
-<span class='no'>average_params</span><span class='kw'>=</span> <span class='fu'>format_param</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>VPalm_out</span>$<span class='no'>Average</span>)
-<span class='co'># }</span></pre>
+    <pre class="examples"><div class='input'><span class='fu'>extract_form</span>(<span class='no'>form</span>)</div><div class='output co'>#&gt; <span class='error'>Error in apply(form, 2, as.character): objet 'form' introuvable</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

@@ -11,7 +11,9 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' extract_section(5,1)
+#' }
 extract_section= function(df_archi,Row,Col){
   data.frame(
     NbLeaflets= as.numeric(df_archi[Row+1,Col+1]),
@@ -41,7 +43,10 @@ extract_section= function(df_archi,Row,Col){
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' extract_form(form)
+#' }
+#'
 extract_form= function(form){
   form= apply(form, 2, as.character)
 
@@ -56,13 +61,16 @@ extract_form= function(form){
     })
   sections_df= data.table::rbindlist(sections_list)%>%tibble::as_tibble()
 
-  sections_df%>%
-    dplyr::mutate(obs_date= dmy(form[1,2]),
-                  LeafIndex= as.numeric(form[1,5]),
-                  Progeny= form[2,2],
-                  TreeNumber= form[3,2],
-                  RachisLength= as.numeric(form[1,8])
-    )%>%
+  Obs_once=
+    data.frame(obs_date= dmy(form[1,2]),
+               Progeny= form[2,2],
+               TreeNumber= form[3,2],
+               LeafIndex= as.numeric(form[1,5]),
+               LeafIndexRank1= as.numeric(form[2,5]),
+               RachisLength= as.numeric(form[1,8]))
+
+  Obs_once[rep(1,nrow(sections_df)),]%>%
+    cbind(sections_df)%>%
     dplyr::mutate(PositionOnRachis= .data$RachisLength*(2.0*.data$Section-1)/20)
 }
 
@@ -79,10 +87,16 @@ extract_form= function(form){
 #' @details If the sheet is not given, the function will import data from all sheets. Otherwise,
 #' the user can provide a given sheet, or a vector of sheets (see examples).
 #'
+#' @note If you have an error as the following one: "JAVA_HOME cannot be determined from the Registry",
+#' please chack that you have a JAVA version that match you R one, *i.e.* that your JAVA is 64-bits if
+#' your R is 64-bits also. If JAVA is 64-bits, it should be installed in "C:/Program Files/Java",
+#' otherwise it is located in "C:/Program Files (x86)/Java"
+#'
 #' @return A data.frame with the data from all sheets (all leaves)
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # Extract all sheets:
 #' extract_sheets(path= "1-Data/raw/Form Archi.xlsx")
 #'
@@ -91,7 +105,7 @@ extract_form= function(form){
 #'
 #' # Extract the second and third sheets:
 #' extract_sheets(path= "1-Data/raw/Form Archi.xlsx", sheet= c(2,3))
-#'
+#' }
 extract_sheets= function(path, sheet=NULL){
   if(is.null(sheet)){
     N_sheets= 1:(xlsx::getSheets(xlsx::loadWorkbook(path))%>%length())

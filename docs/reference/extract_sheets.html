@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Format a VPalm input list — format_tree • Vpalmr</title>
+<title>Extract sheets — extract_sheets • Vpalmr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,10 @@
 
 
 
-<meta property="og:title" content="Format a VPalm input list — format_tree" />
+<meta property="og:title" content="Extract sheets — extract_sheets" />
 
-<meta property="og:description" content="Format an extract_params() list or one of the extract_progeny() list
-to prepare for writting" />
+<meta property="og:description" content="Extract the data from all forms and all sheets from the leaf area and
+biomass excel files" />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -100,43 +100,58 @@ to prepare for writting" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Format a VPalm input list</h1>
+    <h1>Extract sheets</h1>
     
-    <div class="hidden name"><code>format_tree.Rd</code></div>
+    <div class="hidden name"><code>extract_sheets.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Format an <code><a href='extract_params.html'>extract_params()</a></code> list or one of the <code><a href='extract_progeny.html'>extract_progeny()</a></code> list
-to prepare for writting</p>
+    <p>Extract the data from all forms and all sheets from the leaf area and
+biomass excel files</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>format_tree</span>(<span class='no'>data</span>)</pre>
+    <pre class="usage"><span class='fu'>extract_sheets</span>(<span class='no'>path</span>, <span class='kw'>sheet</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>data</th>
-      <td><p>An <code><a href='extract_params.html'>extract_params()</a></code> list, or one from the <code><a href='extract_progeny.html'>extract_progeny()</a></code> lists</p></td>
+      <th>path</th>
+      <td><p>The path to the excel file</p></td>
+    </tr>
+    <tr>
+      <th>sheet</th>
+      <td><p>The sheets index on the files (see details)</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <code><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble::tibble()</a></code> with two columns:</p><ul>
-<li><p>name: the Java-formatted variable initialization for VPalm</p></li>
-<li><p>value: the variable value</p></li>
-</ul>
+    <p>A data.frame with the data from all sheets (all leaves)</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    <p>If the sheet is not given, the function will import data from all sheets. Otherwise,
+the user can provide a given sheet, or a vector of sheets (see examples).</p>
+    
+    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
+
+    <p>If you have an error as the following one: "JAVA_HOME cannot be determined from the Registry",
+please chack that you have a JAVA version that match you R one, <em>i.e.</em> that your JAVA is 64-bits if
+your R is 64-bits also. If JAVA is 64-bits, it should be installed in "C:/Program Files/Java",
+otherwise it is located in "C:/Program Files (x86)/Java"</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='no'>VPalm_out</span><span class='kw'>=</span> <span class='kw pkg'>Vpalmr</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/Vpalmr/topics/extract_progeny'>extract_progeny</a></span>(<span class='kw'>data</span><span class='kw'>=</span> <span class='no'>Inputs</span>, <span class='kw'>model</span><span class='kw'>=</span> <span class='no'>models</span>, <span class='kw'>nb_leaves</span><span class='kw'>=</span> <span class='fl'>45</span>, <span class='kw'>seed</span><span class='kw'>=</span> <span class='fl'>10</span>)
-<span class='no'>average_params</span><span class='kw'>=</span> <span class='fu'>format_param</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>VPalm_out</span>$<span class='no'>Average</span>)
-<span class='co'># }</span></pre>
+    <pre class="examples"><div class='input'><span class='co'># Extract all sheets:</span>
+<span class='fu'>extract_sheets</span>(<span class='kw'>path</span><span class='kw'>=</span> <span class='st'>"1-Data/raw/Form Archi.xlsx"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in xlsx::loadWorkbook(path): Cannot find 1-Data/raw/Form Archi.xlsx</span></div><div class='input'>
+<span class='co'># Extract only the first sheet:</span>
+<span class='fu'>extract_sheets</span>(<span class='kw'>path</span><span class='kw'>=</span> <span class='st'>"1-Data/raw/Form Archi.xlsx"</span>, <span class='kw'>sheet</span><span class='kw'>=</span> <span class='fl'>1</span>)</div><div class='output co'>#&gt; <span class='error'>Error in lapply(N_sheets, function(x) {    tryCatch(expr = {        df_archi = xlsx::read.xlsx(path, sheetIndex = x, header = F,             colClasses = "character")        extract_form(form = df_archi)    }, error = function(cond) {        message(paste("Error during sheet extraction for sheet:",             x))        message("Here's the original error message:")        message(cond)        return(NULL)    })}): objet 'N_sheets' introuvable</span></div><div class='input'>
+<span class='co'># Extract the second and third sheets:</span>
+<span class='fu'>extract_sheets</span>(<span class='kw'>path</span><span class='kw'>=</span> <span class='st'>"1-Data/raw/Form Archi.xlsx"</span>, <span class='kw'>sheet</span><span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>3</span>))</div><div class='output co'>#&gt; <span class='error'>Error in lapply(N_sheets, function(x) {    tryCatch(expr = {        df_archi = xlsx::read.xlsx(path, sheetIndex = x, header = F,             colClasses = "character")        extract_form(form = df_archi)    }, error = function(cond) {        message(paste("Error during sheet extraction for sheet:",             x))        message("Here's the original error message:")        message(cond)        return(NULL)    })}): objet 'N_sheets' introuvable</span></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -144,6 +159,10 @@ to prepare for writting</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
+
+      <li><a href="#note">Note</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

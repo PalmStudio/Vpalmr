@@ -22,7 +22,14 @@ biomass excel files
 If the sheet is not given, the function will import data from all sheets. Otherwise,
 the user can provide a given sheet, or a vector of sheets (see examples).
 }
+\note{
+If you have an error as the following one: "JAVA_HOME cannot be determined from the Registry",
+please chack that you have a JAVA version that match you R one, \emph{i.e.} that your JAVA is 64-bits if
+your R is 64-bits also. If JAVA is 64-bits, it should be installed in "C:/Program Files/Java",
+otherwise it is located in "C:/Program Files (x86)/Java"
+}
 \examples{
+\dontrun{
 # Extract all sheets:
 extract_sheets(path= "1-Data/raw/Form Archi.xlsx")
 
@@ -31,5 +38,5 @@ extract_sheets(path= "1-Data/raw/Form Archi.xlsx", sheet= 1)
 
 # Extract the second and third sheets:
 extract_sheets(path= "1-Data/raw/Form Archi.xlsx", sheet= c(2,3))
-
+}
 }

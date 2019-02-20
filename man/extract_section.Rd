@@ -21,5 +21,7 @@ Extract a section from the form
 The row and column of the section is the one from the upper left corner
 }
 \examples{
+\dontrun{
 extract_section(5,1)
+}
 }

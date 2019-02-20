@@ -150,7 +150,7 @@ with a quincunx disposition</p></td>
     </tr>
     <tr>
       <th>seed</th>
-      <td><p>The seed for random parameter generation (must be length ntrees)</p></td>
+      <td><p>The seed for random parameter generation (see details)</p></td>
     </tr>
     <tr>
       <th>overwrite</th>
@@ -179,15 +179,24 @@ of each progeny. Returns a list of three:</p><ul>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>As this function can take some time to run, it is possible to pass a
-progress function to the <code>progress</code> argument as for Shiny progress bar using
-<a href='https://shiny.rstudio.com/articles/progress.html'>progress</a>. This function calls
-<code><a href='up_progress.html'>up_progress()</a></code> under the hood. There are 7 calls to the progress function in total.</p>
+    <p><code>seed</code> should be a named list of length equal to the number of progenies, and each
+object with n seeds each. The names of the list objects should match the ones of the
+progenies. Alternatively, <code>seed</code> can be a vector of seeds of length n that will be recycled
+for each progeny. If <code>NULL</code>, a random seed is generated for each tree of each progeny
+using <code><a href='https://www.rdocumentation.org/packages/base/topics/sample'>base::sample()</a></code>.</p>
     
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>To extract only average trees from progenies, simply set <code>ntrees= 0</code>. To make a scene with the average
 tree from all progenies, set <code>Progeny= "Average"</code>.</p>
+    
+    <h2 class="hasAnchor" id="progress-bar"><a class="anchor" href="#progress-bar"></a>Progress bar</h2>
+
+    
+    <p>As this function can take some time to run, it is possible to pass a
+progress function to the <code>progress</code> argument as for Shiny progress bar using
+<a href='https://shiny.rstudio.com/articles/progress.html'>progress</a>. This function calls
+<code><a href='up_progress.html'>up_progress()</a></code> under the hood. There are 7 calls to the progress function in total.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -213,6 +222,8 @@ tree from all progenies, set <code>Progeny= "Average"</code>.</p>
       <li><a href="#details">Details</a></li>
 
       <li><a href="#note">Note</a></li>
+
+      <li><a href="#progress-bar">Progress bar</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>
