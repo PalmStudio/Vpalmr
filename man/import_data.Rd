@@ -45,7 +45,8 @@ Vpalmr::import_data(parameter= 'Archi/ParameterSimu.csv',
                     leaf_area= 'Archi/LeafArea_monitoring_SMSE.csv',
                     axial_angle= "Archi/LeafDispositionComp_SMSE14.csv",
                     petiole_width= "Archi/Petiole_SMSE14.csv",
-                    twist= "Archi/Torsion_SMSE14.csv")
+                    twist= "Archi/Torsion_SMSE14.csv",
+                    map= 47)
 }
 
 }

@@ -63,14 +63,14 @@ leaflet_shape_nls= function(width, position){
 
 #' Beta function for leaflet shape
 #'
-#' @description The function computes the shape of the leaflet according
-#' to its position on the leaf and two parameters: xm and ym.
+#' @description The function computes the relative width of the leaflet at all x
+#'  positions. The outputed width is relative to the leaflet max width.
 #'
-#' @param x  Relative position on the leaf
+#' @param x  Relative position on the leaflet
 #' @param xm Position of the maximum leaflet width (0-1)
 #' @param ym Shape factor
 #'
-#' @return The shape of the leaflet
+#' @return The relative width of the leaflet at x position
 #' @export
 #'
 shape_beta=function(x,xm,ym){

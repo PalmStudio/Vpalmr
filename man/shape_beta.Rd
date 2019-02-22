@@ -7,16 +7,16 @@
 shape_beta(x, xm, ym)
 }
 \arguments{
-\item{x}{Relative position on the leaf}
+\item{x}{Relative position on the leaflet}
 
 \item{xm}{Position of the maximum leaflet width (0-1)}
 
 \item{ym}{Shape factor}
 }
 \value{
-The shape of the leaflet
+The relative width of the leaflet at x position
 }
 \description{
-The function computes the shape of the leaflet according
-to its position on the leaf and two parameters: xm and ym.
+The function computes the relative width of the leaflet at all x
+positions. The outputed width is relative to the leaflet max width.
 }

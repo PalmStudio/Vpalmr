@@ -558,14 +558,14 @@ mod_leaflet_shape= function(data){
                unlist(Shape$shape)%>%matrix(ncol = 2, byrow = T))%>%
     rename(xm= .data$X1, ym= .data$X2)%>%
     group_by(.data$Progeny)%>%
-    mutate(xm.lm= list(stats::lm(data=.,xm~PositionRelative)),
-           ym.lm= list(stats::lm(data=.,ym~PositionRelative)))%>%
+    do(xm.lm= list(stats::lm(data=.,xm~PositionRelative)),
+       ym.lm= list(stats::lm(data=.,ym~PositionRelative)))%>%
     ungroup()
 
-  Shape$xm_intercept= sapply(Shape$xm.lm, function(x){stats::coef(x)[1]})
-  Shape$xm_slope= sapply(Shape$xm.lm, function(x){stats::coef(x)[2]})
-  Shape$ym_intercept= sapply(Shape$ym.lm, function(x){stats::coef(x)[1]})
-  Shape$ym_slope= sapply(Shape$ym.lm, function(x){stats::coef(x)[2]})
+  Shape$xm_intercept= sapply(Shape$xm.lm, function(x){stats::coef(x[[1]])[1]})
+  Shape$xm_slope= sapply(Shape$xm.lm, function(x){stats::coef(x[[1]])[2]})
+  Shape$ym_intercept= sapply(Shape$ym.lm, function(x){stats::coef(x[[1]])[1]})
+  Shape$ym_slope= sapply(Shape$ym.lm, function(x){stats::coef(x[[1]])[2]})
   Shape%>%
     group_by(.data$Progeny)%>%
     summarise(xm_intercept= mean(.data$xm_intercept, na.rm= T),

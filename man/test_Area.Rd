@@ -5,12 +5,14 @@
 \alias{test_development}
 \title{Test the input data}
 \usage{
-test_Area(x)
+test_Area(x, path = NULL)
 
-test_development(x)
+test_development(x, path = NULL)
 }
 \arguments{
 \item{x}{The input data.frame}
+
+\item{path}{The path to a directory were to write the plots}
 }
 \value{
 \code{NULL} if no major issue was found in the file, or a character string of all

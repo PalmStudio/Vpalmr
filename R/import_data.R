@@ -30,7 +30,8 @@
 #'                     leaf_area= 'Archi/LeafArea_monitoring_SMSE.csv',
 #'                     axial_angle= "Archi/LeafDispositionComp_SMSE14.csv",
 #'                     petiole_width= "Archi/Petiole_SMSE14.csv",
-#'                     twist= "Archi/Torsion_SMSE14.csv")
+#'                     twist= "Archi/Torsion_SMSE14.csv",
+#'                     map= 47)
 #' }
 #'
 #' @export
@@ -57,7 +58,7 @@ import_data= function(parameter,development,phylotaxy,declination,curvature,
   # DataAll -----------------------------------------------------------------
 
   DataAll=
-    data.table::fread(development, dec=',', data.table= F)%>%
+    data.table::fread(development, dec='.', data.table= F, fill= TRUE)%>%
     mutate(NurseryPlanting_Date=as.Date(.data$NurseryPlanting_Date,format='%d/%m/%Y'),
            Transplanting_Date=as.Date(.data$Transplanting_Date,format='%d/%m/%Y'),
            Observation_Date=as.Date(.data$Observation_Date,format='%d/%m/%Y'),
@@ -91,6 +92,10 @@ import_data= function(parameter,development,phylotaxy,declination,curvature,
     merge(DataAll,., by= c("TreeNumber","MonthAfterPlanting"),sort = F)%>%
     mutate(Nb_frond= .data$Nb_frond_new)%>%select(-.data$Nb_frond_new)%>%
     mutate(RatioPetiole= .data$PetioleLength/.data$RachisLength,
+           FrondRank=
+             ifelse(is.na(.data$FrondRank),
+                    .data$LeafIndexRank1-.data$LeafIndex,
+                    .data$FrondRank),
            LeafNumber= .data$TotalEmitted - .data$FrondRank)
 
   #LastEmitted----------------last leaf emitted (= TotalEmitted at rank 1)
@@ -185,13 +190,10 @@ import_data= function(parameter,development,phylotaxy,declination,curvature,
   # Leaf Area ---------------------------------------------------------------
 
   Area=
-    data.table::fread(leaf_area, dec=',', data.table= F)%>%
+    data.table::fread(leaf_area, dec='.', data.table= F)%>%
     mutate(NurseryPlantingDate= as.Date(.data$NurseryPlantingDate,format='%d/%m/%Y'),
            FieldPlantingDate =as.Date(.data$FieldPlantingDate,format='%d/%m/%Y'),
            Obs_Date =as.Date(.data$Obs_Date,format='%d/%m/%Y'))
-
-  # Fixing typos on the dataset:
-  Area$LeafletRankOnSection[Area$TreeNumber=="90_20"&Area$LeafIndex==6&Area$Section==1]= 8
 
   #####     Leaflets position on rachis    #####
   #### calibration from the MAP corresponding to nbLeafEmitted
@@ -220,7 +222,7 @@ import_data= function(parameter,development,phylotaxy,declination,curvature,
   # that are on position 0
   Area=
     Area%>%
-    group_by(.data$TreeNumber,.data$LeafIndex)%>%
+    group_by(.data$TreeNumber,.data$MAP,.data$LeafIndex)%>%
     mutate(NbLeaflets_0= ifelse(.data$PositionOnLeaflet==0,.data$NbLeaflets,0),
            TotalLeaflets= sum(.data$NbLeaflets_0))%>%
     select(-.data$NbLeaflets_0)
@@ -228,7 +230,7 @@ import_data= function(parameter,development,phylotaxy,declination,curvature,
   # Re-computing the leaflet rank on rachis:
   Area%<>%
     ungroup()%>%
-    group_by(.data$Progeny,.data$TreeNumber,.data$LeafIndex,.data$Section)%>%
+    group_by(.data$Progeny,.data$TreeNumber,.data$MAP,.data$LeafIndex,.data$Section)%>%
     arrange(.by_group = T)%>%
     summarise(LeafletRankOnSection= unique(.data$LeafletRankOnSection),
               NbLeaflets= unique(.data$NbLeaflets))%>%
@@ -237,7 +239,7 @@ import_data= function(parameter,development,phylotaxy,declination,curvature,
     mutate(LeafletRank= lag(.data$cum_LeafletRank,default = 0)+
              .data$LeafletRankOnSection)%>%
     select(-.data$cum_LeafletRank,-.data$LeafletRankOnSection,-.data$NbLeaflets)%>%
-    merge(Area,., by=c("Progeny","TreeNumber","LeafIndex","Section"),sort = F)
+    merge(Area,., by=c("Progeny","TreeNumber","MAP","LeafIndex","Section"),sort = F)
 
   # Deriving some new varibales:
   Area=
