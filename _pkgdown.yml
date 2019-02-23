@@ -8,9 +8,9 @@ reference:
     desc: >
       Helpers to extract the field data from the excel forms
     contents:
-      - extract_sheets
-      - extract_form
-      - extract_section
+      - extract_sheets_area
+      - extract_form_area
+      - extract_section_area
   - title: "Model fitting functions (nls, lme, nlme)"
     desc: >
       Functions that fits particular models to the input data
@@ -37,6 +37,7 @@ reference:
       - leaflet_shape_nls
       - shape_beta
       - leaflet_position
+      - position_on_leaflet
   - title: "Leaf scale functions"
     desc: "VPalm functions at leaf scale, used to find the parameters"
     contents:

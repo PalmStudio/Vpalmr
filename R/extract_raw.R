@@ -12,9 +12,9 @@
 #'
 #' @examples
 #' \dontrun{
-#' extract_section(5,1)
+#' extract_section_area(5,1)
 #' }
-extract_section= function(df_archi,Row,Col){
+extract_section_area= function(df_archi,Row,Col){
   data.frame(
     NbLeaflets= as.numeric(df_archi[Row+1,Col+1]),
     LeafletRankOnSection= as.numeric(df_archi[Row+2,Col+1]),
@@ -44,10 +44,10 @@ extract_section= function(df_archi,Row,Col){
 #'
 #' @examples
 #' \dontrun{
-#' extract_form(form)
+#' extract_form_area(form)
 #' }
 #'
-extract_form= function(form){
+extract_form_area= function(form){
   form= apply(form, 2, as.character)
 
   # Position of the sections in the form:
@@ -56,7 +56,7 @@ extract_form= function(form){
   # Extract each section:
   sections_list=
     lapply(1:nrow(sections_positions), function(x){
-      extract_section(df_archi = form, Row = sections_positions[x,1],Col = sections_positions[x,2])%>%
+      extract_section_area(df_archi = form, Row = sections_positions[x,1],Col = sections_positions[x,2])%>%
         dplyr::mutate(Section= x)
     })
   sections_df= data.table::rbindlist(sections_list)%>%tibble::as_tibble()
@@ -98,22 +98,22 @@ extract_form= function(form){
 #' @examples
 #' \dontrun{
 #' # Extract all sheets:
-#' extract_sheets(path= "1-Data/raw/Form Archi.xlsx")
+#' extract_sheets_area(path= "1-Data/raw/Form Archi.xlsx")
 #'
 #' # Extract only the first sheet:
-#' extract_sheets(path= "1-Data/raw/Form Archi.xlsx", sheet= 1)
+#' extract_sheets_area(path= "1-Data/raw/Form Archi.xlsx", sheet= 1)
 #'
 #' # Extract the second and third sheets:
-#' extract_sheets(path= "1-Data/raw/Form Archi.xlsx", sheet= c(2,3))
+#' extract_sheets_area(path= "1-Data/raw/Form Archi.xlsx", sheet= c(2,3))
 #' }
-extract_sheets= function(path, sheet=NULL){
+extract_sheets_area= function(path, sheet=NULL){
   if(is.null(sheet)){
     N_sheets= 1:(xlsx::getSheets(xlsx::loadWorkbook(path))%>%length())
   }
   lapply(N_sheets, function(x){
     tryCatch(expr = {
       df_archi= xlsx::read.xlsx(path,sheetIndex = x, header = F, colClasses = "character")
-      extract_form(form = df_archi)
+      extract_form_area(form = df_archi)
     },
     error=function(cond) {
       message(paste("Error during sheet extraction for sheet:",x))

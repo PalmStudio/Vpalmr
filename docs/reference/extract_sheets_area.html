@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract section — extract_section • Vpalmr</title>
+<title>Extract sheets — extract_sheets_area • Vpalmr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,10 @@
 
 
 
-<meta property="og:title" content="Extract section — extract_section" />
+<meta property="og:title" content="Extract sheets — extract_sheets_area" />
 
-<meta property="og:description" content="Extract a section from the form" />
+<meta property="og:description" content="Extract the data from all forms and all sheets from the leaf area and
+biomass excel files" />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -99,44 +100,60 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract section</h1>
+    <h1>Extract sheets</h1>
     
-    <div class="hidden name"><code>extract_section.Rd</code></div>
+    <div class="hidden name"><code>extract_sheets_area.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Extract a section from the form</p>
+    <p>Extract the data from all forms and all sheets from the leaf area and
+biomass excel files</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>extract_section</span>(<span class='no'>df_archi</span>, <span class='no'>Row</span>, <span class='no'>Col</span>)</pre>
+    <pre class="usage"><span class='fu'>extract_sheets_area</span>(<span class='no'>path</span>, <span class='kw'>sheet</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>Row</th>
-      <td><p>The row index of the section</p></td>
+      <th>path</th>
+      <td><p>The path to the excel file</p></td>
     </tr>
     <tr>
-      <th>Col</th>
-      <td><p>The column index of the section</p></td>
+      <th>sheet</th>
+      <td><p>The sheets index on the files (see details)</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data.frame with the section form data</p>
+    <p>A data.frame with the data from all sheets (all leaves)</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The row and column of the section is the one from the upper left corner</p>
+    <p>If the sheet is not given, the function will import data from all sheets. Otherwise,
+the user can provide a given sheet, or a vector of sheets (see examples).</p>
+    
+    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
+
+    <p>If you have an error as the following one: "JAVA_HOME cannot be determined from the Registry",
+please chack that you have a JAVA version that match you R one, <em>i.e.</em> that your JAVA is 64-bits if
+your R is 64-bits also. If JAVA is 64-bits, it should be installed in "C:/Program Files/Java",
+otherwise it is located in "C:/Program Files (x86)/Java"</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='fu'>extract_section</span>(<span class='fl'>5</span>,<span class='fl'>1</span>)
+<span class='co'># Extract all sheets:</span>
+<span class='fu'>extract_sheets_area</span>(<span class='kw'>path</span><span class='kw'>=</span> <span class='st'>"1-Data/raw/Form Archi.xlsx"</span>)
+
+<span class='co'># Extract only the first sheet:</span>
+<span class='fu'>extract_sheets_area</span>(<span class='kw'>path</span><span class='kw'>=</span> <span class='st'>"1-Data/raw/Form Archi.xlsx"</span>, <span class='kw'>sheet</span><span class='kw'>=</span> <span class='fl'>1</span>)
+
+<span class='co'># Extract the second and third sheets:</span>
+<span class='fu'>extract_sheets_area</span>(<span class='kw'>path</span><span class='kw'>=</span> <span class='st'>"1-Data/raw/Form Archi.xlsx"</span>, <span class='kw'>sheet</span><span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>3</span>))
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -147,6 +164,8 @@
       <li><a href="#value">Value</a></li>
 
       <li><a href="#details">Details</a></li>
+
+      <li><a href="#note">Note</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

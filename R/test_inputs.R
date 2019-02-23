@@ -62,7 +62,8 @@ test_Area= function(x, path= NULL){
   if(nrow(potential_error)>0){
     warn= warn_inc(warn,paste('* Probable error in max length for Tree:',
                               paste(potential_error$leafID, 'section',
-                                    potential_error$Section,"\n")))
+                                    potential_error$Section,
+                                    ". The longest leaflet is at leaf extremity","\n")))
   }
 
 
@@ -90,7 +91,8 @@ test_Area= function(x, path= NULL){
   if(nrow(potential_error)>0){
     warn= warn_inc(warn,paste('* Probable error in width for Tree:',
                               paste(potential_error$leafID, 'section',
-                                    potential_error$Section,"\n")))
+                                    potential_error$Section,
+                                    "The larger leaflet is at leaf extremity.","\n")))
   }
 
 
