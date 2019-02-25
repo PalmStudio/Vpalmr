@@ -540,8 +540,8 @@ mod_leaflet_shape= function(data){
   Shape=
     data%>%
     group_by(.data$TreeNumber,.data$Section)%>%
-    mutate(Leaflet_length= max(.data$PositionOnLeaflet),
-           Leaflet_max_width= max(.data$Width),
+    mutate(Leaflet_length= max(.data$PositionOnLeaflet, na.rm= T),
+           Leaflet_max_width= max(.data$Width, na.rm= T),
            Position_rachis_rel= .data$PositionOnRachis/.data$LeafLength,
            Position_leaflet_rel= .data$PositionOnLeaflet/.data$Leaflet_length,
            Width_rel= .data$Width/.data$Leaflet_max_width,
