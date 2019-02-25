@@ -35,9 +35,11 @@ extract_section_area= function(df_archi,Row,Col){
 
 
 
-#' Extract form
+#' Extract Area form
 #'
-#' @description Extract the data from a form of one leaf from one Tree
+#' @description Extract the data from a form of one leaf from one Tree. This function is called
+#' by [extract_sheets()]. Users should use [extract_sheets()] instead of this function.
+#'
 #' @param form The form (usually a sheet from an excel file)
 #' @return A data.frame with the different measurements
 #' @export
@@ -75,20 +77,57 @@ extract_form_area= function(form){
 }
 
 
+#' Extract development form
+#'
+#' @description Extract the data from a leaf development form. This function is called
+#' by [extract_sheets()]. Users should use [extract_sheets()] instead of this function.
+#'
+#' @param form The data form on which extraction is made
+#'
+#' @return A data.frame with the data from all sheets (all leaves)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' extract_form_dev(form)
+#' }
+extract_form_dev= function(form){
+  nbRow=nrow(form)
+  extr=data.frame(
+    Observation_Date=as.Date(as.numeric(as.character(form[1,2])),origin='1899-12-30'),
+    Progeny=as.character(form[1,4]),
+    TreeNumber=as.character(form[3:nbRow,1]),
+    LeafIndexRank1=as.numeric(as.character((form[3:nbRow,2]))),
+    StemHeight17=as.numeric(as.character((form[3:nbRow,3]))),
+    LeafIndex=as.numeric(as.character((form[3:nbRow,4]))),
+    PetioleLength=as.numeric(as.character((form[3:nbRow,5]))),
+    Bposition=as.numeric(as.character((form[3:nbRow,6]))),
+    RachisLength=as.numeric(as.character((form[3:nbRow,7]))),
+    LeafletBLength=as.numeric(as.character((form[3:nbRow,8]))),
+    LeafletBWidth=as.numeric(as.character((form[3:nbRow,9])))
+  )
+  return(extr)
+}
+
 
 #' Extract sheets
 #'
-#' @description Extract the data from all forms and all sheets from the leaf area and
-#'  biomass excel files
+#' @description Extract the data from all forms and all sheets from the leaf area/biomass or
+#' the development excel files
 #'
 #' @param path The path to the excel file
+#' @param form The form type (see form section)
 #' @param sheet The sheets index on the files (see details)
 #'
 #' @details If the sheet is not given, the function will import data from all sheets. Otherwise,
 #' the user can provide a given sheet, or a vector of sheets (see examples).
 #'
+#' @section form
+#' The form argument is either 'area' or 'development', and correspond to the type of form that is
+#' needed: either the ones from leaf area and biomass, or the ones from leaf development.
+#'
 #' @note If you have an error as the following one: "JAVA_HOME cannot be determined from the Registry",
-#' please chack that you have a JAVA version that match you R one, *i.e.* that your JAVA is 64-bits if
+#' please check that you have a JAVA version that match you R one, *i.e.* that your JAVA is 64-bits if
 #' your R is 64-bits also. If JAVA is 64-bits, it should be installed in "C:/Program Files/Java",
 #' otherwise it is located in "C:/Program Files (x86)/Java"
 #'
@@ -98,22 +137,28 @@ extract_form_area= function(form){
 #' @examples
 #' \dontrun{
 #' # Extract all sheets:
-#' extract_sheets_area(path= "1-Data/raw/Form Archi.xlsx")
+#' extract_sheets(path= "1-Data/raw/Form Archi.xlsx",form='area')
 #'
 #' # Extract only the first sheet:
-#' extract_sheets_area(path= "1-Data/raw/Form Archi.xlsx", sheet= 1)
+#' form(path= "1-Data/raw/Form Archi.xlsx", form='area', sheet= 1)
 #'
 #' # Extract the second and third sheets:
-#' extract_sheets_area(path= "1-Data/raw/Form Archi.xlsx", sheet= c(2,3))
+#' extract_sheets(path= "1-Data/raw/Form Archi.xlsx",form='area', sheet= c(2,3))
 #' }
-extract_sheets_area= function(path, sheet=NULL){
+extract_sheets= function(path,form=c('area','development'),sheet=NULL){
+  form=match.arg(form,c('area','development'))
   if(is.null(sheet)){
     N_sheets= 1:(xlsx::getSheets(xlsx::loadWorkbook(path))%>%length())
   }
   lapply(N_sheets, function(x){
     tryCatch(expr = {
-      df_archi= xlsx::read.xlsx(path,sheetIndex = x, header = F, colClasses = "character")
-      extract_form_area(form = df_archi)
+      df= xlsx::read.xlsx(path,sheetIndex = x, header = F, colClasses = "character")
+      if(form=='area'){
+        extract_form_area(form = df)
+      }
+      if(form=='development') {
+        extract_form_dev(form = df)
+      }
     },
     error=function(cond) {
       message(paste("Error during sheet extraction for sheet:",x))
@@ -123,3 +168,4 @@ extract_sheets_area= function(path, sheet=NULL){
     })
   })%>%data.table::rbindlist()
 }
+

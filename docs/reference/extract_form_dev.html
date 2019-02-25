@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Format a VPalm input list — format_tree • Vpalmr</title>
+<title>Extract development form — extract_form_dev • Vpalmr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,10 @@
 
 
 
-<meta property="og:title" content="Format a VPalm input list — format_tree" />
+<meta property="og:title" content="Extract development form — extract_form_dev" />
 
-<meta property="og:description" content="Format an extract_params() list or one of the extract_progeny() list
-to prepare for writting" />
+<meta property="og:description" content="Extract the data from a leaf development form. This function is called
+by extract_sheets(). Users should use extract_sheets() instead of this function." />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -100,42 +100,37 @@ to prepare for writting" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Format a VPalm input list</h1>
+    <h1>Extract development form</h1>
     
-    <div class="hidden name"><code>format_tree.Rd</code></div>
+    <div class="hidden name"><code>extract_form_dev.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Format an <code><a href='extract_params.html'>extract_params()</a></code> list or one of the <code><a href='extract_progeny.html'>extract_progeny()</a></code> list
-to prepare for writting</p>
+    <p>Extract the data from a leaf development form. This function is called
+by <code><a href='extract_sheets.html'>extract_sheets()</a></code>. Users should use <code><a href='extract_sheets.html'>extract_sheets()</a></code> instead of this function.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>format_tree</span>(<span class='no'>data</span>)</pre>
+    <pre class="usage"><span class='fu'>extract_form_dev</span>(<span class='no'>form</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>data</th>
-      <td><p>An <code><a href='extract_params.html'>extract_params()</a></code> list, or one from the <code><a href='extract_progeny.html'>extract_progeny()</a></code> lists</p></td>
+      <th>form</th>
+      <td><p>The data form on which extraction is made</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <code><a href='https://www.rdocumentation.org/packages/tibble/topics/tibble'>tibble::tibble()</a></code> with two columns:</p><ul>
-<li><p>name: the Java-formatted variable initialization for VPalm</p></li>
-<li><p>value: the variable value</p></li>
-</ul>
-
+    <p>A data.frame with the data from all sheets (all leaves)</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='no'>VPalm_out</span><span class='kw'>=</span> <span class='kw pkg'>Vpalmr</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/Vpalmr/topics/extract_progeny'>extract_progeny</a></span>(<span class='kw'>data</span><span class='kw'>=</span> <span class='no'>Inputs</span>, <span class='kw'>model</span><span class='kw'>=</span> <span class='no'>models</span>, <span class='kw'>nb_leaves</span><span class='kw'>=</span> <span class='fl'>45</span>, <span class='kw'>seed</span><span class='kw'>=</span> <span class='fl'>10</span>)
-<span class='no'>average_params</span><span class='kw'>=</span> <span class='fu'>format_param</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>VPalm_out</span>$<span class='no'>Average</span>)
+<span class='fu'>extract_form_dev</span>(<span class='no'>form</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

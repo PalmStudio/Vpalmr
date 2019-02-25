@@ -8,8 +8,9 @@ reference:
     desc: >
       Helpers to extract the field data from the excel forms
     contents:
-      - extract_sheets_area
+      - extract_sheets
       - extract_form_area
+      - extract_form_dev
       - extract_section_area
   - title: "Model fitting functions (nls, lme, nlme)"
     desc: >
@@ -53,9 +54,11 @@ reference:
     contents:
       - stem_height
   - title: "Extract"
-    desc: "Extract the VPalm parameters from the models outputs"
+    desc: "Extract the VPalm parameters from the models outputs (the main is extract_progeny)"
     contents:
-      - starts_with("extract_")
+      - extract_progeny
+      - extract_trees
+      - extract_params
   - title: "Format"
     desc: "Format the parameters lists as a VPalm input"
     contents:
