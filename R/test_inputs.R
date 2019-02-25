@@ -143,7 +143,7 @@ test_Area= function(x, path= NULL){
 
   # Testing if the number of leaflets per section is unique:
   tryCatch(expr = {
-    Area%>%
+    x%>%
       group_by(.data$TreeNumber,.data$MAP,.data$LeafIndex,.data$Section)%>%
       summarise(NbLeaflets_section= unique(.data$NbLeaflets))
   },
@@ -188,6 +188,16 @@ test_development= function(x, path= NULL){
     ggsave(filename = file.path(path,"MAP_vs_TotalEmitted.png"), plot= testplot,
            width = 60, height = 80, units = "cm",dpi = 120)
 
+  }
+
+  df_err=
+    x$DataAll%>%
+    filter(PosB>1.0)
+
+  if(nrow(df_err)>0){
+    df_err%>%glue::glue_data("Error in RachisLength or Bposition for Tree {TreeNumber}, ",
+                             "MAP {MonthAfterPlanting}, leaf index {LeafIndex}")%>%
+      warn_inc(warn,.)
   }
 
   return(warn)

@@ -42,4 +42,5 @@ compute_MAP= function(x){
                                    lead(.data$MAP_comp),.data$MAP_comp))%>%ungroup()%>%
     dplyr::mutate(MonthAfterPlanting= .data$MAP_comp)%>%
     dplyr::select(-.data$MAP_comp)
+  # NB: The last two mutates are used for the case when one session is made on several different days
 }
