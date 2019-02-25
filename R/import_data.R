@@ -218,6 +218,7 @@ import_data= function(parameter,development,phylotaxy,declination,curvature,
     filter(.data$MAP<=.data$Map_Max & .data$MAP>= .data$Map_Min)%>%
     select(-.data$Map_Max,-.data$Map_Min)
 
+  Area= add_pos_0_on_Leaflet(Area)
   # Computing the total number of leaflets per leaf from the sum of the number of leaflets
   # that are on position 0
   Area=

@@ -79,3 +79,41 @@ shape_beta=function(x,xm,ym){
 
   (1/ym)*(x**(p-1)*(1-x)**(q-1))
 }
+
+
+
+#' Add position 0 on leaflet
+#'
+#' @description Add a position 0 to the leaflet positions
+#'
+#' @param x The Area data.frame
+#'
+#' @return The Area data.frame with the 0 position for each leaflet if missing, so Area
+#' will potentially have more rows
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' add_pos_0_on_Leaflet(Area)
+#' }
+add_pos_0_on_Leaflet= function(x){
+  x%>%
+    group_by(.data$TreeNumber,.data$MAP,.data$LeafIndex,.data$Section)%>%
+    summarise(Progeny= unique(.data$Progeny),
+              Obs_Date= unique(.data$Obs_Date),
+              Trial= unique(.data$Trial),
+              NurseryPlantingDate= unique(.data$NurseryPlantingDate),
+              FieldPlantingDate= unique(.data$FieldPlantingDate),
+              LeafRank= unique(.data$LeafRank),
+              LeafLength= unique(.data$LeafLength),
+              NbLeaflets= unique(.data$NbLeaflets),
+              LeafletRankOnSection= unique(.data$LeafletRankOnSection),
+              PositionOnRachis= unique(.data$PositionOnRachis),
+              is_leaflet_pos_0= any(unique(.data$PositionOnLeaflet)==0))%>%
+    ungroup()%>%
+    filter(is_leaflet_pos_0==FALSE)%>%
+    mutate(PositionOnLeaflet= 0, Width= 0)%>%
+    select(-is_leaflet_pos_0)%>%
+    rbind(x,.)%>%
+    arrange(.data$Progeny,.data$TreeNumber,.data$MAP,.data$LeafIndex,.data$Section)
+}

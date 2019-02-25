@@ -140,6 +140,18 @@ test_Area= function(x, path= NULL){
 
   }
 
+
+  # Testing if the number of leaflets per section is unique:
+  tryCatch(expr = {
+    Area%>%
+      group_by(.data$TreeNumber,.data$MAP,.data$LeafIndex,.data$Section)%>%
+      summarise(NbLeaflets_section= unique(.data$NbLeaflets))
+  },
+  error= function(cond){
+    message("NbLeaflets should be unique for each section")
+  })
+
+
   return(warn)
 }
 

@@ -38,6 +38,7 @@ reference:
       - shape_beta
       - leaflet_position
       - position_on_leaflet
+      - add_pos_0_on_Leaflet
   - title: "Leaf scale functions"
     desc: "VPalm functions at leaf scale, used to find the parameters"
     contents:

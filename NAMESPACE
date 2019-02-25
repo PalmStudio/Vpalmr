@@ -3,6 +3,7 @@
 export("%<>%")
 export("%>%")
 export(AlKashi)
+export(add_pos_0_on_Leaflet)
 export(coef_sample)
 export(compute_archi)
 export(curvature)
