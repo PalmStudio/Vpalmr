@@ -182,3 +182,83 @@ test_development= function(x, path= NULL){
 }
 
 
+
+
+
+
+
+#' Test the position on leaflet
+#'
+#' @description Test the position on leaflet (`PositionOnLeaflet`) format and
+#' values from one section of a leaf in a given palm tree.
+#'
+#' @param data A sample of the Area data file
+#'
+#' @return The input data.frame with one more column for the test: `err`. If the section
+#' pass the test, `err` have the value "no error", else it will take a character value of
+#' the given error.
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' # Data frame with the right positions:
+#' df_sub= data.frame(TreeNumber= "90_15", LeafIndex= -1, Section= 1,
+#'                    PositionOnLeaflet= Vpalmr::position_on_leaflet(56))
+#' # Testing (all should be ok):
+#' test_pos_on_leaflet(df_sub)
+#'
+#' # Adding a wrong value:
+#' df_sub[5,'PositionOnLeaflet']= 20
+#' test_pos_on_leaflet(df_sub)
+#' }
+test_pos_on_leaflet= function(data){
+  err=
+    try({
+      data%>%
+        dplyr::select(.data$TreeNumber, .data$LeafIndex, .data$Section, .data$PositionOnLeaflet)%>%
+        dplyr::mutate(PositionOnLeaflet_TRUE=
+                        Vpalmr::position_on_leaflet(x = last(.data$PositionOnLeaflet))
+        )
+      # NB: last(PositionOnLeaflet) gives the leaflet length
+    }, silent = TRUE)
+
+  # Tests:
+  if(inherits(err, "try-error")){
+    data$err= "Number of PositionOnLeaflet, should have 8 values"
+  }else{
+    if(!all(err$PositionOnLeaflet==err$PositionOnLeaflet_TRUE)){
+      data$err= ifelse(err$PositionOnLeaflet==err$PositionOnLeaflet_TRUE,
+                       "no error", "PositionOnLeaflet sequence is wrong")
+      # data$err= "PositionOnLeaflet sequence is wrong"
+    }else{
+      data$err= "no error"
+    }
+  }
+  data
+}
+
+
+#' Test all positions on leaflet
+#'
+#' @description Test the format and values of the positions on leaflets of
+#' all sections of all leaves on all trees
+#'
+#' @param data The area data.frame
+#'
+#' @return A data.frame showing each line with potential error
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' test_pos_on_leaflet_all(Area)
+#' }
+test_pos_on_leaflet_all= function(data){
+  data%>%
+    filter(MAP>47)%>% # The measurements were different before MAP 47
+    group_by(MAP, TreeNumber, LeafIndex, Section)%>%
+    arrange(PositionOnLeaflet,.by_group = TRUE)%>%
+    do(test_pos_on_leaflet(.))%>%
+    summarise(err= unique(err))%>%
+    filter(err!="no error")
+}
