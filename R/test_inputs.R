@@ -190,9 +190,17 @@ test_development= function(x, path= NULL){
 
   }
 
-  df_err=
-    x$DataAll%>%
-    filter(PosB>1.0)
+  # Testing that Petiole length is less than Rachis length
+  df_err= x%>%filter(PetioleLength>RachisLength)
+
+  if(nrow(df_err)>0){
+    df_err%>%glue::glue_data("Error in RachisLength or PetioleLength for Tree {TreeNumber}, ",
+                             "MAP {MonthAfterPlanting}, leaf index {LeafIndex}")%>%
+      warn_inc(warn,.)
+  }
+
+  # Testing that PosB is not > 1 (it is a relative position)
+  df_err= x%>%filter(PosB>1.0&PosB<0.2)
 
   if(nrow(df_err)>0){
     df_err%>%glue::glue_data("Error in RachisLength or Bposition for Tree {TreeNumber}, ",
