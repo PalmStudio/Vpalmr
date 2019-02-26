@@ -212,11 +212,6 @@ test_development= function(x, path= NULL){
 }
 
 
-
-
-
-
-
 #' Test the position on leaflet
 #'
 #' @description Test the position on leaflet (`PositionOnLeaflet`) format and

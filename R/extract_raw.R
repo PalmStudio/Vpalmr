@@ -155,8 +155,7 @@ extract_sheets= function(path,form=c('area','development'),sheet=NULL){
       df= xlsx::read.xlsx(path,sheetIndex = x, header = F, colClasses = "character")
       if(form=='area'){
         extract_form_area(form = df)
-      }
-      if(form=='development') {
+      }else if(form=='development') {
         extract_form_dev(form = df)
       }
     },
