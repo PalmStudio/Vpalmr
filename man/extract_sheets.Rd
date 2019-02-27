@@ -4,12 +4,12 @@
 \alias{extract_sheets}
 \title{Extract sheets}
 \usage{
-extract_sheets(path, form = c("area", "development"), sheet = NULL)
+extract_sheets(path, type = c("area", "development"), sheet = NULL)
 }
 \arguments{
 \item{path}{The path to the excel file}
 
-\item{form}{The form type (see form section)}
+\item{type}{The form type (see type section)}
 
 \item{sheet}{The sheets index on the files (see details)}
 }
@@ -30,15 +30,21 @@ please check that you have a JAVA version that match you R one, \emph{i.e.} that
 your R is 64-bits also. If JAVA is 64-bits, it should be installed in "C:/Program Files/Java",
 otherwise it is located in "C:/Program Files (x86)/Java"
 }
+\section{type}{
+
+The type argument is either 'area' or 'development', and correspond to the type of form that is
+needed: either the ones from leaf area and biomass, or the ones from leaf development.
+}
+
 \examples{
 \dontrun{
 # Extract all sheets:
-extract_sheets(path= "1-Data/raw/Form Archi.xlsx",form='area')
+extract_sheets(path= "1-Data/raw/Form Archi.xlsx",type='area')
 
 # Extract only the first sheet:
-form(path= "1-Data/raw/Form Archi.xlsx", form='area', sheet= 1)
+extract_sheets(path= "1-Data/raw/Form Archi.xlsx", type='area', sheet= 1)
 
 # Extract the second and third sheets:
-extract_sheets(path= "1-Data/raw/Form Archi.xlsx",form='area', sheet= c(2,3))
+extract_sheets(path= "1-Data/raw/Form Archi.xlsx",type='area', sheet= c(2,3))
 }
 }

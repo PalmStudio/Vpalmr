@@ -112,7 +112,7 @@ the development excel files</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>extract_sheets</span>(<span class='no'>path</span>, <span class='kw'>form</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"area"</span>, <span class='st'>"development"</span>), <span class='kw'>sheet</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>extract_sheets</span>(<span class='no'>path</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"area"</span>, <span class='st'>"development"</span>), <span class='kw'>sheet</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -122,8 +122,8 @@ the development excel files</p>
       <td><p>The path to the excel file</p></td>
     </tr>
     <tr>
-      <th>form</th>
-      <td><p>The form type (see form section)</p></td>
+      <th>type</th>
+      <td><p>The form type (see type section)</p></td>
     </tr>
     <tr>
       <th>sheet</th>
@@ -147,17 +147,23 @@ please check that you have a JAVA version that match you R one, <em>i.e.</em> th
 your R is 64-bits also. If JAVA is 64-bits, it should be installed in "C:/Program Files/Java",
 otherwise it is located in "C:/Program Files (x86)/Java"</p>
     
+    <h2 class="hasAnchor" id="type"><a class="anchor" href="#type"></a>type</h2>
+
+    
+    <p>The type argument is either 'area' or 'development', and correspond to the type of form that is
+needed: either the ones from leaf area and biomass, or the ones from leaf development.</p>
+    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
 <span class='co'># Extract all sheets:</span>
-<span class='fu'>extract_sheets</span>(<span class='kw'>path</span><span class='kw'>=</span> <span class='st'>"1-Data/raw/Form Archi.xlsx"</span>,<span class='kw'>form</span><span class='kw'>=</span><span class='st'>'area'</span>)
+<span class='fu'>extract_sheets</span>(<span class='kw'>path</span><span class='kw'>=</span> <span class='st'>"1-Data/raw/Form Archi.xlsx"</span>,<span class='kw'>type</span><span class='kw'>=</span><span class='st'>'area'</span>)
 
 <span class='co'># Extract only the first sheet:</span>
-<span class='fu'>form</span>(<span class='kw'>path</span><span class='kw'>=</span> <span class='st'>"1-Data/raw/Form Archi.xlsx"</span>, <span class='kw'>form</span><span class='kw'>=</span><span class='st'>'area'</span>, <span class='kw'>sheet</span><span class='kw'>=</span> <span class='fl'>1</span>)
+<span class='fu'>extract_sheets</span>(<span class='kw'>path</span><span class='kw'>=</span> <span class='st'>"1-Data/raw/Form Archi.xlsx"</span>, <span class='kw'>type</span><span class='kw'>=</span><span class='st'>'area'</span>, <span class='kw'>sheet</span><span class='kw'>=</span> <span class='fl'>1</span>)
 
 <span class='co'># Extract the second and third sheets:</span>
-<span class='fu'>extract_sheets</span>(<span class='kw'>path</span><span class='kw'>=</span> <span class='st'>"1-Data/raw/Form Archi.xlsx"</span>,<span class='kw'>form</span><span class='kw'>=</span><span class='st'>'area'</span>, <span class='kw'>sheet</span><span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>3</span>))
+<span class='fu'>extract_sheets</span>(<span class='kw'>path</span><span class='kw'>=</span> <span class='st'>"1-Data/raw/Form Archi.xlsx"</span>,<span class='kw'>type</span><span class='kw'>=</span><span class='st'>'area'</span>, <span class='kw'>sheet</span><span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>3</span>))
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -170,6 +176,8 @@ otherwise it is located in "C:/Program Files (x86)/Java"</p>
       <li><a href="#details">Details</a></li>
 
       <li><a href="#note">Note</a></li>
+
+      <li><a href="#type">type</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

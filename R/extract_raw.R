@@ -116,14 +116,14 @@ extract_form_dev= function(form){
 #' the development excel files
 #'
 #' @param path The path to the excel file
-#' @param form The form type (see form section)
+#' @param type The form type (see type section)
 #' @param sheet The sheets index on the files (see details)
 #'
 #' @details If the sheet is not given, the function will import data from all sheets. Otherwise,
 #' the user can provide a given sheet, or a vector of sheets (see examples).
 #'
-#' @section form
-#' The form argument is either 'area' or 'development', and correspond to the type of form that is
+#' @section type:
+#' The type argument is either 'area' or 'development', and correspond to the type of form that is
 #' needed: either the ones from leaf area and biomass, or the ones from leaf development.
 #'
 #' @note If you have an error as the following one: "JAVA_HOME cannot be determined from the Registry",
@@ -137,25 +137,25 @@ extract_form_dev= function(form){
 #' @examples
 #' \dontrun{
 #' # Extract all sheets:
-#' extract_sheets(path= "1-Data/raw/Form Archi.xlsx",form='area')
+#' extract_sheets(path= "1-Data/raw/Form Archi.xlsx",type='area')
 #'
 #' # Extract only the first sheet:
-#' form(path= "1-Data/raw/Form Archi.xlsx", form='area', sheet= 1)
+#' extract_sheets(path= "1-Data/raw/Form Archi.xlsx", type='area', sheet= 1)
 #'
 #' # Extract the second and third sheets:
-#' extract_sheets(path= "1-Data/raw/Form Archi.xlsx",form='area', sheet= c(2,3))
+#' extract_sheets(path= "1-Data/raw/Form Archi.xlsx",type='area', sheet= c(2,3))
 #' }
-extract_sheets= function(path,form=c('area','development'),sheet=NULL){
-  form=match.arg(form,c('area','development'))
+extract_sheets= function(path, type=c('area','development'),sheet=NULL){
+  type=match.arg(type,c('area','development'))
   if(is.null(sheet)){
     N_sheets= 1:(xlsx::getSheets(xlsx::loadWorkbook(path))%>%length())
   }
   lapply(N_sheets, function(x){
     tryCatch(expr = {
       df= xlsx::read.xlsx(path,sheetIndex = x, header = F, colClasses = "character")
-      if(form=='area'){
+      if(type=='area'){
         extract_form_area(form = df)
-      }else if(form=='development') {
+      }else if(type=='development') {
         extract_form_dev(form = df)
       }
     },
@@ -167,4 +167,3 @@ extract_sheets= function(path,form=c('area','development'),sheet=NULL){
     })
   })%>%data.table::rbindlist()
 }
-
