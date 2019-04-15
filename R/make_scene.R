@@ -57,6 +57,9 @@ make_scene= function(data, nleaves= 45, Progeny= NULL,
                      seed= NULL,overwrite= T, ntrees= NULL,
                      progress= NULL){
 
+  path= normalizePath(path, winslash = "/", mustWork = TRUE)
+  AMAPStudio= normalizePath(AMAPStudio, winslash = "/", mustWork = TRUE)
+
   if(is.null(ntrees)){ntrees= 0}
   # Formating the VPalm outputs
   VPalm_list= Vpalmr::extract_progeny(data= data$input, model= data$model,

@@ -15,6 +15,10 @@
 #'
 make_opf= function(parameter,opf,AMAPStudio,overwrite=T,verbose=F){
 
+  # Normalize all paths:
+  AMAPStudio= normalizePath(AMAPStudio, winslash = "/", mustWork = TRUE)
+  opf= normalizePath(opf, winslash = "/", mustWork = TRUE)
+
   if(!dir.exists(file.path(dirname(opf)))){
     dir.create(file.path(dirname(opf)), recursive = T)
   }
@@ -44,7 +48,7 @@ make_opf= function(parameter,opf,AMAPStudio,overwrite=T,verbose=F){
     file_time= NULL
   }
 
-
+  on.exit(setwd(this_wd))
   setwd(AMAPStudio)
   exportFile=
     paste('java -jar', "vpalm.jar",parameter,opf,sep=' ')
@@ -102,6 +106,11 @@ make_opf= function(parameter,opf,AMAPStudio,overwrite=T,verbose=F){
 #' @export
 #'
 make_opf_all= function(parameter,opf,AMAPStudio,overwrite=T,parallel=T,NbCores=NULL){
+
+  # normalize all paths:
+  AMAPStudio= normalizePath(AMAPStudio, winslash = "/", mustWork = TRUE)
+  opf= normalizePath(opf, winslash = "/", mustWork = TRUE)
+
   param_files=
     list.files(parameter,full.names = T)%>%
     .[!file.info(.)$isdir]%>%
@@ -125,7 +134,7 @@ make_opf_all= function(parameter,opf,AMAPStudio,overwrite=T,parallel=T,NbCores=N
   }
 
   AMAPStudio=
-    tryCatch(normalizePath(AMAPStudio, winslash= "/", mustWork = T),
+    tryCatch(AMAPStudio,
              error=function(cond) {
                message(paste("AMAPStudio not found at", AMAPStudio))
                return(FALSE)
