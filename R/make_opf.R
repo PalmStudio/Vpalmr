@@ -19,6 +19,11 @@ make_opf= function(parameter,opf,AMAPStudio,overwrite=T,verbose=F){
   AMAPStudio= normalizePath(AMAPStudio, winslash = "/", mustWork = TRUE)
   opf= normalizePath(opf, winslash = "/", mustWork = TRUE)
 
+  # If the user input a jar file, only use the directory name:
+  if(grepl('.jar',AMAPStudio)){
+    AMAPStudio= dirname(AMAPStudio)
+  }
+
   if(!dir.exists(file.path(dirname(opf)))){
     dir.create(file.path(dirname(opf)), recursive = T)
   }
@@ -34,8 +39,6 @@ make_opf= function(parameter,opf,AMAPStudio,overwrite=T,verbose=F){
         return(FALSE)
       }
     )
-
-  opf= normalizePath(opf, winslash= "/", mustWork = F)
 
   if(file.exists(opf)){
     if(!overwrite){

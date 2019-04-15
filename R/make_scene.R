@@ -60,6 +60,11 @@ make_scene= function(data, nleaves= 45, Progeny= NULL,
   path= normalizePath(path, winslash = "/", mustWork = TRUE)
   AMAPStudio= normalizePath(AMAPStudio, winslash = "/", mustWork = TRUE)
 
+  # If the user input a jar file, only use the directory name:
+  if(grepl('.jar',AMAPStudio)){
+    AMAPStudio= dirname(AMAPStudio)
+  }
+
   if(is.null(ntrees)){ntrees= 0}
   # Formating the VPalm outputs
   VPalm_list= Vpalmr::extract_progeny(data= data$input, model= data$model,
