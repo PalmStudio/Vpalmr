@@ -136,7 +136,7 @@ extract_params= function(data, model, leaves= 45, seed= sample.int(1000,1),
   model$petioleWidthC.lme%<>%pull_lme(epsilon= 10^-6, type= type)
   model$df_optim%<>%
     pull_others(type= type, stats::sd(.$coef_mean))%>%
-    dplyr::summarise(coef_simu= unique(coef_simu))
+    dplyr::summarise(coef_simu= unique(.data$coef_simu))
   model$rachisRelativeHeight.nlme%<>%pull_others(type= type, .$SdG1)
 
 

@@ -15,7 +15,7 @@ The development data.frame with new or updated MAP.
 \description{
 Compute the months after planting for the development data from
 the transplanting date and the observation date. The function also corrects the
-MAP if the filed campaign is made over 2 consecutive months (should have the same MAP).
+MAP if the field campaign is made over 2 consecutive months (should have the same MAP).
 }
 \examples{
 \dontrun{

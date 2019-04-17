@@ -2,6 +2,7 @@
 #'
 #' @description Extract a section from the form
 #'
+#' @param df_archi The architectural data.frame
 #' @param Row The row index of the section
 #' @param Col The column index of the section
 #'
@@ -64,7 +65,7 @@ extract_form_area= function(form){
   sections_df= data.table::rbindlist(sections_list)%>%tibble::as_tibble()
 
   Obs_once=
-    data.frame(obs_date= dmy(form[1,2]),
+    data.frame(obs_date= lubridate::dmy(form[1,2]),
                Progeny= form[2,2],
                TreeNumber= form[3,2],
                LeafIndex= as.numeric(form[1,5]),

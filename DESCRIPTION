@@ -24,4 +24,7 @@ Imports:
     utils,
     rlang,
     tibble,
-    parallel
+    parallel,
+    glue,
+    lubridate,
+    xlsx

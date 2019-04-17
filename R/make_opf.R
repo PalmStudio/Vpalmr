@@ -17,7 +17,7 @@ make_opf= function(parameter,opf,AMAPStudio,overwrite=T,verbose=F){
 
   # Normalize all paths:
   AMAPStudio= normalizePath(AMAPStudio, winslash = "/", mustWork = TRUE)
-  opf= normalizePath(opf, winslash = "/", mustWork = TRUE)
+  opf= normalizePath(opf, winslash = "/", mustWork = FALSE)
 
   # If the user input a jar file, only use the directory name:
   if(grepl('.jar',AMAPStudio)){
@@ -112,7 +112,7 @@ make_opf_all= function(parameter,opf,AMAPStudio,overwrite=T,parallel=T,NbCores=N
 
   # normalize all paths:
   AMAPStudio= normalizePath(AMAPStudio, winslash = "/", mustWork = TRUE)
-  opf= normalizePath(opf, winslash = "/", mustWork = TRUE)
+  opf= normalizePath(opf, winslash = "/", mustWork = FALSE)
 
   param_files=
     list.files(parameter,full.names = T)%>%
@@ -126,7 +126,7 @@ make_opf_all= function(parameter,opf,AMAPStudio,overwrite=T,parallel=T,NbCores=N
   opf_path=
     basename(param_files)%>%gsub("\\.txt","\\.opf",.)%>%
     file.path(opf,.)%>%
-    normalizePath(., winslash= "/", mustWork = F)
+    normalizePath(., winslash= "/", mustWork = FALSE)
 
   existing_opfs= sapply(opf_path, file.exists)
   existing_opfs= existing_opfs[existing_opfs]

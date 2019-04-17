@@ -63,6 +63,7 @@ coef_sample= function(data, epsilon, type= c('sample','mean')){
 #' @param epsilon epsilon value for matrix inversion
 #' @param type The type of sampling performed on the parameter distribution (see
 #'  [coef_sample()])
+#' @param sd The standard deviation required for the sample
 #'
 #' @details Epsilon is used to avoid non semi-positive matrices, and is added to the matrix
 #' diagonal to make it closer to the identity matrix

@@ -61,16 +61,17 @@ design_plot= function(rows=1, cols= 1, x_dist= NULL, y_dist= NULL, x0= 0){
   design=
     mapply(function(Row,Col){
       voronoi_plot%>%
-        dplyr::select(x,y,xmax,ymax,xmin,ymin)%>%
-        dplyr::mutate(xmin= xmax*(Col-1), ymin= ymax*(Row-1),
-                      x= x+xmin, y= y+ymin,
-                      xmax= xmax*Col, ymax= ymax*Row,
+        dplyr::select(.data$x,.data$y,.data$xmax,.data$ymax,
+                      .data$xmin,.data$ymin)%>%
+        dplyr::mutate(xmin= .data$xmax*(Col-1), ymin= .data$ymax*(Row-1),
+                      x= .data$x+.data$xmin, y= .data$y+.data$ymin,
+                      xmax= .data$xmax*Col, ymax= .data$ymax*Row,
                       Col= Col, Row= Row)
     }, Row= mat_plot$Row, Col= mat_plot$Col)%>%t()%>%
     dplyr::as_tibble()%>%
     tidyr::unnest()%>%
-    dplyr::mutate(xmax= max(xmax), ymax= max(ymax),
-                  xmin= min(xmin), ymin= min(ymin))
+    dplyr::mutate(xmax= max(.data$xmax), ymax= max(.data$ymax),
+                  xmin= min(.data$xmin), ymin= min(.data$ymin))
 
 
   result=
@@ -85,12 +86,12 @@ design_plot= function(rows=1, cols= 1, x_dist= NULL, y_dist= NULL, x0= 0){
     dplyr::mutate(Border_y= ifelse(.data$y==min(.data$y)|
                                      .data$y==max(.data$y),"out","in"))%>%
     dplyr::ungroup()%>%
-    dplyr::mutate(Border= ifelse(Border_x=="out"|Border_y=="out","out","in"))
+    dplyr::mutate(Border= ifelse(.data$Border_x=="out"|.data$Border_y=="out","out","in"))
 
   # plot:
   plot_bounds=
     result%>%
-    ggplot2::ggplot(ggplot2::aes(x= x, y= y, color= Border))+
+    ggplot2::ggplot(ggplot2::aes(x= .data$x, y= .data$y, color= .data$Border))+
     ggplot2::geom_point()+
     ggplot2::ylim(low= min(result$ymin), high= max(result$ymax))+
     ggplot2::xlim(low= min(result$xmin), high= max(result$xmax))
@@ -186,7 +187,7 @@ format_ops=function(design, Progeny, map, id= 1, bounds= FALSE,
 write_ops= function(data, path, overwrite= T){
 
   file_time= NULL
-  path= normalizePath(path, winslash= "/", mustWork = F)
+  path= normalizePath(path, winslash= "/", mustWork = FALSE)
 
 
   if(!dir.exists(file.path(dirname(path)))){
@@ -197,7 +198,7 @@ write_ops= function(data, path, overwrite= T){
         warning("OPS file ", basename(path), " already exists",
                 " and overwrite is set to FALSE. Please set overwrite= TRUE or change the",
                 " file name or directory")
-        return(basename(file_name))
+        return(basename(path))
       }else{
         file_time= file.mtime(path)
       }

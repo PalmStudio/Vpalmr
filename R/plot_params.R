@@ -92,14 +92,14 @@ plot_stem_diameter= function(data,model){
     dplyr::do(df=
                 data.frame(RachisLength= seq(50,700,1),
                            StemDiameter=
-                             f.sigmo(X= seq(50,700,1), max= .$finalStemDiam,
+                             sigmoid(X= seq(50,700,1), max= .$finalStemDiam,
                                      slope= .$StemDiamSlope, infl= .$StemDiamInfl)))%>%
     tidyr::unnest()
 
   data%>%
     dplyr::filter(!is.na(.data$RachisLength)&!is.na(.data$StemDiameter))%>%
-    ggplot2::ggplot(aes(x = RachisLength, y= StemDiameter, group= Progeny))+
-    ggplot2::facet_wrap(Progeny~.)+
+    ggplot2::ggplot(aes(x = .data$RachisLength, y= .data$StemDiameter, group= .data$Progeny))+
+    ggplot2::facet_wrap(.data$Progeny~.)+
     ggplot2::geom_point(aes(color= "Observed"))+
     ggplot2::geom_line(data=pred, aes(color= "Predicted"))+
     ggplot2::ylab('Stem Basis Diameter (cm)')+
@@ -123,8 +123,8 @@ plot_stem_height= function(data,model){
 
   data%>%
     dplyr::filter(!is.na(.data$StemHeight17)&!is.na(.data$TotalEmitted))%>%
-    ggplot(aes(x = StemHeight17, y= TotalEmitted, group= Progeny))+
-    ggplot2::facet_wrap(Progeny~.)+
+    ggplot(aes(x = .data$StemHeight17, y= .data$TotalEmitted, group= .data$Progeny))+
+    ggplot2::facet_wrap(.data$Progeny~.)+
     ggplot2::geom_point(aes(color= "Observed"))+
     ggplot2::geom_line(data=pred, aes(color= "Predicted"))+
     ggplot2::ylab('Stem height (cm)')+
@@ -154,12 +154,12 @@ plot_rachis_length= function(data,model,nb_leaves){
 
   data%>%
     dplyr::filter(!is.na(.data$RachisLength)&!is.na(.data$LeafNumber))%>%
-    ggplot2::ggplot(aes(y= RachisLength, x= LeafNumber, color= "Observed"))+
-    ggplot2::facet_wrap(Progeny~.)+
+    ggplot2::ggplot(aes(y= .data$RachisLength, x= .data$LeafNumber, color= "Observed"))+
+    ggplot2::facet_wrap(.data$Progeny~.)+
     ggplot2::geom_point()+
-    ggplot2::geom_line(data= pred, aes(color= "Predicted"))+
+    ggplot2::geom_line(data= .data$pred, aes(color= "Predicted"))+
     ggplot2::ylab('Rachis Length (cm)')+ggplot2::xlab('Number of emmitted leaves from planting')+
-    ggplot2::ggtitle(paste('Palm age=',paste(nbLeafEmitted$Physio_age,collapse = ", "),
+    ggplot2::ggtitle(paste('Palm age=',paste(physio$Physio_age,collapse = ", "),
                            '\n(leaves emitted since planting)'))
 }
 
@@ -172,10 +172,10 @@ plot_petiole_ratio= function(data,model){
                     .data$FrondRank>17)%>%
     dplyr::group_by(.data$Progeny)%>%
     merge(model, by= "Progeny")%>%
-    ggplot2::ggplot(aes(x= RachisLength))+
-    ggplot2::facet_wrap(Progeny~.)+
-    ggplot2::geom_point(aes(y= RatioPetiole.x, color= "Observed"))+
-    ggplot2::geom_line(aes(y= RatioPetiole.y, color= "Simulated"))+
+    ggplot2::ggplot(aes(x= .data$RachisLength))+
+    ggplot2::facet_wrap(.data$Progeny~.)+
+    ggplot2::geom_point(aes(y= .data$RatioPetiole.x, color= "Observed"))+
+    ggplot2::geom_line(aes(y= .data$RatioPetiole.y, color= "Simulated"))+
     ggplot2::labs(y= 'Petiol/Rachis length ratio', x= 'Rachis length (cm)')
 
 }
@@ -190,10 +190,10 @@ plot_B_position= function(data,model){
                     .data$FrondRank>17 & !is.na(.data$PosB))%>%
     dplyr::group_by(.data$Progeny)%>%
     merge(model, by= "Progeny")%>%
-    ggplot2::ggplot(aes(x= RachisLength))+
-    ggplot2::facet_wrap(Progeny~.)+
-    ggplot2::geom_point(aes(y= PosB.x, color= "Observed"))+
-    ggplot2::geom_line(aes(y= PosB.y, color= "Simulated"))+
+    ggplot2::ggplot(aes(x= .data$RachisLength))+
+    ggplot2::facet_wrap(.data$Progeny~.)+
+    ggplot2::geom_point(aes(y= .data$PosB.x, color= "Observed"))+
+    ggplot2::geom_line(aes(y= .data$PosB.y, color= "Simulated"))+
     ggplot2::labs(y= 'Relative position of B point', x= 'Rachis length (cm)')
 }
 
@@ -203,7 +203,7 @@ plot_B_position= function(data,model){
 #' @export
 plot_nb_leaflet= function(data,model){
   model=
-    nbLeaflets.nls%>%
+    model$nbLeaflets.nls%>%
     dplyr::ungroup()%>%
     dplyr::group_by(.data$Progeny)%>%
     dplyr::do(df=
@@ -216,8 +216,8 @@ plot_nb_leaflet= function(data,model){
 
   data%>%
     dplyr::filter(!is.na(.data$Nb_leaflets))%>%
-    ggplot2::ggplot(aes(x = RachisLength, y= Nb_leaflets, group= Progeny))+
-    ggplot2::facet_wrap(Progeny~.)+
+    ggplot2::ggplot(aes(x = .data$RachisLength, y= .data$Nb_leaflets, group= .data$Progeny))+
+    ggplot2::facet_wrap(.data$Progeny~.)+
     ggplot2::geom_point(aes(color= "Observed"))+
     ggplot2::geom_line(data= model, aes(color= "Predicted"))+
     ggplot2::ylab('Number of leaflets')+
@@ -235,13 +235,12 @@ plot_C_declination= function(data,model){
     dplyr::do(df=
                 data.frame(Rank= seq(0,60,1),
                            Decli_C=
-                             f.linear(X= seq(0,60,1), intercept = .$decliC_intercept,
-                                      slope = .$decliC_slope)))%>%
+                             .$decliC_intercept+.$decliC_slope*seq(0,60,1)))%>%
     tidyr::unnest()
 
   data%>%
-    ggplot2::ggplot(aes(y= Decli_C, x= Rank, color= "Observed"))+
-    ggplot2::facet_wrap(Progeny~.)+
+    ggplot2::ggplot(aes(y= .data$Decli_C, x= .data$Rank, color= "Observed"))+
+    ggplot2::facet_wrap(.data$Progeny~.)+
     ggplot2::geom_point()+
     ggplot2::geom_line(data= pred, aes(color= "Predicted"))+
     ggplot2::ylab('Declination at C point (degree)')+ggplot2::xlab('Rank')
@@ -255,8 +254,8 @@ plot_leaf_curvature= function(data,model){
   df_plot=
     merge(data,model%>%select(-.data$value,-.data$conv),
           by = c('Progeny','TreeNumber'),all.x = T, sort = F)%>%
-    arrange(.data$Progeny, .data$TreeNumber, .data$Rank,
-            .data$RelativePositionRachisEstim)%>%
+    dplyr::arrange(.data$Progeny, .data$TreeNumber, .data$Rank,
+                   .data$RelativePositionRachisEstim)%>%
     dplyr::group_by(.data$Progeny, .data$TreeNumber, .data$Rank)%>%
     dplyr::mutate(
       angA_sim= sigmoid(X= .data$angC, max= 160, slope= 0.02,infl= .data$decAInfl),
@@ -271,26 +270,26 @@ plot_leaf_curvature= function(data,model){
 
   df_plot_sim=
     df_plot%>%
-    select(.data$Progeny, .data$TreeNumber, .data$Rank, .data$angC,
-           .data$angA_sim, .data$coef_mean, .data$rachisLength)%>%
-    summarise_all(mean)%>%
+    dplyr::select(.data$Progeny, .data$TreeNumber, .data$Rank, .data$angC,
+                  .data$angA_sim, .data$coef_mean, .data$rachisLength)%>%
+    dplyr::summarise_all(mean)%>%
     dplyr::group_by(.data$Progeny, .data$TreeNumber, .data$Rank)%>%
     dplyr::do(leaf_curvature(position = seq(0,1,0.01),
                              angC = .$angC, angA = .$angA_sim,
                              coefCurv = .$coef_mean,
                              Length = .$rachisLength))
 
-  ggplot2::ggplot(df_plot, aes(group= paste(Progeny,TreeNumber,Rank)))+
-    ggplot2::facet_wrap(Progeny~.)+
-    ggplot2::geom_line(aes(x = X_distance_cm, y= Y_distance_cm, color= "Observed"))+
-    ggplot2::geom_point(aes(x = X_distance_cm, y= Y_distance_cm, color= "Observed"))+
-    ggplot2::geom_line(aes(x = X_sim, y= Y_sim, color= "Predicted", lty= "Positions as observed"))+
+  ggplot2::ggplot(df_plot, aes(group= paste(.data$Progeny,.data$TreeNumber,.data$Rank)))+
+    ggplot2::facet_wrap(.data$Progeny~.)+
+    ggplot2::geom_line(aes(x = .data$X_distance_cm, y= .data$Y_distance_cm, color= "Observed"))+
+    ggplot2::geom_point(aes(x = .data$X_distance_cm, y= .data$Y_distance_cm, color= "Observed"))+
+    ggplot2::geom_line(aes(x = .data$X_sim, y= .data$Y_sim, color= "Predicted", lty= "Positions as observed"))+
     ggplot2::geom_line(data = df_plot_sim,
-                       aes(x= X, y= Y,color= "Predicted", lty= "New simulated positions"))+
+                       aes(x= .data$X, y= .data$Y,color= "Predicted", lty= "New simulated positions"))+
     ggplot2::ylab('Y distance (m)')+ggplot2::xlab('X distance (m)')+
-    theme(legend.position = "bottom")+
-    guides(color = guide_legend(title= "Colour: "),
-           linetype = guide_legend(title= "Line type: "))
+    ggplot2::theme(legend.position = "bottom")+
+    ggplot2::guides(color = guide_legend(title= "Colour: "),
+                    linetype = guide_legend(title= "Line type: "))
 }
 
 #' @rdname plot_stem_diameter
@@ -306,7 +305,7 @@ plot_A_declination= function(data, model, decMaxA= 180, decSlopeA= 0.01){
                                          slope = decSlopeA, infl= .$decInflA)))%>%
     tidyr::unnest()
 
-  ggplot2::ggplot(data, aes(x = angC, y= angA, group= Progeny))+
+  ggplot2::ggplot(data, aes(x = .data$angC, y= .data$angA, group= .data$Progeny))+
     ggplot2::facet_wrap(Progeny~.)+
     ggplot2::geom_point(aes(color= "Observed"))+
     ggplot2::geom_line(data= pred, aes(color= "Predicted"))+
@@ -324,10 +323,10 @@ plot_A_deviation= function(data,model){
                                         Length= .data$rachisLength))%>%
     merge(model%>%dplyr::rename(DevA_deg_sim= .data$DevA_deg),
           by = c('Progeny'),all.x = T, sort = F)%>%
-    ggplot2::ggplot(aes(x= rachisLength))+
-    ggplot2::facet_wrap(Progeny~.)+
-    ggplot2::geom_point(aes(y= DevA_deg, color= "Observed"))+
-    ggplot2::geom_line(aes(y= DevA_deg_sim, color= "Predicted"))+
+    ggplot2::ggplot(aes(x= .data$rachisLength))+
+    ggplot2::facet_wrap(.data$Progeny~.)+
+    ggplot2::geom_point(aes(y= .data$DevA_deg, color= "Observed"))+
+    ggplot2::geom_line(aes(y= .data$DevA_deg_sim, color= "Predicted"))+
     ggplot2::ylab('Leaf deviation (deg)')+ggplot2::xlab('Rachis length (cm)')
 }
 
@@ -342,7 +341,7 @@ plot_leaflet_position= function(data, model, mode= c("Progeny","Tree")){
     data%>%
     dplyr::group_by(.data$TreeNumber,.data$LeafIndex)%>%
     summarise(LeafNumber= min(.data$LeafNumber,na.rm = T))%>%
-    merge(Area,., by=c("TreeNumber","LeafIndex"), sort= F)%>%
+    merge(data,., by=c("TreeNumber","LeafIndex"), sort= F)%>%
     dplyr::filter(.data$PositionOnLeaflet==0)
 
   pred=
@@ -358,8 +357,8 @@ plot_leaflet_position= function(data, model, mode= c("Progeny","Tree")){
   if(mode=="Progeny"){
     plot_pos=
       data%>%
-      ggplot2::ggplot(aes(x= RelativeLeafletRank, y= RelativePositionRachis))+
-      ggplot2::facet_wrap(Progeny~.)+
+      ggplot2::ggplot(aes(x= .data$RelativeLeafletRank, y= .data$RelativePositionRachis))+
+      ggplot2::facet_wrap(.data$Progeny~.)+
       ggplot2::geom_point(aes(color= "Observed"))+
       ggplot2::geom_line(data=pred, aes(color= "Predicted"))+
       ggplot2::xlab('Leaflet relative rank')+ggplot2::ylab('Leafelt relative position')
@@ -380,15 +379,13 @@ plot_leaflet_position= function(data, model, mode= c("Progeny","Tree")){
             by="Progeny")%>%
       dplyr::mutate(PositionRachis_sim= .data$RelativePositionRachis_sim*.data$LeafLength)%>%
       ggplot2::ggplot()+
-      ggplot2::facet_wrap(Progeny~.)+
-      ggplot2::geom_point(aes(x= RelativeLeafletRank, y= PositionOnRachis, color= "Observed"))+
-      ggplot2::geom_line(aes(x= RelativeLeafletRank_sim, y= PositionRachis_sim,
-                             color= as.factor(Tree_Index)))+
+      ggplot2::facet_wrap(.data$Progeny~.)+
+      ggplot2::geom_point(aes(x= .data$RelativeLeafletRank, y= .data$PositionOnRachis, color= "Observed"))+
+      ggplot2::geom_line(aes(x= .data$RelativeLeafletRank_sim, y= .data$PositionRachis_sim,
+                             color= as.factor(.data$Tree_Index)))+
       # NB: if the true Tree number is needed, replace Tree_Index by TreeNumber above
       ggplot2::xlab('Leaflet relative rank')+ggplot2::ylab('Leafelt position on rachis (cm)')+
-      ggplot2::labs(color= "Tree index \nin progenies",
-                    title= paste('Palm age=',paste(nbLeafEmitted$Physio_age, collapse = ", ")),
-                    subtitle= "Physiologial age in number of leaves emitted since planting")
+      ggplot2::labs(color= "Tree index \nin progenies")
   }
   plot_pos
 }
@@ -408,8 +405,8 @@ plot_leaflet_length_B= function(data, model){
 
   data%>%
     dplyr::filter(!is.na(.data$LeafletBLength))%>%
-    ggplot2::ggplot(aes(y=LeafletBLength, x= RachisLength, color= "Observed"))+
-    ggplot2::facet_wrap(Progeny~.)+
+    ggplot2::ggplot(aes(y=.data$LeafletBLength, x= .data$RachisLength, color= "Observed"))+
+    ggplot2::facet_wrap(.data$Progeny~.)+
     ggplot2::geom_point()+
     ggplot2::geom_line(data= pred, aes(color= "Predicted"))+
     ggplot2::ylab('Lealet length at B point (cm)')+ggplot2::xlab('Rachis length (cm)')
@@ -432,8 +429,8 @@ plot_leaflet_width_B= function(data, model){
 
   data%>%
     dplyr::filter(!is.na(.data$LeafletBWidth))%>%
-    ggplot2::ggplot(aes(y=LeafletBWidth, x= RachisLength, color= "Observed"))+
-    ggplot2::facet_wrap(Progeny~.)+
+    ggplot2::ggplot(aes(y=.data$LeafletBWidth, x= .data$RachisLength, color= "Observed"))+
+    ggplot2::facet_wrap(.data$Progeny~.)+
     ggplot2::geom_point()+
     ggplot2::geom_line(data= pred, aes(color= "Predicted"))+
     ggplot2::ylab('Lealet width at B point (cm)')+ggplot2::xlab('Rachis length (cm)')
@@ -445,7 +442,7 @@ plot_leaflet_width_B= function(data, model){
 #' @export
 plot_leaflet_length= function(data, model){
   pred=
-    leafleftLength.nlme%>%
+    model$leafleftLength.nlme%>%
     ungroup()%>%
     dplyr::group_by(.data$Progeny)%>%
     dplyr::do(leaflet_length=
@@ -464,13 +461,11 @@ plot_leaflet_length= function(data, model){
     ungroup()%>%
     dplyr::mutate(Relative_length= .data$PositionOnLeaflet/.data$Max_length)%>%
     dplyr::group_by(.data$Progeny)%>%
-    ggplot2::ggplot(aes(y= Relative_length, x= Position_rachis_rel, color= "Observed"))+
-    ggplot2::facet_wrap(Progeny~.)+
+    ggplot2::ggplot(aes(y= .data$Relative_length, x= .data$Position_rachis_rel, color= "Observed"))+
+    ggplot2::facet_wrap(.data$Progeny~.)+
     ggplot2::geom_point()+
     ggplot2::geom_line(data= pred, aes(color= "Predicted"))+
-    ggplot2::ylab('Relative leaflet length')+ggplot2::xlab('Relative position on rachis')+
-    ggplot2::ggtitle(paste('Palm age=',paste(nbLeafEmitted$Physio_age, collapse = ", "),
-                           'leaves emitted since planting'))
+    ggplot2::ylab('Relative leaflet length')+ggplot2::xlab('Relative position on rachis')
 }
 
 
@@ -500,14 +495,12 @@ plot_leaflet_width= function(data, model){
     dplyr::group_by(.data$TreeNumber, .data$LeafIndex)%>%
     dplyr::mutate(Max_max_width= max(.data$Leaflet_max_width),
                   Relative_max_width= .data$Leaflet_max_width/.data$Max_max_width)%>%
-    ggplot2::ggplot(aes(y=Relative_max_width, x= Position_rachis_rel, color= "Observed"))+
-    ggplot2::facet_wrap(Progeny~.)+
+    ggplot2::ggplot(aes(y=.data$Relative_max_width, x= .data$Position_rachis_rel, color= "Observed"))+
+    ggplot2::facet_wrap(.data$Progeny~.)+
     ggplot2::geom_point()+
     ggplot2::geom_line(data= pred, aes(color= "Predicted"))+
     ggplot2::ylab('Relative position on rachis')+
-    ggplot2::xlab('Relative leaflet maximum width')+
-    ggplot2::ggtitle(c(paste('Palm age=',paste(nbLeafEmitted$Physio_age, collapse = ", "),
-                             'leaves emitted since planting')))
+    ggplot2::xlab('Relative leaflet maximum width')
 }
 
 #' @rdname plot_stem_diameter
@@ -525,14 +518,12 @@ plot_leaflet_axial_angle= function(data, model){
     tidyr::unnest()
 
   data%>%
-    ggplot2::ggplot(aes(y=Axial, x= Position_rel, color= "Observed"))+
-    ggplot2::facet_wrap(Progeny~.)+
+    ggplot2::ggplot(aes(y=.data$Axial, x= .data$Position_rel, color= "Observed"))+
+    ggplot2::facet_wrap(.data$Progeny~.)+
     ggplot2::geom_point()+
     ggplot2::geom_line(data= pred, aes(color= "Predicted"))+
     ggplot2::ylab('Leaflet axial angle (deg)')+
-    ggplot2::xlab('Relative position on rachis')+
-    ggplot2::ggtitle(c(paste('Palm age=',paste(nbLeafEmitted$Physio_age, collapse = ", "),
-                             'leaves emitted since planting')))
+    ggplot2::xlab('Relative position on rachis')
 }
 
 #' @rdname plot_stem_diameter
@@ -564,11 +555,11 @@ plot_leaflet_radial_angle= function(data, model){
   data%>%
     dplyr::mutate(Type= ifelse(.data$Type==0,"Mid",ifelse(.data$Type==1,"High","Low")))%>%
     ggplot2::ggplot()+
-    ggplot2::facet_wrap(Progeny~.)+
-    ggplot2::geom_point(aes(y= Radial_deg, x= Position_rel, color= Type))+
+    ggplot2::facet_wrap(.data$Progeny~.)+
+    ggplot2::geom_point(aes(y= .data$Radial_deg, x= .data$Position_rel, color= .data$Type))+
     geom_ribbon(data = data_polygons,
-                aes(x= Position_rel, ymin= Mode_inf, ymax= Mode_sup,
-                    color= Type, fill= Type), alpha= 0.5)+
+                aes(x= .data$Position_rel, ymin= .data$Mode_inf, ymax= .data$Mode_sup,
+                    color= .data$Type, fill= .data$Type), alpha= 0.5)+
     ggplot2::labs(x= "Relative position on rachis", y= "Leaflet axial angle (deg)",
                   title= "Observed (points) and simulated range (polygons) of axial angles")
 }
@@ -577,7 +568,7 @@ plot_leaflet_radial_angle= function(data, model){
 #' @rdname plot_stem_diameter
 #' @export
 plot_leaflet_type_freq= function(model){
-  ggplot2::ggplot(model,aes(y= Prop, x= Position_rel, color= Observation))+
+  ggplot2::ggplot(model,aes(y= .data$Prop, x= .data$Position_rel, color= .data$Observation))+
     ggplot2::geom_line()+ggplot2::geom_point()+
     ggplot2::labs(y='Leaflets relative frequency',x='Relative position on rachis')
 }
@@ -587,12 +578,12 @@ plot_leaflet_type_freq= function(model){
 plot_leaflet_shape= function(model){
   model%>%
     dplyr::group_by(.data$Progeny)%>%
-    ggplot2::ggplot(aes(x= PositionRelative))+
-    facet_grid(Progeny~.)+
-    ggplot2::geom_point(aes(y= xm, color= "xm"))+
-    ggplot2::geom_point(aes(y= ym, color= "ym"))+
-    ggplot2::geom_smooth(aes(y= xm, color= "xm"),method='lm',formula=y~x)+
-    ggplot2::geom_smooth(aes(y= ym, color= "ym"),method='lm',formula=y~x)+
+    ggplot2::ggplot(aes(x= .data$PositionRelative))+
+    facet_grid(.data$Progeny~.)+
+    ggplot2::geom_point(aes(y= .data$xm, color= "xm"))+
+    ggplot2::geom_point(aes(y= .data$ym, color= "ym"))+
+    ggplot2::geom_smooth(aes(y= .data$xm, color= "xm"),method='lm',formula=y~x)+
+    ggplot2::geom_smooth(aes(y= .data$ym, color= "ym"),method='lm',formula=y~x)+
     ggplot2::labs(y= "Leaflet shape")
 }
 
@@ -610,8 +601,8 @@ plot_petiole_width_C= function(data,model){
     tidyr::unnest()
 
   data%>%
-    ggplot2::ggplot(aes(y= Petiole_width_C_cm, x= CtoA, color= "Observed"))+
-    ggplot2::facet_wrap(Progeny~.)+
+    ggplot2::ggplot(aes(y= .data$Petiole_width_C_cm, x= .data$CtoA, color= "Observed"))+
+    ggplot2::facet_wrap(.data$Progeny~.)+
     ggplot2::geom_point()+
     ggplot2::geom_line(data= pred_width.C, aes(color= "Predicted"))+
     ggplot2::ylab('Width section at C point (cm)')+ggplot2::xlab('Rachis length (cm)')
@@ -634,15 +625,13 @@ plot_petiole_height= function(data,model){
 
   data%>%
     dplyr::filter(!is.na(.data$Petiole_relative_height))%>%
-    ggplot2::ggplot(aes(y= Petiole_relative_height, x= Position_rachis_rel,
+    ggplot2::ggplot(aes(y= .data$Petiole_relative_height, x= .data$Position_rachis_rel,
                         color= "Observed"))+
-    ggplot2::facet_wrap(Progeny~.)+
+    ggplot2::facet_wrap(.data$Progeny~.)+
     ggplot2::geom_point()+
     ggplot2::geom_line(data= pred, aes(color= "Predicted"))+
     ggplot2::ylab('Petiole relative height')+
-    ggplot2::xlab('Relative position on rachis')+
-    ggplot2::ggtitle(c(paste('Palm age=',paste(nbLeafEmitted$Physio_age, collapse = ", "),
-                             'leaves emitted since planting')))
+    ggplot2::xlab('Relative position on rachis')
 }
 
 
@@ -667,7 +656,7 @@ plot_all= function(data,model,nb_leaves= 45){
     B_position= plot_B_position(data$DataAll,model$Bpos),
     nb_leaflet= plot_nb_leaflet(data$DataAll,model$nbLeaflets.nls),
     C_declination= plot_C_declination(data$declination, model$decliC.lme),
-    leaf_curvature= plot_leaf_curvature(data= data$Curve, model = df_optim),
+    leaf_curvature= plot_leaf_curvature(data= data$Curve, model = model$df_optim),
     A_declination= plot_A_declination(data$Curve,model$decliA_nls),
     A_deviation= plot_A_deviation(data$Curve,model$Dev),
     leaflet_position= plot_leaflet_position(data$DataAll,model$dispo_nls),

@@ -102,8 +102,8 @@ object_lenght= function(x,y,res = 1,method = c("loess","smooth.spline"),...){
 
   if(method=="smooth.spline"){
     df_model=
-      predict(object= smooth.spline(x,y,...),
-              x= seq(0,max(x),res)%>%dplyr::union(x))%>%
+      stats::predict(object= smooth.spline(x,y,...),
+                     x= seq(0,max(x),res)%>%dplyr::union(x))%>%
       data.frame()%>%dplyr::rename(x_res= .data$x, y_res= .data$y)
   }else if(method=="loess"){
     df_model=

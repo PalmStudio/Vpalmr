@@ -7,6 +7,8 @@
 extract_section_area(df_archi, Row, Col)
 }
 \arguments{
+\item{df_archi}{The architectural data.frame}
+
 \item{Row}{The row index of the section}
 
 \item{Col}{The column index of the section}

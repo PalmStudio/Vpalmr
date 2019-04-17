@@ -57,7 +57,7 @@ make_scene= function(data, nleaves= 45, Progeny= NULL,
                      seed= NULL,overwrite= T, ntrees= NULL,
                      progress= NULL){
 
-  path= normalizePath(path, winslash = "/", mustWork = TRUE)
+  path= normalizePath(path, winslash = "/", mustWork = FALSE)
   AMAPStudio= normalizePath(AMAPStudio, winslash = "/", mustWork = TRUE)
 
   # If the user input a jar file, only use the directory name:
@@ -126,7 +126,7 @@ make_scene= function(data, nleaves= 45, Progeny= NULL,
   # plot:
   design_ggplot=
     plot_design%>%
-    ggplot2::ggplot(ggplot2::aes(x= x, y= y, color= Border))+
+    ggplot2::ggplot(ggplot2::aes(x= .data$x, y= .data$y, color= .data$Border))+
     ggplot2::geom_point()+
     ggplot2::ylim(low= min(unique(plot_design$ymin)),
                   high= max(unique(plot_design$ymax)))+

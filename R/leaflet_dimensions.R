@@ -111,9 +111,9 @@ add_pos_0_on_Leaflet= function(x){
               PositionOnRachis= unique(.data$PositionOnRachis),
               is_leaflet_pos_0= any(unique(.data$PositionOnLeaflet)==0))%>%
     ungroup()%>%
-    filter(is_leaflet_pos_0==FALSE)%>%
+    filter(.data$is_leaflet_pos_0==FALSE)%>%
     mutate(PositionOnLeaflet= 0, Width= 0)%>%
-    select(-is_leaflet_pos_0)%>%
+    select(-.data$is_leaflet_pos_0)%>%
     rbind(x,.)%>%
     arrange(.data$Progeny,.data$TreeNumber,.data$MAP,.data$LeafIndex,.data$Section)
 }

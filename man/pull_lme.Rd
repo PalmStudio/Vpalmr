@@ -20,6 +20,8 @@ pull_others(data, type = c("sample", "mean"), sd)
 
 \item{type}{The type of sampling performed on the parameter distribution (see
 \code{\link[=coef_sample]{coef_sample()}})}
+
+\item{sd}{The standard deviation required for the sample}
 }
 \value{
 A \code{\link[tibble:tibble]{tibble::tibble()}} with model outputs

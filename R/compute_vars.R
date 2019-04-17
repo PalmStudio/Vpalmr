@@ -2,7 +2,7 @@
 #'
 #' @description Compute the months after planting for the development data from
 #' the transplanting date and the observation date. The function also corrects the
-#' MAP if the filed campaign is made over 2 consecutive months (should have the same MAP).
+#' MAP if the field campaign is made over 2 consecutive months (should have the same MAP).
 #'
 #'
 #' @param x The development data.frame
@@ -20,7 +20,7 @@ compute_MAP= function(x){
   Planting_date_df=
     x%>%
     select(.data$TreeNumber,.data$Transplanting_Date)%>%
-    na.omit()%>%
+    stats::na.omit()%>%
     group_by(.data$TreeNumber)%>%
     summarise(Transplanting_Date= unique(.data$Transplanting_Date))
 
@@ -38,7 +38,7 @@ compute_MAP= function(x){
     dplyr::mutate(MAP_comp= ifelse(!is.na(.data$Nb_frond)&!is.na(lead(.data$Nb_frond))&
                                      .data$Nb_frond==lead(.data$Nb_frond)&
                                      !is.na(.data$LeafIndexRank1)&!is.na(lead(.data$LeafIndexRank1))&
-                                     LeafIndexRank1==lead(.data$LeafIndexRank1),
+                                     .data$LeafIndexRank1==lead(.data$LeafIndexRank1),
                                    lead(.data$MAP_comp),.data$MAP_comp))%>%ungroup()%>%
     dplyr::mutate(MonthAfterPlanting= .data$MAP_comp)%>%
     dplyr::select(-.data$MAP_comp)
