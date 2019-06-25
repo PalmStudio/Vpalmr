@@ -19,7 +19,8 @@ make_scene(data, nleaves = 45, Progeny = NULL, path, AMAPStudio,
 
 \item{AMAPStudio}{The path to AMAPStudio were VPalm lives}
 
-\item{plant_dist}{The distance between palm trees, used as y_dist in \code{\link[=design_plot]{design_plot()}}}
+\item{plant_dist}{The distance between palm trees, used as y_dist in \code{\link[=design_plot]{design_plot()}}. Used only
+if \code{plot_design} is \code{NULL}.}
 
 \item{plot_design}{The design of the plot if custom. If \code{NULL}, calls \code{\link[=design_plot]{design_plot()}}
 with a quincunx disposition}

@@ -10,7 +10,8 @@
 #' @param AMAPStudio The path to AMAPStudio were VPalm lives
 #' @param plot_design The design of the plot if custom. If `NULL`, calls [design_plot()]
 #' with a quincunx disposition
-#' @param plant_dist The distance between palm trees, used as y_dist in [design_plot()]
+#' @param plant_dist The distance between palm trees, used as y_dist in [design_plot()]. Used only
+#' if `plot_design` is `NULL`.
 #' @param seed  The seed for random parameter generation (see details)
 #' @param overwrite Boolean. Should pre-existing scene files overwriten ?
 #' @param ntrees  The number of trees to be sampled for each progeny if genetic variability
