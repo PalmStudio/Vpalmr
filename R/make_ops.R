@@ -113,7 +113,7 @@ design_plot= function(rows=1, cols= 1, x_dist= NULL, y_dist= NULL, x0= 0){
 #' @param map     The tree age in month after planting
 #' @param id      The scene ID
 #' @param bounds  Are the plot bounds written in the OPS file ? Used for backward
-#' compatibility
+#' compatibility.
 #' @param pavement Pavement file path. Only used if the pavement file (`.gwa`) has to
 #'  be linked in the OPS. Used for backward compatibility.
 #' @param average  Boolean. Use average tree instead of the sampled ones.
@@ -121,7 +121,7 @@ design_plot= function(rows=1, cols= 1, x_dist= NULL, y_dist= NULL, x0= 0){
 #' @return A pre-formatted OPS
 #' @export
 #'
-format_ops=function(design, Progeny, map, id= 1, bounds= FALSE,
+format_ops=function(design, Progeny, map, id= 1, bounds= TRUE,
                     pavement= NULL, average= FALSE){
 
   nbTree= nrow(design)
@@ -145,15 +145,23 @@ format_ops=function(design, Progeny, map, id= 1, bounds= FALSE,
   if(bounds){
     plot_box=
       design%>%
-      dplyr::mutate(zmin= 0, zmax= 0)%>%
+      dplyr::mutate(zmin= 0.0, zmax= 0.0)%>%
       dplyr::select(.data$xmin, .data$ymin, .data$zmin,
                     .data$xmax, .data$ymax, .data$zmax)%>%
       dplyr::summarise_all(function(x){round(unique(x),3)})%>%
       dplyr::transmute("# T xOrigin yOrigin zOrigin xSize ySize flat"=
                          glue::glue("T {xmin} {ymin} {zmin} {xmax} {ymax} {zmax} flat"))%>%
       as.matrix()
+    plot_box= rbind(colnames(plot_box),plot_box)
+
+    plot_groups= c("# Archimed metadata format :",
+                   '# start comment with "[Archimed]" stuck to # sign',
+                   "# field 1 : functional group name",
+                   "#[Archimed] two")
+
   }else{
     plot_box= NULL
+    plot_groups= NULL
   }
 
   if(!is.null(pavement)){
@@ -165,6 +173,7 @@ format_ops=function(design, Progeny, map, id= 1, bounds= FALSE,
 
   c(plot_box,
     paste('# Part 1: one line per plant in the scene'),
+    paste(plot_groups),
     paste('#sceneId plantId plantFileName x y z scale inclinationAzimut inclinationAngle stemTwist'),
     paste(opf_table),
     pav,

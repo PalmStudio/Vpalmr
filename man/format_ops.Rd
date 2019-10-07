@@ -4,7 +4,7 @@
 \alias{format_ops}
 \title{Format ops information}
 \usage{
-format_ops(design, Progeny, map, id = 1, bounds = FALSE,
+format_ops(design, Progeny, map, id = 1, bounds = TRUE,
   pavement = NULL, average = FALSE)
 }
 \arguments{
@@ -17,7 +17,7 @@ format_ops(design, Progeny, map, id = 1, bounds = FALSE,
 \item{id}{The scene ID}
 
 \item{bounds}{Are the plot bounds written in the OPS file ? Used for backward
-compatibility}
+compatibility.}
 
 \item{pavement}{Pavement file path. Only used if the pavement file (\code{.gwa}) has to
 be linked in the OPS. Used for backward compatibility.}

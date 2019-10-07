@@ -19,13 +19,13 @@ make_opf= function(parameter,opf,AMAPStudio,overwrite=T,verbose=F){
   AMAPStudio= normalizePath(AMAPStudio, winslash = "/", mustWork = TRUE)
   opf= normalizePath(opf, winslash = "/", mustWork = FALSE)
 
+  if(!dir.exists(file.path(dirname(opf)))){
+    dir.create(file.path(dirname(opf)), recursive = T)
+  }
+
   # If the user input a jar file, only use the directory name:
   if(grepl('.jar',AMAPStudio)){
     AMAPStudio= dirname(AMAPStudio)
-  }
-
-  if(!dir.exists(file.path(dirname(opf)))){
-    dir.create(file.path(dirname(opf)), recursive = T)
   }
 
   this_wd= getwd()
@@ -51,10 +51,21 @@ make_opf= function(parameter,opf,AMAPStudio,overwrite=T,verbose=F){
     file_time= NULL
   }
 
+  # Test if there are some white spaces in the config path, and if so double quote it:
+  if(grepl(" ",parameter)){
+    parameter= paste0("\"",parameter,"\"")
+  }
+  # Test if there are some white spaces in the config path, and if so double quote it:
+  if(grepl(" ",opf)){
+    opf_call= paste0("\"",opf,"\"")
+  }else{
+    opf_call= opf
+  }
+
   on.exit(setwd(this_wd))
   setwd(AMAPStudio)
   exportFile=
-    paste('java -jar', "vpalm.jar",parameter,opf,sep=' ')
+    paste('java -jar', "vpalm.jar",parameter,opf_call,sep=' ')
     # paste('java -cp bin;ext/* jeeb.workspace.palms.elaeisRaphael.ElaeisArchiTree',
     #       parameter,opf,sep=' ')
   out=
