@@ -4,8 +4,14 @@
 \alias{extract_trees}
 \title{Extract several VPalm parameters}
 \usage{
-extract_trees(data, model, n, leaves = 45, seed = sample.int(1000, n),
-  init = init_list())
+extract_trees(
+  data,
+  model,
+  n,
+  leaves = 45,
+  seed = sample.int(1000, n),
+  init = init_list()
+)
 }
 \arguments{
 \item{data}{A list of all data (generally from \code{\link[=import_data]{import_data()}})}

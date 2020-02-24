@@ -17,6 +17,7 @@
 #' @param ntrees  The number of trees to be sampled for each progeny if genetic variability
 #' is required. If `NULL` or `0`, uses only average palm trees.
 #' @param progress A progress function (see details) Shiny progress bar if ran using Shiny application.
+#' @param java    Java path (optionnal)
 #'
 #' @note To extract only average trees from progenies, simply set `ntrees= 0`. To make a scene with the average
 #' tree from all progenies, set `Progeny= "Average"`.
@@ -56,7 +57,7 @@ make_scene= function(data, nleaves= 45, Progeny= NULL,
                      path, AMAPStudio,
                      plant_dist= 9.2, plot_design= NULL,
                      seed= NULL,overwrite= T, ntrees= NULL,
-                     progress= NULL){
+                     progress= NULL, java= NULL){
 
   path= normalizePath(path, winslash = "/", mustWork = FALSE)
   AMAPStudio= normalizePath(AMAPStudio, winslash = "/", mustWork = TRUE)
@@ -102,7 +103,7 @@ make_scene= function(data, nleaves= 45, Progeny= NULL,
   # Make the OPFs (carefull, OPFs must be in a subfolder of OPS for AMAPStudio) :
   OPFs= make_opf_all(parameter = file.path(path, "VPalm_inputs"),
                      opf = file.path(path, "scenes/opf"),
-                     AMAPStudio = AMAPStudio, overwrite = overwrite)
+                     AMAPStudio = AMAPStudio, overwrite = overwrite, java= java)
   up_progress(progress,'make_opf_all')
 
   # Design the planting pattern:

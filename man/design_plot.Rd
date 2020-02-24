@@ -4,8 +4,7 @@
 \alias{design_plot}
 \title{Design the plot}
 \usage{
-design_plot(rows = 1, cols = 1, x_dist = NULL, y_dist = NULL,
-  x0 = 0)
+design_plot(rows = 1, cols = 1, x_dist = NULL, y_dist = NULL, x0 = 0)
 }
 \arguments{
 \item{rows}{How many times the voronoi sub-plot is repeated in rows?}

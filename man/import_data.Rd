@@ -4,8 +4,18 @@
 \alias{import_data}
 \title{Import all data}
 \usage{
-import_data(parameter, development, phylotaxy, declination, curvature,
-  leaf_area, axial_angle, petiole_width, twist, map)
+import_data(
+  parameter,
+  development,
+  phylotaxy,
+  declination,
+  curvature,
+  leaf_area,
+  axial_angle,
+  petiole_width,
+  twist,
+  map
+)
 }
 \arguments{
 \item{parameter}{File path to the parameter file (ParameterSimu.csv)}

@@ -4,8 +4,15 @@
 \alias{make_opf_all}
 \title{Make a set of opf file}
 \usage{
-make_opf_all(parameter, opf, AMAPStudio, overwrite = T, parallel = T,
-  NbCores = NULL)
+make_opf_all(
+  parameter,
+  opf,
+  AMAPStudio,
+  overwrite = T,
+  parallel = T,
+  NbCores = NULL,
+  java = NULL
+)
 }
 \arguments{
 \item{parameter}{The folder of the parameter files}
@@ -20,6 +27,8 @@ make_opf_all(parameter, opf, AMAPStudio, overwrite = T, parallel = T,
 
 \item{NbCores}{The number of cores to use for parallel making. If \code{NULL} (the default)
 uses all cores minus one.}
+
+\item{java}{Java path (optionnal)}
 }
 \value{
 Creates one OPF file from each VPalm parameter file, and returns \code{TRUE} if all OPFs

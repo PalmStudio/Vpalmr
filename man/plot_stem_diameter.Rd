@@ -87,7 +87,7 @@ A ggplot
 Plot the estimations of the palm architectural parameters from
 their parameter estimation and input data.
 }
-\section{Plotting functions (plot_*)}{
+\section{Plotting functions (plot_\*)}{
 
 \itemize{
 \item \code{\link[=plot_stem_diameter]{plot_stem_diameter()}}: plot the predicted stem diameter at the level of

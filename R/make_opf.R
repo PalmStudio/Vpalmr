@@ -9,11 +9,12 @@
 #' @param AMAPStudio The root path to AMAPStudio
 #' @param overwrite Boolean. Should pre-existing OPF files overwriten ?
 #' @param verbose Should the VPalm writting informations printed to the console ?
+#' @param java    Java path (optionnal)
 #'
 #' @return Writes an OPF file, and return `TRUE` if the file was successfully written.
 #' @export
 #'
-make_opf= function(parameter,opf,AMAPStudio,overwrite=T,verbose=F){
+make_opf= function(parameter,opf,AMAPStudio,overwrite=T,verbose=F, java){
 
   # Normalize all paths:
   AMAPStudio= normalizePath(AMAPStudio, winslash = "/", mustWork = TRUE)
@@ -64,8 +65,12 @@ make_opf= function(parameter,opf,AMAPStudio,overwrite=T,verbose=F){
 
   on.exit(setwd(this_wd))
   setwd(AMAPStudio)
+  if(is.null(java)){
+    java= "java"
+  }
+
   exportFile=
-    paste('java -jar', "vpalm.jar",parameter,opf_call,sep=' ')
+    paste(java,'-jar', "vpalm.jar",parameter,opf_call,sep=' ')
     # paste('java -cp bin;ext/* jeeb.workspace.palms.elaeisRaphael.ElaeisArchiTree',
     #       parameter,opf,sep=' ')
   out=
@@ -109,6 +114,7 @@ make_opf= function(parameter,opf,AMAPStudio,overwrite=T,verbose=F){
 #' @param parallel  Boolean. Is the OPF making to be distributed on available machine cores?
 #' @param NbCores   The number of cores to use for parallel making. If `NULL` (the default)
 #' uses all cores minus one.
+#' @param java    Java path (optionnal)
 #'
 #' @details The parameter folder should only contain parameter files. Subfolders
 #' are tolerated though. The function uses [parallel::detectCores()] to find how many
@@ -119,7 +125,7 @@ make_opf= function(parameter,opf,AMAPStudio,overwrite=T,verbose=F){
 #' were successfully written.
 #' @export
 #'
-make_opf_all= function(parameter,opf,AMAPStudio,overwrite=T,parallel=T,NbCores=NULL){
+make_opf_all= function(parameter,opf,AMAPStudio,overwrite=T,parallel=T,NbCores=NULL,java=NULL){
 
   # normalize all paths:
   AMAPStudio= normalizePath(AMAPStudio, winslash = "/", mustWork = TRUE)
@@ -168,7 +174,7 @@ make_opf_all= function(parameter,opf,AMAPStudio,overwrite=T,parallel=T,NbCores=N
         cl = cl,
         fun = function(x,y){
           out_tmp= make_opf(parameter = x, opf = y, AMAPStudio = AMAPStudio,
-                            overwrite = overwrite)
+                            overwrite = overwrite, java = java)
           out_tmp
         }, x= param_files, y= opf_path)
 

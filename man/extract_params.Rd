@@ -4,8 +4,14 @@
 \alias{extract_params}
 \title{Extract VPalm parameters}
 \usage{
-extract_params(data, model, leaves = 45, seed = sample.int(1000, 1),
-  init = init_list(), type = c("sample", "mean"))
+extract_params(
+  data,
+  model,
+  leaves = 45,
+  seed = sample.int(1000, 1),
+  init = init_list(),
+  type = c("sample", "mean")
+)
 }
 \arguments{
 \item{data}{A list of all data (generally from \code{\link[=import_data]{import_data()}})}

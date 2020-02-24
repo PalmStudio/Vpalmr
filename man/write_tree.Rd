@@ -4,8 +4,14 @@
 \alias{write_tree}
 \title{Write VPalm tree parameter file}
 \usage{
-write_tree(data, path = getwd(), name = "vpalm_input", age = NULL,
-  overwrite = TRUE, verbose = TRUE)
+write_tree(
+  data,
+  path = getwd(),
+  name = "vpalm_input",
+  age = NULL,
+  overwrite = TRUE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{data}{A formated matrix input}
@@ -31,5 +37,5 @@ matrix, generally from \code{\link[=format_tree]{format_tree()}}
 }
 \details{
 If the \code{age} argument is not provided, the function will try to extract it from
-the matrix (from the \code{Modelled Months After Planting} row name).
+the matrix (from the \verb{Modelled Months After Planting} row name).
 }

@@ -4,8 +4,15 @@
 \alias{extract_progeny}
 \title{VPalm parameter list for all progenies}
 \usage{
-extract_progeny(data, model, n, leaves = 45, seed = NULL,
-  init = init_list(), average = T)
+extract_progeny(
+  data,
+  model,
+  n,
+  leaves = 45,
+  seed = NULL,
+  init = init_list(),
+  average = T
+)
 }
 \arguments{
 \item{data}{A list of all data (generally from \code{\link[=import_data]{import_data()}})}

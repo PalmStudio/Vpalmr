@@ -4,8 +4,13 @@
 \alias{write_progeny}
 \title{Writes all progenies VPalm inputs}
 \usage{
-write_progeny(data, path = getwd(), wforce = FALSE, overwrite = TRUE,
-  verbose = TRUE)
+write_progeny(
+  data,
+  path = getwd(),
+  wforce = FALSE,
+  overwrite = TRUE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{data}{A pre-formated \code{\link[=format_progeny]{format_progeny()}} output list of matrices}

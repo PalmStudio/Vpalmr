@@ -6,9 +6,16 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A Package To Create Architectural Inputs For The VPalm Model Using Field Data • Vpalmr</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="A Package To Create Architectural Inputs For The VPalm Model Using Field Data">
 <meta property="og:description" content="Vpalmr is designed to import field architectural data, compute the input parameters and opf/ops files for the VPalm model.">
 <meta property="og:image" content="/logo.png">
@@ -31,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">Vpalmr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -39,7 +46,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -59,50 +66,38 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="contents col-md-9">
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-<div id="vpalmr" class="section level1">
+<div id="vpalmr-" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#vpalmr" class="anchor"></a>Vpalmr <img src="reference/figures/logo.png" alt="logo" width="300" align="right">
+<a href="#vpalmr-" class="anchor"></a>Vpalmr <img src="reference/figures/logo.png" alt="logo" width="300" align="right">
 </h1></div>
 <p>The goal of Vpalmr is to ease the process of making virtual palm plants from field data.</p>
-<p>The data preparation, the models and all details are described in the <a href="https://www.researchgate.net/publication/318351549_Analyzing_and_modelling_the_genetic_variability_of_aerial_architecture_and_light_interception_of_the_oil_palm_Elaeis_guineensis_Jacq?_sg=KZ3K7bz0sNnV3iRwaYehauoZ0rn6Lc0MDO3O3tyXR-j9QzT4ODe9zb6ySgPOAXzoJhHXloiAo7CA5SYE8TsD7dd3SldfET7k8Iy-CuKf.cKm7AfKFCz6-jBiO4jl27VWnrz_HvA_KI0RNwUQgIQfQzoL2Dj9HLol3pv95Qb9vzkq7AoICAb4IH77DV3rgAQ">PhD of R. Perez</a> and the subsequent articles <span class="citation">(Perez et al. 2016; Perez 2017; Perez, Costes, et al. 2018; Perez, Dauzat, et al. 2018; Perez, Pallas, et al. 2017)</span></p>
+<p>The data preparation, the models and all details are described in the <a href="https://www.researchgate.net/publication/318351549_Analyzing_and_modelling_the_genetic_variability_of_aerial_architecture_and_light_interception_of_the_oil_palm_Elaeis_guineensis_Jacq?_sg=KZ3K7bz0sNnV3iRwaYehauoZ0rn6Lc0MDO3O3tyXR-j9QzT4ODe9zb6ySgPOAXzoJhHXloiAo7CA5SYE8TsD7dd3SldfET7k8Iy-CuKf.cKm7AfKFCz6-jBiO4jl27VWnrz_HvA_KI0RNwUQgIQfQzoL2Dj9HLol3pv95Qb9vzkq7AoICAb4IH77DV3rgAQ">PhD of R. Perez</a> and the subsequent articles (Perez et al. 2016; Perez 2017; Perez, Costes, et al. 2018; Perez, Dauzat, et al. 2018; Perez et al. 2017)</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>The development version from <a href="https://github.com/">GitHub</a> can be installed with:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co"># install.packages("devtools")</span></a>
-<a class="sourceLine" id="cb1-2" title="2">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"VEZY/Vpalmr"</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb1-2" title="2">devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">"VEZY/Vpalmr"</span>)</a></code></pre></div>
 <p>Or using the lightweight <a href="https://github.com/r-lib/remotes#readme">remotes</a> package:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"remotes"</span>)</a>
-<a class="sourceLine" id="cb2-2" title="2">remotes<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/remotes/topics/install_github">install_github</a></span>(<span class="st">"VEZY/Vpalmr"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"remotes"</span>)</a>
+<a class="sourceLine" id="cb2-2" title="2">remotes<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/remotes/man/install_github.html">install_github</a></span>(<span class="st">"VEZY/Vpalmr"</span>)</a></code></pre></div>
 </div>
-<div id="references" class="section level2 unnumbered">
+<div id="references" class="section level2">
 <h2 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h2>
-<div id="refs" class="references">
-<div id="ref-RN1342">
 <p>Perez, Raphaël. 2017. “Analyzing and Modelling the Genetic Variability of Aerial Architecture and Light Interception of Oil Palm (Elaeis Guineensis Jacq).” Thesis.</p>
-</div>
-<div id="ref-PEREZ2018250">
-<p>Perez, Raphaël, Evelyne Costes, Frédéric Théveny, Sébastien Griffon, Jean-Pierre Caliman, and Jean Dauzat. 2018. “3D Plant Model Assessed by Terrestrial Lidar and Hemispherical Photographs: A Useful Tool for Comparing Light Interception Among Oil Palm Progenies.” <em>Agricultural and Forest Meteorology</em> 249: 250–63. <a href="https://doi.org/https://doi.org/10.1016/j.agrformet.2017.11.008">https://doi.org/https://doi.org/10.1016/j.agrformet.2017.11.008</a>.</p>
-</div>
-<div id="ref-RN1350">
-<p>Perez, Raphaël, Jean Dauzat, Benoît Pallas, Julien Lamour, Philippe Verley, Jean-Pierre Caliman, Evelyne Costes, and Robert Faivre. 2018. “Designing Oil Palm Architectural Ideotypes for Optimal Light Interception and Carbon Assimilation Through a Sensitivity Analysis of Leaf Traits.” Journal Article. <em>Annals of Botany</em> 121 (5): 909–26. <a href="https://doi.org/10.1093/aob/mcx161">https://doi.org/10.1093/aob/mcx161</a>.</p>
-</div>
-<div id="ref-Perez2016">
-<p>Perez, Raphaël, Benoît Pallas, Gilles Le Moguédec, Hervé Rey, Griffon Sébastien, Jean-Pierre Caliman, Evelyne Costes, and Jean Dauzat. 2016. “Integrating Mixed-Effect Models into an Architectural Plant Model to Simulate Inter-and Intra-Progeny Variability: A Case Study on Oil Palm (Elaeis Guineensis Jacq.).” <em>Journal of Experimental Botany</em> 67 (June): erw203. <a href="https://doi.org/10.1093/jxb/erw203">https://doi.org/10.1093/jxb/erw203</a>.</p>
-</div>
-<div id="ref-Perez2017">
-<p>Perez, Raphaël, Benoît Pallas, Griffon Sébastien, Hervé Rey, J.P. Caliman, G Le Moguédec, Jean Dauzat, and Evelyne Costes. 2017. “Reconstructing Three-Dimensional Oil Palm Architecture from Allometric Relationships.” <em>Acta Horticulturae</em> 1160 (May): 11–18. <a href="https://doi.org/https://doi.org/10.17660/ActaHortic.2017.1160.3">https://doi.org/https://doi.org/10.17660/ActaHortic.2017.1160.3</a>.</p>
-</div>
-</div>
+<p>Perez, Raphaël, Evelyne Costes, Frédéric Théveny, Sébastien Griffon, Jean-Pierre Caliman, and Jean Dauzat. 2018. “3D Plant Model Assessed by Terrestrial Lidar and Hemispherical Photographs: A Useful Tool for Comparing Light Interception Among Oil Palm Progenies.” <em>Agricultural and Forest Meteorology</em> 249: 250–63. <a href="doi:%5Bhttps://doi.org/10.1016/j.agrformet.2017.11.008" class="uri">doi:[https://doi.org/10.1016/j.agrformet.2017.11.008</a>](<a href="https://doi.org/https://doi.org/10.1016/j.agrformet.2017.11.008" class="uri">https://doi.org/https://doi.org/10.1016/j.agrformet.2017.11.008</a>).</p>
+<p>Perez, Raphaël, Jean Dauzat, Benoît Pallas, Julien Lamour, Philippe Verley, Jean-Pierre Caliman, Evelyne Costes, and Robert Faivre. 2018. “Designing Oil Palm Architectural Ideotypes for Optimal Light Interception and Carbon Assimilation Through a Sensitivity Analysis of Leaf Traits.” Journal Article. <em>Annals of Botany</em> 121 (5): 909–26. <a href="doi:%5B10.1093/aob/mcx161" class="uri">doi:[10.1093/aob/mcx161</a>](<a href="https://doi.org/10.1093/aob/mcx161" class="uri">https://doi.org/10.1093/aob/mcx161</a>).</p>
+<p>Perez, Raphaël, Benoît Pallas, Gilles Le Moguédec, Hervé Rey, Griffon Sébastien, Jean-Pierre Caliman, Evelyne Costes, and Jean Dauzat. 2016. “Integrating Mixed-Effect Models into an Architectural Plant Model to Simulate Inter-and Intra-Progeny Variability: A Case Study on Oil Palm (Elaeis Guineensis Jacq.).” <em>Journal of Experimental Botany</em> 67 (June): erw203. <a href="doi:%5B10.1093/jxb/erw203" class="uri">doi:[10.1093/jxb/erw203</a>](<a href="https://doi.org/10.1093/jxb/erw203" class="uri">https://doi.org/10.1093/jxb/erw203</a>).</p>
+<p>Perez, Raphaël, Benoît Pallas, Griffon Sébastien, Hervé Rey, J.P. Caliman, G Le Moguédec, Jean Dauzat, and Evelyne Costes. 2017. “Reconstructing Three-Dimensional Oil Palm Architecture from Allometric Relationships.” <em>Acta Horticulturae</em> 1160 (May): 11–18. <a href="doi:%5Bhttps://doi.org/10.17660/ActaHortic.2017.1160.3" class="uri">doi:[https://doi.org/10.17660/ActaHortic.2017.1160.3</a>](<a href="https://doi.org/https://doi.org/10.17660/ActaHortic.2017.1160.3" class="uri">https://doi.org/https://doi.org/10.17660/ActaHortic.2017.1160.3</a>).</p>
 </div>
 </div>
   </div>
 
-  <div class="col-md-3" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
@@ -113,7 +108,7 @@
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>Remi Vezy <br><small class="roles"> Author, maintainer, copyright holder </small> <a href="https://orcid.org/0000-0002-0808-1461" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID" height="16"></a> </li>
+<li>Remi Vezy <br><small class="roles"> Author, maintainer, copyright holder </small> <a href="https://orcid.org/0000-0002-0808-1461" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID"></a> </li>
 <li>Raphael Perez <br><small class="roles"> Author, copyright holder </small>  </li>
 <li>Jean Dauzat <br><small class="roles"> Author, copyright holder </small>  </li>
 </ul>
@@ -128,12 +123,14 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

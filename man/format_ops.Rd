@@ -4,8 +4,15 @@
 \alias{format_ops}
 \title{Format ops information}
 \usage{
-format_ops(design, Progeny, map, id = 1, bounds = TRUE,
-  pavement = NULL, average = FALSE)
+format_ops(
+  design,
+  Progeny,
+  map,
+  id = 1,
+  bounds = TRUE,
+  pavement = NULL,
+  average = FALSE
+)
 }
 \arguments{
 \item{design}{The planting design, generally computed using \code{\link[=design_plot]{design_plot()}}}

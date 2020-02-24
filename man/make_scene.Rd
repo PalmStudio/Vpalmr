@@ -4,9 +4,20 @@
 \alias{make_scene}
 \title{Make a full 3D scene}
 \usage{
-make_scene(data, nleaves = 45, Progeny = NULL, path, AMAPStudio,
-  plant_dist = 9.2, plot_design = NULL, seed = NULL, overwrite = T,
-  ntrees = NULL, progress = NULL)
+make_scene(
+  data,
+  nleaves = 45,
+  Progeny = NULL,
+  path,
+  AMAPStudio,
+  plant_dist = 9.2,
+  plot_design = NULL,
+  seed = NULL,
+  overwrite = T,
+  ntrees = NULL,
+  progress = NULL,
+  java = NULL
+)
 }
 \arguments{
 \item{data}{The output from \code{\link[=compute_archi]{compute_archi()}}}
@@ -33,6 +44,8 @@ with a quincunx disposition}
 is required. If \code{NULL} or \code{0}, uses only average palm trees.}
 
 \item{progress}{A progress function (see details) Shiny progress bar if ran using Shiny application.}
+
+\item{java}{Java path (optionnal)}
 }
 \value{
 Writes a full 3D scene with a list of OPS for each progeny and a list of OPF for each plant

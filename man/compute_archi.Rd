@@ -4,12 +4,15 @@
 \alias{compute_archi}
 \title{Compute Architectural parameters}
 \usage{
-compute_archi(map, data_path = list(parameter = "ParameterSimu.csv",
-  development = "Development_Rep4_SMSE.csv", phylotaxy = "Stem_SMSE14.csv",
-  declination = "AnglesC&A_SMSE_Nov14.csv", curvature =
-  "LeafCurvature_SMSE14.csv", leaf_area = "LeafArea_monitoring_SMSE.csv",
-  axial_angle = "LeafDispositionComp_SMSE14.csv", petiole_width =
-  "Petiole_SMSE14.csv", twist = "Torsion_SMSE14.csv"), write_path = NULL)
+compute_archi(
+  map,
+  data_path = list(parameter = "ParameterSimu.csv", development =
+    "Development_Rep4_SMSE.csv", phylotaxy = "Stem_SMSE14.csv", declination =
+    "AnglesC&A_SMSE_Nov14.csv", curvature = "LeafCurvature_SMSE14.csv", leaf_area =
+    "LeafArea_monitoring_SMSE.csv", axial_angle = "LeafDispositionComp_SMSE14.csv",
+    petiole_width = "Petiole_SMSE14.csv", twist = "Torsion_SMSE14.csv"),
+  write_path = NULL
+)
 }
 \arguments{
 \item{map}{Palm trees age desired in months after planting}
