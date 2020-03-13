@@ -28,7 +28,7 @@ make_opf_all(
 \item{NbCores}{The number of cores to use for parallel making. If \code{NULL} (the default)
 uses all cores minus one.}
 
-\item{java}{Java path (optionnal)}
+\item{java}{Java path (optionnal, see details)}
 }
 \value{
 Creates one OPF file from each VPalm parameter file, and returns \code{TRUE} if all OPFs
@@ -43,5 +43,7 @@ each.
 The parameter folder should only contain parameter files. Subfolders
 are tolerated though. The function uses \code{\link[parallel:detectCores]{parallel::detectCores()}} to find how many
 cores are available on the machine. This function has known issues, see help for more
-details.
+details. The \code{java} argument can be a path to the java
+executable if the user needs a particular version (for example if the default Java used is the Open JDK,
+because ARCHIMED is only compatible with the Oracle version).
 }

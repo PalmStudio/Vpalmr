@@ -9,12 +9,16 @@
 #' @param AMAPStudio The root path to AMAPStudio
 #' @param overwrite Boolean. Should pre-existing OPF files overwriten ?
 #' @param verbose Should the VPalm writting informations printed to the console ?
-#' @param java    Java path (optionnal)
+#' @param java    Java path (optionnal, see details).
+#'
+#' @details The `java` argument can be a path to the java
+#' executable if the user needs a particular version (for example if the default Java used is the Open JDK,
+#' because ARCHIMED is only compatible with the Oracle version).
 #'
 #' @return Writes an OPF file, and return `TRUE` if the file was successfully written.
 #' @export
 #'
-make_opf= function(parameter,opf,AMAPStudio,overwrite=T,verbose=F, java){
+make_opf= function(parameter,opf,AMAPStudio,overwrite=T,verbose=F, java=NULL){
 
   # Normalize all paths:
   AMAPStudio= normalizePath(AMAPStudio, winslash = "/", mustWork = TRUE)
@@ -114,12 +118,14 @@ make_opf= function(parameter,opf,AMAPStudio,overwrite=T,verbose=F, java){
 #' @param parallel  Boolean. Is the OPF making to be distributed on available machine cores?
 #' @param NbCores   The number of cores to use for parallel making. If `NULL` (the default)
 #' uses all cores minus one.
-#' @param java    Java path (optionnal)
+#' @param java    Java path (optionnal, see details)
 #'
 #' @details The parameter folder should only contain parameter files. Subfolders
 #' are tolerated though. The function uses [parallel::detectCores()] to find how many
 #' cores are available on the machine. This function has known issues, see help for more
-#' details.
+#' details. The `java` argument can be a path to the java
+#' executable if the user needs a particular version (for example if the default Java used is the Open JDK,
+#' because ARCHIMED is only compatible with the Oracle version).
 #'
 #' @return Creates one OPF file from each VPalm parameter file, and returns `TRUE` if all OPFs
 #' were successfully written.

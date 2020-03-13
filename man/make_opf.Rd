@@ -4,7 +4,7 @@
 \alias{make_opf}
 \title{Make OPF}
 \usage{
-make_opf(parameter, opf, AMAPStudio, overwrite = T, verbose = F, java)
+make_opf(parameter, opf, AMAPStudio, overwrite = T, verbose = F, java = NULL)
 }
 \arguments{
 \item{parameter}{The VPalm parameter file path and name (see \code{\link[=write_progeny]{write_progeny()}}
@@ -18,7 +18,7 @@ or \code{\link[=write_tree]{write_tree()}})}
 
 \item{verbose}{Should the VPalm writting informations printed to the console ?}
 
-\item{java}{Java path (optionnal)}
+\item{java}{Java path (optionnal, see details).}
 }
 \value{
 Writes an OPF file, and return \code{TRUE} if the file was successfully written.
@@ -26,4 +26,9 @@ Writes an OPF file, and return \code{TRUE} if the file was successfully written.
 \description{
 Use VPalm from AMAPStudio to make an Open Plant Format file using
 a parameter file generally created by \code{\link[=write_progeny]{write_progeny()}} or \code{\link[=write_tree]{write_tree()}}.
+}
+\details{
+The \code{java} argument can be a path to the java
+executable if the user needs a particular version (for example if the default Java used is the Open JDK,
+because ARCHIMED is only compatible with the Oracle version).
 }
