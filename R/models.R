@@ -506,7 +506,8 @@ mod_leaflet_radial_angle= function(data){
 
   radial=
     rbind(radialHigh.nls,radialLow.nls)%>%
-    arrange(.data$Progeny,.data$Type,.data$Mode)
+    group_by(.data$Progeny,.data$Type,.data$Mode)%>%
+    arrange()
   radial$A0= sapply(radial%>%.$mod,function(x){stats::coef(x)['A0']})
   radial$Amax= sapply(radial%>%.$mod,function(x){stats::coef(x)['Amax']})
   radial
